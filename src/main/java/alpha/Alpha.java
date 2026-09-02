@@ -1,17 +1,18 @@
+package alpha;
+
 import java.util.Scanner;
 
-/**
- * Runs the Alpha chatbot command-line application.
- */
+
+ //Runs the Alpha chatbot command-line application.
 public class Alpha {
     private static final String DIVIDER = "    ____________________________________________________________";
     private static final int MAX_TASKS = 100;
 
     /**
-     * Greets the user, stores/updates tasks, lists them on request, and exits on {@code bye}.
-     * Supported commands: {@code list}, {@code mark}, {@code unmark}, {@code bye}.
+     * Greets the user, manages tasks, lists them on request, and exits on {@code bye}.
+     * Supported commands are {@code list}, {@code mark}, {@code unmark}, and {@code bye}.
      *
-     * @param args command-line arguments (not used)
+     * @param args Command-line arguments, which are not used.
      */
     public static void main(String[] args) {
         String banner = " █████╗ ██╗     ██████╗ ██╗  ██╗ █████╗ \n"
@@ -57,61 +58,65 @@ public class Alpha {
     }
 
     /**
-     * Marks the task at the 1-based index in the given command as done.
+     * Marks the task at the one-based index in the given command as done.
      *
-     * @param command   the user's input, e.g. "mark 2"
-     * @param tasks     the array of tasks
-     * @param taskCount the number of tasks stored
+     * @param command The user's input, for example, "mark 2".
+     * @param tasks The array of tasks.
+     * @param taskCount The number of tasks stored.
      */
     private static void markTask(String command, Task[] tasks, int taskCount) {
         Integer index = parseIndex(command, 5, taskCount);
         if (index == null) {
             return;
         }
+
         tasks[index].markAsDone();
         System.out.println("     Nice! I've marked this task as done:");
         System.out.println("       " + tasks[index]);
     }
 
     /**
-     * Marks the task at the 1-based index in the given command as not done.
+     * Marks the task at the one-based index in the given command as not done.
      *
-     * @param command   the user's input, e.g. "unmark 2"
-     * @param tasks     the array of tasks
-     * @param taskCount the number of tasks stored
+     * @param command The user's input, for example, "unmark 2".
+     * @param tasks The array of tasks.
+     * @param taskCount The number of tasks stored.
      */
     private static void unmarkTask(String command, Task[] tasks, int taskCount) {
         Integer index = parseIndex(command, 7, taskCount);
         if (index == null) {
             return;
         }
+
         tasks[index].markAsNotDone();
         System.out.println("     OK, I've marked this task as not done yet:");
         System.out.println("       " + tasks[index]);
     }
 
     /**
-     * Parses the task number from the given command into a 0-based index.
-     * Prints a message and returns {@code null} if the number is not a valid
-     * positive integer or does not refer to a stored task.
+     * Parses the task number from the given command into a zero-based index.
+     * Prints a message and returns {@code null} if the number is not a valid positive integer
+     * or does not refer to a stored task.
      *
-     * @param command   the user's input, e.g. "mark 2"
-     * @param prefixLen the length of the command prefix (e.g. "mark ")
-     * @param taskCount the number of tasks stored
-     * @return the 0-based task index, or {@code null} if invalid
+     * @param command The user's input, for example, "mark 2".
+     * @param prefixLength The length of the command prefix, for example, "mark ".
+     * @param taskCount The number of tasks stored.
+     * @return The zero-based task index, or {@code null} if invalid.
      */
-    private static Integer parseIndex(String command, int prefixLen, int taskCount) {
+    private static Integer parseIndex(String command, int prefixLength, int taskCount) {
         int index;
         try {
-            index = Integer.parseInt(command.substring(prefixLen).trim()) - 1;
-        } catch (NumberFormatException e) {
+            index = Integer.parseInt(command.substring(prefixLength).trim()) - 1;
+        } catch (NumberFormatException exception) {
             System.out.println("     Please give me a task number, e.g. \"mark 2\".");
             return null;
         }
+
         if (index < 0 || index >= taskCount) {
             System.out.println("     There is no task with that number.");
             return null;
         }
+
         return index;
     }
 }
