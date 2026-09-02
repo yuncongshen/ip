@@ -1,68 +1,24 @@
 package alpha;
 
 /**
- * Represents a task in the Alpha chatbot application.
- * Each task has a description, a type (ToDo, Deadline, or Event),
- * optional date/time fields, and a done status that can be toggled.
+ * Represents the common behaviour shared by all task types in the Alpha
+ * chatbot application. Each task has a description and a done status that
+ * can be toggled. Subclasses {@code Todo}, {@code Deadline}, and
+ * {@code Event} add their own type-specific details.
  */
 public class Task {
-    private String description;
+    protected String description;
     private boolean isDone;
-    private String type;
-    private String by;
-    private String from;
-    private String to;
 
     /**
-     * Creates a new task with the given description, type, and optional time fields.
+     * Creates a new task with the given description.
      * A new task is not done by default.
      *
      * @param description The text describing the task.
-     * @param type The task type: "T" for ToDo, "D" for Deadline, "E" for Event.
-     * @param by The deadline datetime, or {@code null} for non-deadline tasks.
-     * @param from The event start datetime, or {@code null} for non-event tasks.
-     * @param to The event end datetime, or {@code null} for non-event tasks.
      */
-    public Task(String description, String type, String by, String from, String to) {
+    public Task(String description) {
         this.description = description;
         this.isDone = false;
-        this.type = type;
-        this.by = by;
-        this.from = from;
-        this.to = to;
-    }
-
-    /**
-     * Creates a ToDo task with the given description.
-     *
-     * @param description The text describing the task.
-     * @return A new ToDo task.
-     */
-    public static Task createTodo(String description) {
-        return new Task(description, "T", null, null, null);
-    }
-
-    /**
-     * Creates a Deadline task with the given description and deadline.
-     *
-     * @param description The text describing the task.
-     * @param by The deadline datetime.
-     * @return A new Deadline task.
-     */
-    public static Task createDeadline(String description, String by) {
-        return new Task(description, "D", by, null, null);
-    }
-
-    /**
-     * Creates an Event task with the given description, start, and end datetimes.
-     *
-     * @param description The text describing the task.
-     * @param from The event start datetime.
-     * @param to The event end datetime.
-     * @return A new Event task.
-     */
-    public static Task createEvent(String description, String from, String to) {
-        return new Task(description, "E", null, from, to);
     }
 
     /**
@@ -98,21 +54,14 @@ public class Task {
     }
 
     /**
-     * Returns a string representation of this task including its type and status.
-     * ToDo tasks are shown as "[T][X] desc".
-     * Deadline tasks are shown as "[D][ ] desc (by: datetime)".
-     * Event tasks are shown as "[E][ ] desc (from: start to: end)".
+     * Returns the common part of this task's string representation, including
+     * its status and description. Subclasses prepend their type marker and
+     * append their type-specific details.
      *
-     * @return The string representation.
+     * @return The string representation of the status and description.
      */
     @Override
     public String toString() {
-        String base = "[" + type + "][" + getStatusIcon() + "] " + description;
-        if (type.equals("D")) {
-            return base + " (by: " + by + ")";
-        } else if (type.equals("E")) {
-            return base + " (from: " + from + " to: " + to + ")";
-        }
-        return base;
+        return "[" + getStatusIcon() + "] " + description;
     }
 }
