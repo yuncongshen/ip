@@ -10,7 +10,8 @@ public class Alpha {
 
     /**
      * Greets the user, manages tasks, lists them on request, and exits on {@code bye}.
-     * Supported commands are {@code list}, {@code mark}, {@code unmark}, and {@code bye}.
+     * Supported commands are {@code todo}, {@code deadline}, {@code event},
+     * {@code list}, {@code mark}, {@code unmark}, and {@code bye}.
      *
      * @param args Command-line arguments, which are not used.
      */
@@ -46,10 +47,18 @@ public class Alpha {
                 markTask(command, tasks, taskCount);
             } else if (command.startsWith("unmark ")) {
                 unmarkTask(command, tasks, taskCount);
+            } else if (command.startsWith("todo ")) {
+                taskCount = addTodo(command, tasks, taskCount);
+            } else if (command.startsWith("deadline ")) {
+                taskCount = addDeadline(command, tasks, taskCount);
+            } else if (command.startsWith("event ")) {
+                taskCount = addEvent(command, tasks, taskCount);
             } else if (taskCount < MAX_TASKS) {
-                tasks[taskCount] = new Task(command);
+                tasks[taskCount] = Task.createTodo(command);
                 taskCount++;
-                System.out.println("     added: " + command);
+                System.out.println("     Got it. I've added this task:");
+                System.out.println("       " + tasks[taskCount - 1]);
+                System.out.println("     Now you have " + taskCount + " tasks in the list.");
             } else {
                 System.out.println("     I cannot store more than " + MAX_TASKS + " tasks.");
             }
@@ -118,5 +127,87 @@ public class Alpha {
         }
 
         return index;
+    }
+
+    /**
+     * Adds a ToDo task described in the given command to the task array.
+     *
+     * @param command The user's input, for example, "todo borrow book".
+     * @param tasks The array of tasks.
+     * @param taskCount The number of tasks stored.
+     * @return The updated number of tasks stored.
+     */
+    private static int addTodo(String command, Task[] tasks, int taskCount) {
+        if (taskCount >= MAX_TASKS) {
+            System.out.println("     I cannot store more than " + MAX_TASKS + " tasks.");
+            return taskCount;
+        }
+
+        String description = command.substring("todo ".length());
+        tasks[taskCount] = Task.createTodo(description);
+        return printAdded(tasks, taskCount);
+    }
+
+    /**
+     * Adds a Deadline task described in the given command to the task array.
+     * The description and deadline are separated by the "/by" marker.
+     *
+     * @param command The user's input, for example, "deadline return book /by Sunday".
+     * @param tasks The array of tasks.
+     * @param taskCount The number of tasks stored.
+     * @return The updated number of tasks stored.
+     */
+    private static int addDeadline(String command, Task[] tasks, int taskCount) {
+        if (taskCount >= MAX_TASKS) {
+            System.out.println("     I cannot store more than " + MAX_TASKS + " tasks.");
+            return taskCount;
+        }
+
+        String body = command.substring("deadline ".length());
+        String[] parts = body.split(" /by ", 2);
+        String description = parts[0];
+        String by = parts.length > 1 ? parts[1] : "";
+        tasks[taskCount] = Task.createDeadline(description, by);
+        return printAdded(tasks, taskCount);
+    }
+
+    /**
+     * Adds an Event task described in the given command to the task array.
+     * The description and start/end datetimes are separated by the "/from" and "/to" markers.
+     *
+     * @param command The user's input, for example, "event meeting /from Mon 2pm /to 4pm".
+     * @param tasks The array of tasks.
+     * @param taskCount The number of tasks stored.
+     * @return The updated number of tasks stored.
+     */
+    private static int addEvent(String command, Task[] tasks, int taskCount) {
+        if (taskCount >= MAX_TASKS) {
+            System.out.println("     I cannot store more than " + MAX_TASKS + " tasks.");
+            return taskCount;
+        }
+
+        String body = command.substring("event ".length());
+        String[] parts = body.split(" /from ", 2);
+        String description = parts[0];
+        String[] times = parts.length > 1 ? parts[1].split(" /to ", 2) : new String[]{"", ""};
+        String from = times[0];
+        String to = times.length > 1 ? times[1] : "";
+        tasks[taskCount] = Task.createEvent(description, from, to);
+        return printAdded(tasks, taskCount);
+    }
+
+    /**
+     * Prints a confirmation message for the newly added task and returns the updated task count.
+     *
+     * @param tasks The array of tasks.
+     * @param taskCount The number of tasks stored before the addition.
+     * @return The updated number of tasks stored.
+     */
+    private static int printAdded(Task[] tasks, int taskCount) {
+        taskCount++;
+        System.out.println("     Got it. I've added this task:");
+        System.out.println("       " + tasks[taskCount - 1]);
+        System.out.println("     Now you have " + taskCount + " tasks in the list.");
+        return taskCount;
     }
 }
