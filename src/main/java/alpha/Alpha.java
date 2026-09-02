@@ -2,8 +2,9 @@ package alpha;
 
 import java.util.Scanner;
 
-
- //Runs the Alpha chatbot command-line application.
+/**
+ * Runs the Alpha chatbot command-line application.
+ */
 public class Alpha {
     private static final String DIVIDER = "    ____________________________________________________________";
     private static final int MAX_TASKS = 100;
@@ -38,32 +39,46 @@ public class Alpha {
                 break;
             }
 
-            if (command.equals("list")) {
-                System.out.println("     Here are the tasks in your list:");
-                for (int i = 0; i < taskCount; i++) {
-                    System.out.println("     " + (i + 1) + "." + tasks[i]);
-                }
-            } else if (command.startsWith("mark ")) {
-                markTask(command, tasks, taskCount);
-            } else if (command.startsWith("unmark ")) {
-                unmarkTask(command, tasks, taskCount);
-            } else if (command.startsWith("todo ")) {
-                taskCount = addTodo(command, tasks, taskCount);
-            } else if (command.startsWith("deadline ")) {
-                taskCount = addDeadline(command, tasks, taskCount);
-            } else if (command.startsWith("event ")) {
-                taskCount = addEvent(command, tasks, taskCount);
-            } else if (taskCount < MAX_TASKS) {
-                tasks[taskCount] = new Todo(command);
-                taskCount++;
-                System.out.println("     Got it. I've added this task:");
-                System.out.println("       " + tasks[taskCount - 1]);
-                System.out.println("     Now you have " + taskCount + " tasks in the list.");
-            } else {
-                System.out.println("     I cannot store more than " + MAX_TASKS + " tasks.");
-            }
+            taskCount = processCommand(command, tasks, taskCount);
             System.out.println(DIVIDER);
         }
+    }
+
+    /**
+     * Processes a non-exit command and returns the resulting task count.
+     *
+     * @param command The user's command.
+     * @param tasks The array of tasks.
+     * @param taskCount The number of tasks stored.
+     * @return The number of tasks stored after processing the command.
+     */
+    private static int processCommand(String command, Task[] tasks, int taskCount) {
+        if (command.equals("list")) {
+            System.out.println("     Here are the tasks in your list:");
+            for (int i = 0; i < taskCount; i++) {
+                System.out.println("     " + (i + 1) + "." + tasks[i]);
+            }
+        } else if (command.startsWith("mark ")) {
+            markTask(command, tasks, taskCount);
+        } else if (command.startsWith("unmark ")) {
+            unmarkTask(command, tasks, taskCount);
+        } else if (command.startsWith("todo ")) {
+            taskCount = addTodo(command, tasks, taskCount);
+        } else if (command.startsWith("deadline ")) {
+            taskCount = addDeadline(command, tasks, taskCount);
+        } else if (command.startsWith("event ")) {
+            taskCount = addEvent(command, tasks, taskCount);
+        } else if (taskCount < MAX_TASKS) {
+            tasks[taskCount] = new Todo(command);
+            taskCount++;
+            System.out.println("     Got it. I've added this task:");
+            System.out.println("       " + tasks[taskCount - 1]);
+            System.out.println("     Now you have " + taskCount + " tasks in the list.");
+        } else {
+            System.out.println("     I cannot store more than " + MAX_TASKS + " tasks.");
+        }
+
+        return taskCount;
     }
 
     /**
@@ -189,7 +204,7 @@ public class Alpha {
         String body = command.substring("event ".length());
         String[] parts = body.split(" /from ", 2);
         String description = parts[0];
-        String[] times = parts.length > 1 ? parts[1].split(" /to ", 2) : new String[]{"", ""};
+        String[] times = parts.length > 1 ? parts[1].split(" /to ", 2) : new String[] {"", ""};
         String from = times[0];
         String to = times.length > 1 ? times[1] : "";
         tasks[taskCount] = new Event(description, from, to);
