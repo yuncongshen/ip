@@ -1,5 +1,10 @@
 package alpha;
 
+import alpha.task.Deadline;
+import alpha.task.Event;
+import alpha.task.Task;
+import alpha.task.Todo;
+
 import java.util.Scanner;
 
 /**

@@ -1,4 +1,4 @@
-package alpha;
+package alpha.task;
 
 /**
  * Represents the common behaviour shared by all task types in the Alpha
