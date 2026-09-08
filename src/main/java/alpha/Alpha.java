@@ -62,20 +62,14 @@ public class Alpha {
             markTask(command, tasks, taskCount);
         } else if (command.startsWith("unmark ")) {
             unmarkTask(command, tasks, taskCount);
-        } else if (command.startsWith("todo ")) {
+        } else if (command.equals("todo") || command.startsWith("todo ")) {
             taskCount = addTodo(command, tasks, taskCount);
-        } else if (command.startsWith("deadline ")) {
+        } else if (command.equals("deadline") || command.startsWith("deadline ")) {
             taskCount = addDeadline(command, tasks, taskCount);
-        } else if (command.startsWith("event ")) {
+        } else if (command.equals("event") || command.startsWith("event ")) {
             taskCount = addEvent(command, tasks, taskCount);
-        } else if (taskCount < MAX_TASKS) {
-            tasks[taskCount] = new Todo(command);
-            taskCount++;
-            System.out.println("     Got it. I've added this task:");
-            System.out.println("       " + tasks[taskCount - 1]);
-            System.out.println("     Now you have " + taskCount + " tasks in the list.");
         } else {
-            System.out.println("     I cannot store more than " + MAX_TASKS + " tasks.");
+            System.out.println("     Bro, I don't know what that means...");
         }
 
         return taskCount;
@@ -158,7 +152,13 @@ public class Alpha {
             return taskCount;
         }
 
-        String description = command.substring("todo ".length());
+        String description = command.length() > "todo ".length()
+                ? command.substring("todo ".length()).trim()
+                : "";
+        if (description.isEmpty()) {
+            System.out.println("     Bro, please add a description...");
+            return taskCount;
+        }
         tasks[taskCount] = new Todo(description);
         return printAdded(tasks, taskCount);
     }
@@ -178,9 +178,15 @@ public class Alpha {
             return taskCount;
         }
 
-        String body = command.substring("deadline ".length());
+        String body = command.length() > "deadline ".length()
+                ? command.substring("deadline ".length()).trim()
+                : "";
         String[] parts = body.split(" /by ", 2);
         String description = parts[0];
+        if (description.isEmpty()) {
+            System.out.println("     Bro, please add a description...");
+            return taskCount;
+        }
         String by = parts.length > 1 ? parts[1] : "";
         tasks[taskCount] = new Deadline(description, by);
         return printAdded(tasks, taskCount);
@@ -201,9 +207,15 @@ public class Alpha {
             return taskCount;
         }
 
-        String body = command.substring("event ".length());
+        String body = command.length() > "event ".length()
+                ? command.substring("event ".length()).trim()
+                : "";
         String[] parts = body.split(" /from ", 2);
         String description = parts[0];
+        if (description.isEmpty()) {
+            System.out.println("     Bro, please add a description...");
+            return taskCount;
+        }
         String[] times = parts.length > 1 ? parts[1].split(" /to ", 2) : new String[] {"", ""};
         String from = times[0];
         String to = times.length > 1 ? times[1] : "";
