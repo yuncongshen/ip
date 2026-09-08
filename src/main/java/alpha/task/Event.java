@@ -1,4 +1,4 @@
-package alpha;
+package alpha.task;
 
 /**
  * Represents an Event task, which has a description and start and end

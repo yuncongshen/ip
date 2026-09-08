@@ -1,4 +1,4 @@
-package alpha;
+package alpha.task;
 
 /**
  * Represents a ToDo task, which has only a description and no deadline or

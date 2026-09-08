@@ -1,4 +1,4 @@
-package alpha;
+package alpha.task;
 
 /**
  * Represents a Deadline task, which has a description and a deadline.
