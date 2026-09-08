@@ -39,7 +39,11 @@ public class Alpha {
                 break;
             }
 
-            taskCount = processCommand(command, tasks, taskCount);
+            try {
+                taskCount = processCommand(command, tasks, taskCount);
+            } catch (AlphaException exception) {
+                printError(exception.getMessage());
+            }
             System.out.println(DIVIDER);
         }
     }
@@ -51,8 +55,10 @@ public class Alpha {
      * @param tasks The array of tasks.
      * @param taskCount The number of tasks stored.
      * @return The number of tasks stored after processing the command.
+     * @throws AlphaException If the command is unrecognized.
      */
-    private static int processCommand(String command, Task[] tasks, int taskCount) {
+    private static int processCommand(String command, Task[] tasks, int taskCount)
+            throws AlphaException {
         if (command.equals("list")) {
             System.out.println("     Here are the tasks in your list:");
             for (int i = 0; i < taskCount; i++) {
@@ -62,20 +68,14 @@ public class Alpha {
             markTask(command, tasks, taskCount);
         } else if (command.startsWith("unmark ")) {
             unmarkTask(command, tasks, taskCount);
-        } else if (command.startsWith("todo ")) {
+        } else if (command.equals("todo") || command.startsWith("todo ")) {
             taskCount = addTodo(command, tasks, taskCount);
-        } else if (command.startsWith("deadline ")) {
+        } else if (command.equals("deadline") || command.startsWith("deadline ")) {
             taskCount = addDeadline(command, tasks, taskCount);
-        } else if (command.startsWith("event ")) {
+        } else if (command.equals("event") || command.startsWith("event ")) {
             taskCount = addEvent(command, tasks, taskCount);
-        } else if (taskCount < MAX_TASKS) {
-            tasks[taskCount] = new Todo(command);
-            taskCount++;
-            System.out.println("     Got it. I've added this task:");
-            System.out.println("       " + tasks[taskCount - 1]);
-            System.out.println("     Now you have " + taskCount + " tasks in the list.");
         } else {
-            System.out.println("     I cannot store more than " + MAX_TASKS + " tasks.");
+            throw new AlphaException("Bro, I don't know what that means...");
         }
 
         return taskCount;
@@ -87,12 +87,11 @@ public class Alpha {
      * @param command The user's input, for example, "mark 2".
      * @param tasks The array of tasks.
      * @param taskCount The number of tasks stored.
+     * @throws AlphaException If the task number is invalid.
      */
-    private static void markTask(String command, Task[] tasks, int taskCount) {
-        Integer index = parseIndex(command, 5, taskCount);
-        if (index == null) {
-            return;
-        }
+    private static void markTask(String command, Task[] tasks, int taskCount)
+            throws AlphaException {
+        int index = parseIndex(command, 5, taskCount);
 
         tasks[index].markAsDone();
         System.out.println("     Nice! I've marked this task as done:");
@@ -105,12 +104,11 @@ public class Alpha {
      * @param command The user's input, for example, "unmark 2".
      * @param tasks The array of tasks.
      * @param taskCount The number of tasks stored.
+     * @throws AlphaException If the task number is invalid.
      */
-    private static void unmarkTask(String command, Task[] tasks, int taskCount) {
-        Integer index = parseIndex(command, 7, taskCount);
-        if (index == null) {
-            return;
-        }
+    private static void unmarkTask(String command, Task[] tasks, int taskCount)
+            throws AlphaException {
+        int index = parseIndex(command, 7, taskCount);
 
         tasks[index].markAsNotDone();
         System.out.println("     OK, I've marked this task as not done yet:");
@@ -119,29 +117,37 @@ public class Alpha {
 
     /**
      * Parses the task number from the given command into a zero-based index.
-     * Prints a message and returns {@code null} if the number is not a valid positive integer
-     * or does not refer to a stored task.
      *
      * @param command The user's input, for example, "mark 2".
      * @param prefixLength The length of the command prefix, for example, "mark ".
      * @param taskCount The number of tasks stored.
-     * @return The zero-based task index, or {@code null} if invalid.
+     * @return The zero-based task index.
+     * @throws AlphaException If the number is not a valid positive integer
+     *                        or does not refer to a stored task.
      */
-    private static Integer parseIndex(String command, int prefixLength, int taskCount) {
+    private static int parseIndex(String command, int prefixLength, int taskCount)
+            throws AlphaException {
         int index;
         try {
             index = Integer.parseInt(command.substring(prefixLength).trim()) - 1;
         } catch (NumberFormatException exception) {
-            System.out.println("     Please give me a task number, e.g. \"mark 2\".");
-            return null;
+            throw new AlphaException("Please give me a task number, e.g. \"mark 2\"...");
         }
 
         if (index < 0 || index >= taskCount) {
-            System.out.println("     There is no task with that number.");
-            return null;
+            throw new AlphaException("There is no task with that number...");
         }
 
         return index;
+    }
+
+    /**
+     * Prints the given error message indented as chatbot output.
+     *
+     * @param message The error message to display.
+     */
+    private static void printError(String message) {
+        System.out.println("     " + message);
     }
 
     /**
@@ -151,14 +157,20 @@ public class Alpha {
      * @param tasks The array of tasks.
      * @param taskCount The number of tasks stored.
      * @return The updated number of tasks stored.
+     * @throws AlphaException If the description is empty or the task array is full.
      */
-    private static int addTodo(String command, Task[] tasks, int taskCount) {
+    private static int addTodo(String command, Task[] tasks, int taskCount)
+            throws AlphaException {
         if (taskCount >= MAX_TASKS) {
-            System.out.println("     I cannot store more than " + MAX_TASKS + " tasks.");
-            return taskCount;
+            throw new AlphaException("I cannot store more than " + MAX_TASKS + " tasks...");
         }
 
-        String description = command.substring("todo ".length());
+        String description = command.length() > "todo ".length()
+                ? command.substring("todo ".length()).trim()
+                : "";
+        if (description.isEmpty()) {
+            throw new AlphaException("Bro, please add a description...");
+        }
         tasks[taskCount] = new Todo(description);
         return printAdded(tasks, taskCount);
     }
@@ -171,16 +183,22 @@ public class Alpha {
      * @param tasks The array of tasks.
      * @param taskCount The number of tasks stored.
      * @return The updated number of tasks stored.
+     * @throws AlphaException If the description is empty or the task array is full.
      */
-    private static int addDeadline(String command, Task[] tasks, int taskCount) {
+    private static int addDeadline(String command, Task[] tasks, int taskCount)
+            throws AlphaException {
         if (taskCount >= MAX_TASKS) {
-            System.out.println("     I cannot store more than " + MAX_TASKS + " tasks.");
-            return taskCount;
+            throw new AlphaException("I cannot store more than " + MAX_TASKS + " tasks...");
         }
 
-        String body = command.substring("deadline ".length());
+        String body = command.length() > "deadline ".length()
+                ? command.substring("deadline ".length()).trim()
+                : "";
         String[] parts = body.split(" /by ", 2);
         String description = parts[0];
+        if (description.isEmpty()) {
+            throw new AlphaException("Bro, please add a description...");
+        }
         String by = parts.length > 1 ? parts[1] : "";
         tasks[taskCount] = new Deadline(description, by);
         return printAdded(tasks, taskCount);
@@ -194,16 +212,22 @@ public class Alpha {
      * @param tasks The array of tasks.
      * @param taskCount The number of tasks stored.
      * @return The updated number of tasks stored.
+     * @throws AlphaException If the description is empty or the task array is full.
      */
-    private static int addEvent(String command, Task[] tasks, int taskCount) {
+    private static int addEvent(String command, Task[] tasks, int taskCount)
+            throws AlphaException {
         if (taskCount >= MAX_TASKS) {
-            System.out.println("     I cannot store more than " + MAX_TASKS + " tasks.");
-            return taskCount;
+            throw new AlphaException("I cannot store more than " + MAX_TASKS + " tasks...");
         }
 
-        String body = command.substring("event ".length());
+        String body = command.length() > "event ".length()
+                ? command.substring("event ".length()).trim()
+                : "";
         String[] parts = body.split(" /from ", 2);
         String description = parts[0];
+        if (description.isEmpty()) {
+            throw new AlphaException("Bro, please add a description...");
+        }
         String[] times = parts.length > 1 ? parts[1].split(" /to ", 2) : new String[] {"", ""};
         String from = times[0];
         String to = times.length > 1 ? times[1] : "";
