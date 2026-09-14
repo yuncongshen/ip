@@ -17,7 +17,7 @@ public class Alpha {
     /**
      * Greets the user, manages tasks, lists them on request, and exits on {@code bye}.
      * Supported commands are {@code todo}, {@code deadline}, {@code event},
-     * {@code list}, {@code mark}, {@code unmark}, and {@code bye}.
+     * {@code list}, {@code mark}, {@code unmark}, {@code delete}, and {@code bye}.
      *
      * @param args Command-line arguments, which are not used.
      */
@@ -73,6 +73,8 @@ public class Alpha {
             markTask(command, tasks, taskCount);
         } else if (command.startsWith("unmark ")) {
             unmarkTask(command, tasks, taskCount);
+        } else if (command.equals("delete") || command.startsWith("delete ")) {
+            taskCount = deleteTask(command, tasks, taskCount);
         } else if (command.equals("todo") || command.startsWith("todo ")) {
             taskCount = addTodo(command, tasks, taskCount);
         } else if (command.equals("deadline") || command.startsWith("deadline ")) {
@@ -118,6 +120,31 @@ public class Alpha {
         tasks[index].markAsNotDone();
         System.out.println("     OK, I've marked this task as not done yet:");
         System.out.println("       " + tasks[index]);
+    }
+
+    /**
+     * Deletes a task and shifts the remaining tasks to keep the array contiguous.
+     *
+     * @param command The user's input, for example, "delete 3".
+     * @param tasks The array of tasks.
+     * @param taskCount The number of tasks stored.
+     * @return The number of tasks remaining after deletion.
+     * @throws AlphaException If the task number is missing or invalid.
+     */
+    private static int deleteTask(String command, Task[] tasks, int taskCount)
+            throws AlphaException {
+        int index = parseIndex(command, "delete".length(), taskCount);
+        Task deletedTask = tasks[index];
+        for (int i = index; i < taskCount - 1; i++) {
+            tasks[i] = tasks[i + 1];
+        }
+        taskCount--;
+        tasks[taskCount] = null;
+
+        System.out.println("     Noted. I've removed this task:");
+        System.out.println("       " + deletedTask);
+        System.out.println("     Now you have " + taskCount + " tasks in the list.");
+        return taskCount;
     }
 
     /**
