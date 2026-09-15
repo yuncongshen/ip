@@ -1,0 +1,38 @@
+plugins {
+    id 'application'
+    id 'com.gradleup.shadow' version '9.5.1'
+}
+
+repositories {
+    mavenCentral()
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.release = 25
+}
+
+application {
+    mainClass = 'alpha.Alpha'
+}
+
+tasks.named('shadowJar') {
+    archiveFileName = 'alpha.jar'
+    mergeServiceFiles()
+}
+
+tasks.named('jar') {
+    // Only distribute the fat JAR; keep the disabled lean JAR's filename distinct.
+    enabled = false
+    archiveClassifier = 'without-dependencies'
+}
+
+tasks.named('run') {
+    standardInput = System.in
+}

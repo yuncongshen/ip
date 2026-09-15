@@ -17,6 +17,10 @@ public class Deadline extends Task {
         this.by = by;
     }
 
+    public String getBy() {
+        return by;
+    }
+
     /**
      * Returns a string representation of this task in the form
      * {@code [D][ ] description (by: datetime)}.

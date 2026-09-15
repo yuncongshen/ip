@@ -5,6 +5,7 @@ import alpha.task.Event;
 import alpha.task.Task;
 import alpha.task.Todo;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -13,9 +14,10 @@ import java.util.Scanner;
  */
 public class Alpha {
     private static final String DIVIDER = "    ____________________________________________________________";
+    private static final Storage STORAGE = new Storage(Path.of("data", "alpha.txt"));
 
     /**
-     * Greets the user, manages tasks, lists them on request, and exits on {@code bye}.
+     * Greets the user, restores saved tasks, manages them, and exits on {@code bye}.
      * Supported commands are {@code todo}, {@code deadline}, {@code event},
      * {@code list}, {@code mark}, {@code unmark}, {@code delete}, and {@code bye}.
      *
@@ -33,6 +35,13 @@ public class Alpha {
         System.out.println(DIVIDER);
 
         ArrayList<Task> tasks = new ArrayList<>();
+        try {
+            STORAGE.load(tasks);
+        } catch (AlphaException exception) {
+            printError(exception.getMessage());
+            System.out.println(DIVIDER);
+            return;
+        }
         Scanner scanner = new Scanner(System.in);
         while (scanner.hasNextLine()) {
             String command = scanner.nextLine();
@@ -57,7 +66,7 @@ public class Alpha {
      *
      * @param command The user's command.
      * @param tasks The list of tasks.
-     * @throws AlphaException If the command is unrecognized.
+     * @throws AlphaException If the command is invalid or its change cannot be saved.
      */
     private static void processCommand(String command, ArrayList<Task> tasks)
             throws AlphaException {
@@ -66,9 +75,9 @@ public class Alpha {
             for (int i = 0; i < tasks.size(); i++) {
                 System.out.println("     " + (i + 1) + "." + tasks.get(i));
             }
-        } else if (command.startsWith("mark ")) {
+        } else if (command.equals("mark") || command.startsWith("mark ")) {
             markTask(command, tasks);
-        } else if (command.startsWith("unmark ")) {
+        } else if (command.equals("unmark") || command.startsWith("unmark ")) {
             unmarkTask(command, tasks);
         } else if (command.equals("delete") || command.startsWith("delete ")) {
             deleteTask(command, tasks);
@@ -88,13 +97,22 @@ public class Alpha {
      *
      * @param command The user's input, for example, "mark 2".
      * @param tasks The list of tasks.
-     * @throws AlphaException If the task number is invalid.
+     * @throws AlphaException If the task number is invalid or its change cannot be saved.
      */
     private static void markTask(String command, ArrayList<Task> tasks)
             throws AlphaException {
-        int index = parseIndex(command, 5, tasks.size());
+        int index = parseIndex(command, "mark".length(), tasks.size());
 
+        boolean wasDone = tasks.get(index).getStatusIcon().equals("X");
         tasks.get(index).markAsDone();
+        try {
+            STORAGE.save(tasks);
+        } catch (AlphaException exception) {
+            if (!wasDone) {
+                tasks.get(index).markAsNotDone();
+            }
+            throw exception;
+        }
         System.out.println("     Nice! I've marked this task as done:");
         System.out.println("       " + tasks.get(index));
     }
@@ -104,13 +122,22 @@ public class Alpha {
      *
      * @param command The user's input, for example, "unmark 2".
      * @param tasks The list of tasks.
-     * @throws AlphaException If the task number is invalid.
+     * @throws AlphaException If the task number is invalid or its change cannot be saved.
      */
     private static void unmarkTask(String command, ArrayList<Task> tasks)
             throws AlphaException {
-        int index = parseIndex(command, 7, tasks.size());
+        int index = parseIndex(command, "unmark".length(), tasks.size());
 
+        boolean wasDone = tasks.get(index).getStatusIcon().equals("X");
         tasks.get(index).markAsNotDone();
+        try {
+            STORAGE.save(tasks);
+        } catch (AlphaException exception) {
+            if (wasDone) {
+                tasks.get(index).markAsDone();
+            }
+            throw exception;
+        }
         System.out.println("     OK, I've marked this task as not done yet:");
         System.out.println("       " + tasks.get(index));
     }
@@ -120,12 +147,18 @@ public class Alpha {
      *
      * @param command The user's input, for example, "delete 3".
      * @param tasks The list of tasks.
-     * @throws AlphaException If the task number is missing or invalid.
+     * @throws AlphaException If the task number is missing, invalid, or deletion cannot be saved.
      */
     private static void deleteTask(String command, ArrayList<Task> tasks)
             throws AlphaException {
         int index = parseIndex(command, "delete".length(), tasks.size());
         Task deletedTask = tasks.remove(index);
+        try {
+            STORAGE.save(tasks);
+        } catch (AlphaException exception) {
+            tasks.add(index, deletedTask);
+            throw exception;
+        }
 
         System.out.println("     Noted. I've removed this task:");
         System.out.println("       " + deletedTask);
@@ -144,18 +177,18 @@ public class Alpha {
      */
     private static int parseIndex(String command, int prefixLength, int taskCount)
             throws AlphaException {
-        int index;
+        int taskNumber;
         try {
-            index = Integer.parseInt(command.substring(prefixLength).trim()) - 1;
+            taskNumber = Integer.parseInt(command.substring(prefixLength).trim());
         } catch (NumberFormatException exception) {
             throw new AlphaException("Please give me a task number, e.g. \"mark 2\"...");
         }
 
-        if (index < 0 || index >= taskCount) {
+        if (taskNumber <= 0 || taskNumber > taskCount) {
             throw new AlphaException("There is no task with that number...");
         }
 
-        return index;
+        return taskNumber - 1;
     }
 
     /**
@@ -235,11 +268,18 @@ public class Alpha {
     }
 
     /**
-     * Prints a confirmation message for the newly added task.
+     * Saves an addition before confirming it, removing the new task if saving fails.
      *
      * @param tasks The list of tasks.
+     * @throws AlphaException If the addition cannot be saved.
      */
-    private static void printAdded(ArrayList<Task> tasks) {
+    private static void printAdded(ArrayList<Task> tasks) throws AlphaException {
+        try {
+            STORAGE.save(tasks);
+        } catch (AlphaException exception) {
+            tasks.remove(tasks.size() - 1);
+            throw exception;
+        }
         System.out.println("     Got it. I've added this task:");
         System.out.println("       " + tasks.get(tasks.size() - 1));
         System.out.println("     Now you have " + tasks.size() + " tasks in the list.");
