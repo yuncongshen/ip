@@ -5,6 +5,7 @@ import alpha.task.Event;
 import alpha.task.Task;
 import alpha.task.Todo;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -12,7 +13,6 @@ import java.util.Scanner;
  */
 public class Alpha {
     private static final String DIVIDER = "    ____________________________________________________________";
-    private static final int MAX_TASKS = 100;
 
     /**
      * Greets the user, manages tasks, lists them on request, and exits on {@code bye}.
@@ -32,8 +32,7 @@ public class Alpha {
         System.out.println("Yooo! I'm Alpha. What can I help you with today?");
         System.out.println(DIVIDER);
 
-        Task[] tasks = new Task[MAX_TASKS];
-        int taskCount = 0;
+        ArrayList<Task> tasks = new ArrayList<>();
         Scanner scanner = new Scanner(System.in);
         while (scanner.hasNextLine()) {
             String command = scanner.nextLine();
@@ -45,7 +44,7 @@ public class Alpha {
             }
 
             try {
-                taskCount = processCommand(command, tasks, taskCount);
+                processCommand(command, tasks);
             } catch (AlphaException exception) {
                 printError(exception.getMessage());
             }
@@ -54,97 +53,83 @@ public class Alpha {
     }
 
     /**
-     * Processes a non-exit command and returns the resulting task count.
+     * Processes a non-exit command and updates the task list.
      *
      * @param command The user's command.
-     * @param tasks The array of tasks.
-     * @param taskCount The number of tasks stored.
-     * @return The number of tasks stored after processing the command.
+     * @param tasks The list of tasks.
      * @throws AlphaException If the command is unrecognized.
      */
-    private static int processCommand(String command, Task[] tasks, int taskCount)
+    private static void processCommand(String command, ArrayList<Task> tasks)
             throws AlphaException {
         if (command.equals("list")) {
             System.out.println("     Here are the tasks in your list:");
-            for (int i = 0; i < taskCount; i++) {
-                System.out.println("     " + (i + 1) + "." + tasks[i]);
+            for (int i = 0; i < tasks.size(); i++) {
+                System.out.println("     " + (i + 1) + "." + tasks.get(i));
             }
         } else if (command.startsWith("mark ")) {
-            markTask(command, tasks, taskCount);
+            markTask(command, tasks);
         } else if (command.startsWith("unmark ")) {
-            unmarkTask(command, tasks, taskCount);
+            unmarkTask(command, tasks);
         } else if (command.equals("delete") || command.startsWith("delete ")) {
-            taskCount = deleteTask(command, tasks, taskCount);
+            deleteTask(command, tasks);
         } else if (command.equals("todo") || command.startsWith("todo ")) {
-            taskCount = addTodo(command, tasks, taskCount);
+            addTodo(command, tasks);
         } else if (command.equals("deadline") || command.startsWith("deadline ")) {
-            taskCount = addDeadline(command, tasks, taskCount);
+            addDeadline(command, tasks);
         } else if (command.equals("event") || command.startsWith("event ")) {
-            taskCount = addEvent(command, tasks, taskCount);
+            addEvent(command, tasks);
         } else {
             throw new AlphaException("Bro, I don't know what that means...");
         }
-
-        return taskCount;
     }
 
     /**
      * Marks the task at the one-based index in the given command as done.
      *
      * @param command The user's input, for example, "mark 2".
-     * @param tasks The array of tasks.
-     * @param taskCount The number of tasks stored.
+     * @param tasks The list of tasks.
      * @throws AlphaException If the task number is invalid.
      */
-    private static void markTask(String command, Task[] tasks, int taskCount)
+    private static void markTask(String command, ArrayList<Task> tasks)
             throws AlphaException {
-        int index = parseIndex(command, 5, taskCount);
+        int index = parseIndex(command, 5, tasks.size());
 
-        tasks[index].markAsDone();
+        tasks.get(index).markAsDone();
         System.out.println("     Nice! I've marked this task as done:");
-        System.out.println("       " + tasks[index]);
+        System.out.println("       " + tasks.get(index));
     }
 
     /**
      * Marks the task at the one-based index in the given command as not done.
      *
      * @param command The user's input, for example, "unmark 2".
-     * @param tasks The array of tasks.
-     * @param taskCount The number of tasks stored.
+     * @param tasks The list of tasks.
      * @throws AlphaException If the task number is invalid.
      */
-    private static void unmarkTask(String command, Task[] tasks, int taskCount)
+    private static void unmarkTask(String command, ArrayList<Task> tasks)
             throws AlphaException {
-        int index = parseIndex(command, 7, taskCount);
+        int index = parseIndex(command, 7, tasks.size());
 
-        tasks[index].markAsNotDone();
+        tasks.get(index).markAsNotDone();
         System.out.println("     OK, I've marked this task as not done yet:");
-        System.out.println("       " + tasks[index]);
+        System.out.println("       " + tasks.get(index));
     }
 
     /**
-     * Deletes a task and shifts the remaining tasks to keep the array contiguous.
+     * Deletes a task while preserving the order of the remaining tasks.
      *
      * @param command The user's input, for example, "delete 3".
-     * @param tasks The array of tasks.
-     * @param taskCount The number of tasks stored.
-     * @return The number of tasks remaining after deletion.
+     * @param tasks The list of tasks.
      * @throws AlphaException If the task number is missing or invalid.
      */
-    private static int deleteTask(String command, Task[] tasks, int taskCount)
+    private static void deleteTask(String command, ArrayList<Task> tasks)
             throws AlphaException {
-        int index = parseIndex(command, "delete".length(), taskCount);
-        Task deletedTask = tasks[index];
-        for (int i = index; i < taskCount - 1; i++) {
-            tasks[i] = tasks[i + 1];
-        }
-        taskCount--;
-        tasks[taskCount] = null;
+        int index = parseIndex(command, "delete".length(), tasks.size());
+        Task deletedTask = tasks.remove(index);
 
         System.out.println("     Noted. I've removed this task:");
         System.out.println("       " + deletedTask);
-        System.out.println("     Now you have " + taskCount + " tasks in the list.");
-        return taskCount;
+        System.out.println("     Now you have " + tasks.size() + " tasks in the list.");
     }
 
     /**
@@ -183,46 +168,34 @@ public class Alpha {
     }
 
     /**
-     * Adds a ToDo task described in the given command to the task array.
+     * Adds a ToDo task described in the given command to the task list.
      *
      * @param command The user's input, for example, "todo borrow book".
-     * @param tasks The array of tasks.
-     * @param taskCount The number of tasks stored.
-     * @return The updated number of tasks stored.
-     * @throws AlphaException If the description is empty or the task array is full.
+     * @param tasks The list of tasks.
+     * @throws AlphaException If the description is empty.
      */
-    private static int addTodo(String command, Task[] tasks, int taskCount)
+    private static void addTodo(String command, ArrayList<Task> tasks)
             throws AlphaException {
-        if (taskCount >= MAX_TASKS) {
-            throw new AlphaException("I cannot store more than " + MAX_TASKS + " tasks...");
-        }
-
         String description = command.length() > "todo ".length()
                 ? command.substring("todo ".length()).trim()
                 : "";
         if (description.isEmpty()) {
             throw new AlphaException("Bro, please add a description...");
         }
-        tasks[taskCount] = new Todo(description);
-        return printAdded(tasks, taskCount);
+        tasks.add(new Todo(description));
+        printAdded(tasks);
     }
 
     /**
-     * Adds a Deadline task described in the given command to the task array.
+     * Adds a Deadline task described in the given command to the task list.
      * The description and deadline are separated by the "/by" marker.
      *
      * @param command The user's input, for example, "deadline return book /by Sunday".
-     * @param tasks The array of tasks.
-     * @param taskCount The number of tasks stored.
-     * @return The updated number of tasks stored.
-     * @throws AlphaException If the description is empty or the task array is full.
+     * @param tasks The list of tasks.
+     * @throws AlphaException If the description is empty.
      */
-    private static int addDeadline(String command, Task[] tasks, int taskCount)
+    private static void addDeadline(String command, ArrayList<Task> tasks)
             throws AlphaException {
-        if (taskCount >= MAX_TASKS) {
-            throw new AlphaException("I cannot store more than " + MAX_TASKS + " tasks...");
-        }
-
         String body = command.length() > "deadline ".length()
                 ? command.substring("deadline ".length()).trim()
                 : "";
@@ -232,26 +205,20 @@ public class Alpha {
             throw new AlphaException("Bro, please add a description...");
         }
         String by = parts.length > 1 ? parts[1] : "";
-        tasks[taskCount] = new Deadline(description, by);
-        return printAdded(tasks, taskCount);
+        tasks.add(new Deadline(description, by));
+        printAdded(tasks);
     }
 
     /**
-     * Adds an Event task described in the given command to the task array.
+     * Adds an Event task described in the given command to the task list.
      * The description and start/end datetimes are separated by the "/from" and "/to" markers.
      *
      * @param command The user's input, for example, "event meeting /from Mon 2pm /to 4pm".
-     * @param tasks The array of tasks.
-     * @param taskCount The number of tasks stored.
-     * @return The updated number of tasks stored.
-     * @throws AlphaException If the description is empty or the task array is full.
+     * @param tasks The list of tasks.
+     * @throws AlphaException If the description is empty.
      */
-    private static int addEvent(String command, Task[] tasks, int taskCount)
+    private static void addEvent(String command, ArrayList<Task> tasks)
             throws AlphaException {
-        if (taskCount >= MAX_TASKS) {
-            throw new AlphaException("I cannot store more than " + MAX_TASKS + " tasks...");
-        }
-
         String body = command.length() > "event ".length()
                 ? command.substring("event ".length()).trim()
                 : "";
@@ -263,22 +230,18 @@ public class Alpha {
         String[] times = parts.length > 1 ? parts[1].split(" /to ", 2) : new String[] {"", ""};
         String from = times[0];
         String to = times.length > 1 ? times[1] : "";
-        tasks[taskCount] = new Event(description, from, to);
-        return printAdded(tasks, taskCount);
+        tasks.add(new Event(description, from, to));
+        printAdded(tasks);
     }
 
     /**
-     * Prints a confirmation message for the newly added task and returns the updated task count.
+     * Prints a confirmation message for the newly added task.
      *
-     * @param tasks The array of tasks.
-     * @param taskCount The number of tasks stored before the addition.
-     * @return The updated number of tasks stored.
+     * @param tasks The list of tasks.
      */
-    private static int printAdded(Task[] tasks, int taskCount) {
-        taskCount++;
+    private static void printAdded(ArrayList<Task> tasks) {
         System.out.println("     Got it. I've added this task:");
-        System.out.println("       " + tasks[taskCount - 1]);
-        System.out.println("     Now you have " + taskCount + " tasks in the list.");
-        return taskCount;
+        System.out.println("       " + tasks.get(tasks.size() - 1));
+        System.out.println("     Now you have " + tasks.size() + " tasks in the list.");
     }
 }
