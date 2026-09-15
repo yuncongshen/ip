@@ -22,6 +22,14 @@ public class Event extends Task {
         this.to = to;
     }
 
+    public String getFrom() {
+        return from;
+    }
+
+    public String getTo() {
+        return to;
+    }
+
     /**
      * Returns a string representation of this task in the form
      * {@code [E][ ] description (from: start to: end)}.
