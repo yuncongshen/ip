@@ -90,14 +90,14 @@ The `data` directory is created on the first save. Listing tasks, invalid comman
 The application uses the relative path `Path.of("data", "alpha.txt")`; Java supplies the appropriate path separators
 for the host OS. Storage keeps this path relative to the working directory, with no machine-specific drive or folder.
 
-The UTF-8 file uses the version header `ALPHA-1` and one task per line. Records use `|` separators, a type
-(`T`, `D`, or `E`), a completion flag (`0` or `1`), and Base64-encoded UTF-8 text fields. Encoding keeps
-punctuation and line breaks inside a description or time field from being mistaken for record structure.
-Base64 is encoding, not encryption. For example, an unfinished `read book` task is stored as:
+New saves use the header `ALPHA-2` and readable UTF-8 text, with ` | ` between fields. Each record contains
+the task type (`T`, `D`, or `E`), completion flag (`0` or `1`), description, and any time fields:
 
 ```text
-ALPHA-1
-T|0|cmVhZCBib29r
+ALPHA-2
+T | 0 | read book
+D | 1 | return book | June 6th
+E | 0 | project meeting | Monday 2pm | Monday 4pm
 ```
 
 Alpha loads this file on startup, restoring task types, descriptions, time fields, order, and completion status.
@@ -107,7 +107,11 @@ without overwriting it. Blank lines, a leading UTF-8 BOM, and Windows/Unix line 
 Invalid records report their line number; invalid UTF-8 is rejected. Files larger than 1 MiB are rejected as a
 whole. Tasks use an ArrayList, so there is no fixed 100-task limit, including when loading a saved list.
 
-Earlier display-format snapshots are still readable and are converted on the next successful save. If an old
+Special characters are escaped: `\|` for a literal pipe, `\\` for a backslash, and `\n`, `\r`, `\t` for
+newline, carriage return, and tab. Keep the spaces around field separators when editing a file manually.
+
+Existing Base64 (`ALPHA-1`) and earlier display-format snapshots still load and are converted to readable text
+on the next successful task change. Use the rebuilt JAR; older releases cannot read `ALPHA-2` files. If an old
 record has ambiguous time separators, Alpha rejects it rather than guessing how its fields were divided.
 
 Saving writes and flushes a temporary file in the same directory, then atomically replaces the snapshot.

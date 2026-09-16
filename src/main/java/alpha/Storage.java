@@ -31,7 +31,8 @@ import java.util.regex.Pattern;
  * Loads validated snapshots and replaces them atomically without discarding failed or conflicting saves.
  */
 public class Storage {
-    private static final String HEADER = "ALPHA-1";
+    private static final String HEADER = "ALPHA-2";
+    private static final String ENCODED_HEADER = "ALPHA-1";
     private static final int MAX_FILE_BYTES = 1_048_576;
     private final Path file;
     private final Path directory;
@@ -74,14 +75,20 @@ public class Storage {
             while (firstLine < lines.length && lines[firstLine].isBlank()) {
                 firstLine++;
             }
-            boolean isVersioned = firstLine < lines.length && lines[firstLine].equals(HEADER);
+            boolean isReadable = firstLine < lines.length && lines[firstLine].equals(HEADER);
+            boolean isEncoded = firstLine < lines.length && lines[firstLine].equals(ENCODED_HEADER);
+            boolean isVersioned = isReadable || isEncoded;
             ArrayList<Task> restored = new ArrayList<>();
             for (int i = isVersioned ? firstLine + 1 : firstLine; i < lines.length; i++) {
                 if (lines[i].isBlank()) {
                     continue;
                 }
                 try {
-                    restored.add(isVersioned ? parseRecord(lines[i]) : parseLegacyRecord(lines[i]));
+                    if (isReadable) {
+                        restored.add(parseReadableRecord(lines[i]));
+                    } else {
+                        restored.add(isEncoded ? parseRecord(lines[i]) : parseLegacyRecord(lines[i]));
+                    }
                 } catch (IllegalArgumentException exception) {
                     throw new IOException("Invalid task at line " + (i + 1) + ": " + exception.getMessage(),
                             exception);
@@ -206,22 +213,67 @@ public class Storage {
     }
 
     /**
-     * Encodes fields separately so punctuation and line breaks cannot be mistaken for structure.
+     * Writes readable fields, escaping only characters that could disrupt the record structure.
      */
     private static String formatRecord(Task task) {
         if (task.getDescription().isBlank()) {
             throw new IllegalArgumentException("Missing task description");
         }
         String status = task.getStatusIcon().equals("X") ? "1" : "0";
-        String body = status + "|" + encode(task.getDescription());
+        String body = status + " | " + escape(task.getDescription());
         if (task instanceof Deadline deadline) {
-            return "D|" + body + "|" + encode(deadline.getBy());
+            return "D | " + body + " | " + escape(deadline.getBy());
         } else if (task instanceof Event event) {
-            return "E|" + body + "|" + encode(event.getFrom()) + "|" + encode(event.getTo());
+            return "E | " + body + " | " + escape(event.getFrom()) + " | " + escape(event.getTo());
         } else if (task instanceof Todo) {
-            return "T|" + body;
+            return "T | " + body;
         }
         throw new IllegalArgumentException("Unsupported task type");
+    }
+
+    /**
+     * Escapes separators, backslashes, and line-control characters while keeping ordinary text readable.
+     */
+    private static String escape(String field) {
+        return field.replace("\\", "\\\\").replace("|", "\\|")
+                .replace("\n", "\\n").replace("\r", "\\r").replace("\t", "\\t");
+    }
+
+    /**
+     * Decodes only supported escape sequences and rejects incomplete ones.
+     */
+    private static String unescape(String field) {
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < field.length(); i++) {
+            char character = field.charAt(i);
+            if (character != '\\') {
+                result.append(character);
+                continue;
+            }
+            if (++i == field.length()) {
+                throw new IllegalArgumentException("Incomplete escape sequence");
+            }
+            switch (field.charAt(i)) {
+            case '\\' -> result.append('\\');
+            case '|' -> result.append('|');
+            case 'n' -> result.append('\n');
+            case 'r' -> result.append('\r');
+            case 't' -> result.append('\t');
+            default -> throw new IllegalArgumentException("Unknown escape sequence");
+            }
+        }
+        return result.toString();
+    }
+
+    /**
+     * Reads space-padded separators without stripping spaces from task fields.
+     */
+    private static Task parseReadableRecord(String line) {
+        String[] fields = line.split(" \\| ", -1);
+        for (int i = 2; i < fields.length; i++) {
+            fields[i] = unescape(fields[i]);
+        }
+        return createTask(fields);
     }
 
     private static String encode(String field) {
@@ -241,10 +293,20 @@ public class Storage {
      */
     private static Task parseRecord(String line) {
         String[] fields = line.split("\\|", -1);
+        for (int i = 2; i < fields.length; i++) {
+            fields[i] = decode(fields[i]);
+        }
+        return createTask(fields);
+    }
+
+    /**
+     * Constructs a validated task from decoded fields shared by both snapshot versions.
+     */
+    private static Task createTask(String[] fields) {
         if (fields.length < 3 || !(fields[1].equals("0") || fields[1].equals("1"))) {
             throw new IllegalArgumentException("Invalid field count or completion status");
         }
-        String description = decode(fields[2]);
+        String description = fields[2];
         if (description.isBlank()) {
             throw new IllegalArgumentException("Missing task description");
         }
@@ -252,9 +314,9 @@ public class Storage {
         if (fields[0].equals("T") && fields.length == 3) {
             task = new Todo(description);
         } else if (fields[0].equals("D") && fields.length == 4) {
-            task = new Deadline(description, decode(fields[3]));
+            task = new Deadline(description, fields[3]);
         } else if (fields[0].equals("E") && fields.length == 5) {
-            task = new Event(description, decode(fields[3]), decode(fields[4]));
+            task = new Event(description, fields[3], fields[4]);
         } else {
             throw new IllegalArgumentException("Unknown task type or incorrect field count");
         }

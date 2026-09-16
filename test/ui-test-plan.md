@@ -1516,32 +1516,32 @@ Yooo! I'm Alpha. What can I help you with today?
   "steps": [
     {
       "afterInput": 1,
-      "contents": "ALPHA-1\nT|0|cmVhZCBib29r\n"
+      "contents": "ALPHA-2\nT | 0 | read book\n"
     },
     {
       "afterInput": 2,
-      "contents": "ALPHA-1\nT|0|cmVhZCBib29r\nD|0|cmV0dXJuIGJvb2s=|SnVuZSA2dGg=\n"
+      "contents": "ALPHA-2\nT | 0 | read book\nD | 0 | return book | June 6th\n"
     },
     {
       "afterInput": 3,
-      "contents": "ALPHA-1\nT|0|cmVhZCBib29r\nD|0|cmV0dXJuIGJvb2s=|SnVuZSA2dGg=\nE|0|cHJvamVjdCBtZWV0aW5n|QXVnIDZ0aCAycG0=|NHBt\n"
+      "contents": "ALPHA-2\nT | 0 | read book\nD | 0 | return book | June 6th\nE | 0 | project meeting | Aug 6th 2pm | 4pm\n"
     },
     {
       "afterInput": 4,
-      "contents": "ALPHA-1\nT|1|cmVhZCBib29r\nD|0|cmV0dXJuIGJvb2s=|SnVuZSA2dGg=\nE|0|cHJvamVjdCBtZWV0aW5n|QXVnIDZ0aCAycG0=|NHBt\n"
+      "contents": "ALPHA-2\nT | 1 | read book\nD | 0 | return book | June 6th\nE | 0 | project meeting | Aug 6th 2pm | 4pm\n"
     },
     {
       "afterInput": 5,
-      "contents": "ALPHA-1\nT|0|cmVhZCBib29r\nD|0|cmV0dXJuIGJvb2s=|SnVuZSA2dGg=\nE|0|cHJvamVjdCBtZWV0aW5n|QXVnIDZ0aCAycG0=|NHBt\n"
+      "contents": "ALPHA-2\nT | 0 | read book\nD | 0 | return book | June 6th\nE | 0 | project meeting | Aug 6th 2pm | 4pm\n"
     },
     {
       "afterInput": 6,
-      "contents": "ALPHA-1\nT|0|cmVhZCBib29r\nD|0|cmV0dXJuIGJvb2s=|SnVuZSA2dGg=\nE|0|cHJvamVjdCBtZWV0aW5n|QXVnIDZ0aCAycG0=|NHBt\n",
+      "contents": "ALPHA-2\nT | 0 | read book\nD | 0 | return book | June 6th\nE | 0 | project meeting | Aug 6th 2pm | 4pm\n",
       "unchanged": true
     },
     {
       "afterInput": 7,
-      "contents": "ALPHA-1\nT|0|cmVhZCBib29r\nD|0|cmV0dXJuIGJvb2s=|SnVuZSA2dGg=\nE|0|cHJvamVjdCBtZWV0aW5n|QXVnIDZ0aCAycG0=|NHBt\n",
+      "contents": "ALPHA-2\nT | 0 | read book\nD | 0 | return book | June 6th\nE | 0 | project meeting | Aug 6th 2pm | 4pm\n",
       "unchanged": true
     }
   ]
@@ -1684,24 +1684,24 @@ Yooo! I'm Alpha. What can I help you with today?
     },
     {
       "afterInput": 2,
-      "contents": "ALPHA-1\nT|1|cmVhZCBib29r\nD|0|cmV0dXJuIGJvb2s=|SnVuZSA2dGg=\nE|0|cHJvamVjdCBtZWV0aW5n|QXVnIDZ0aCAycG0=|NHBt\n"
+      "contents": "ALPHA-2\nT | 1 | read book\nD | 0 | return book | June 6th\nE | 0 | project meeting | Aug 6th 2pm | 4pm\n"
     },
     {
       "afterInput": 3,
-      "contents": "ALPHA-1\nT|1|cmVhZCBib29r\nD|1|cmV0dXJuIGJvb2s=|SnVuZSA2dGg=\nE|0|cHJvamVjdCBtZWV0aW5n|QXVnIDZ0aCAycG0=|NHBt\n"
+      "contents": "ALPHA-2\nT | 1 | read book\nD | 1 | return book | June 6th\nE | 0 | project meeting | Aug 6th 2pm | 4pm\n"
     },
     {
       "afterInput": 4,
-      "contents": "ALPHA-1\nT|1|cmVhZCBib29r\nD|1|cmV0dXJuIGJvb2s=|SnVuZSA2dGg=\nE|0|cHJvamVjdCBtZWV0aW5n|QXVnIDZ0aCAycG0=|NHBt\nT|0|Y2Fmw6k=\n"
+      "contents": "ALPHA-2\nT | 1 | read book\nD | 1 | return book | June 6th\nE | 0 | project meeting | Aug 6th 2pm | 4pm\nT | 0 | café\n"
     },
     {
       "afterInput": 5,
-      "contents": "ALPHA-1\nT|1|cmVhZCBib29r\nD|1|cmV0dXJuIGJvb2s=|SnVuZSA2dGg=\nE|0|cHJvamVjdCBtZWV0aW5n|QXVnIDZ0aCAycG0=|NHBt\nT|0|Y2Fmw6k=\n",
+      "contents": "ALPHA-2\nT | 1 | read book\nD | 1 | return book | June 6th\nE | 0 | project meeting | Aug 6th 2pm | 4pm\nT | 0 | café\n",
       "unchanged": true
     },
     {
       "afterInput": 6,
-      "contents": "ALPHA-1\nT|1|cmVhZCBib29r\nD|1|cmV0dXJuIGJvb2s=|SnVuZSA2dGg=\nE|0|cHJvamVjdCBtZWV0aW5n|QXVnIDZ0aCAycG0=|NHBt\nT|0|Y2Fmw6k=\n",
+      "contents": "ALPHA-2\nT | 1 | read book\nD | 1 | return book | June 6th\nE | 0 | project meeting | Aug 6th 2pm | 4pm\nT | 0 | café\n",
       "unchanged": true
     }
   ]
@@ -1758,16 +1758,16 @@ Yooo! I'm Alpha. What can I help you with today?
     },
     {
       "afterInput": 2,
-      "contents": "ALPHA-1\nT|0|cmVhZCBib29r\n"
+      "contents": "ALPHA-2\nT | 0 | read book\n"
     },
     {
       "afterInput": 3,
-      "contents": "ALPHA-1\nT|0|cmVhZCBib29r\n",
+      "contents": "ALPHA-2\nT | 0 | read book\n",
       "unchanged": true
     },
     {
       "afterInput": 4,
-      "contents": "ALPHA-1\nT|0|cmVhZCBib29r\n",
+      "contents": "ALPHA-2\nT | 0 | read book\n",
       "unchanged": true
     }
   ]
@@ -1838,24 +1838,24 @@ Yooo! I'm Alpha. What can I help you with today?
     },
     {
       "afterInput": 2,
-      "contents": "ALPHA-1\nT|1|cmVhZCBib29r\nD|0|cmV0dXJuIGJvb2s=|SnVuZSA2dGg=\nE|0|cHJvamVjdCBtZWV0aW5n|QXVnIDZ0aCAycG0=|NHBt\n"
+      "contents": "ALPHA-2\nT | 1 | read book\nD | 0 | return book | June 6th\nE | 0 | project meeting | Aug 6th 2pm | 4pm\n"
     },
     {
       "afterInput": 3,
-      "contents": "ALPHA-1\nT|1|cmVhZCBib29r\nD|1|cmV0dXJuIGJvb2s=|SnVuZSA2dGg=\nE|0|cHJvamVjdCBtZWV0aW5n|QXVnIDZ0aCAycG0=|NHBt\n"
+      "contents": "ALPHA-2\nT | 1 | read book\nD | 1 | return book | June 6th\nE | 0 | project meeting | Aug 6th 2pm | 4pm\n"
     },
     {
       "afterInput": 4,
-      "contents": "ALPHA-1\nT|1|cmVhZCBib29r\nD|1|cmV0dXJuIGJvb2s=|SnVuZSA2dGg=\nE|0|cHJvamVjdCBtZWV0aW5n|QXVnIDZ0aCAycG0=|NHBt\nT|0|Y2Fmw6k=\n"
+      "contents": "ALPHA-2\nT | 1 | read book\nD | 1 | return book | June 6th\nE | 0 | project meeting | Aug 6th 2pm | 4pm\nT | 0 | café\n"
     },
     {
       "afterInput": 5,
-      "contents": "ALPHA-1\nT|1|cmVhZCBib29r\nD|1|cmV0dXJuIGJvb2s=|SnVuZSA2dGg=\nE|0|cHJvamVjdCBtZWV0aW5n|QXVnIDZ0aCAycG0=|NHBt\nT|0|Y2Fmw6k=\n",
+      "contents": "ALPHA-2\nT | 1 | read book\nD | 1 | return book | June 6th\nE | 0 | project meeting | Aug 6th 2pm | 4pm\nT | 0 | café\n",
       "unchanged": true
     },
     {
       "afterInput": 6,
-      "contents": "ALPHA-1\nT|1|cmVhZCBib29r\nD|1|cmV0dXJuIGJvb2s=|SnVuZSA2dGg=\nE|0|cHJvamVjdCBtZWV0aW5n|QXVnIDZ0aCAycG0=|NHBt\nT|0|Y2Fmw6k=\n",
+      "contents": "ALPHA-2\nT | 1 | read book\nD | 1 | return book | June 6th\nE | 0 | project meeting | Aug 6th 2pm | 4pm\nT | 0 | café\n",
       "unchanged": true
     }
   ]
@@ -1910,11 +1910,11 @@ Yooo! I'm Alpha. What can I help you with today?
     },
     {
       "afterInput": 2,
-      "contents": "ALPHA-1\nT|0|cmVhZCBib29r\n"
+      "contents": "ALPHA-2\nT | 0 | read book\n"
     },
     {
       "afterInput": 3,
-      "contents": "ALPHA-1\nT|0|cmVhZCBib29r\n",
+      "contents": "ALPHA-2\nT | 0 | read book\n",
       "unchanged": true
     }
   ]
@@ -2109,29 +2109,29 @@ Yooo! I'm Alpha. What can I help you with today?
   "steps": [
     {
       "afterInput": 1,
-      "contents": "ALPHA-1\nT|1|cmVhZCBib29r\nE|0|bWVldGluZw==|TW9uZGF5|VHVlc2RheQ==\n"
+      "contents": "ALPHA-2\nT | 1 | read book\nE | 0 | meeting | Monday | Tuesday\n"
     },
     {
       "afterInput": 2,
-      "contents": "ALPHA-1\nT|1|cmVhZCBib29r\nE|0|bWVldGluZw==|TW9uZGF5|VHVlc2RheQ==\n",
+      "contents": "ALPHA-2\nT | 1 | read book\nE | 0 | meeting | Monday | Tuesday\n",
       "unchanged": true
     },
     {
       "afterInput": 3,
-      "contents": "ALPHA-1\nE|0|bWVldGluZw==|TW9uZGF5|VHVlc2RheQ==\n"
+      "contents": "ALPHA-2\nE | 0 | meeting | Monday | Tuesday\n"
     },
     {
       "afterInput": 4,
-      "contents": "ALPHA-1\n"
+      "contents": "ALPHA-2\n"
     },
     {
       "afterInput": 5,
-      "contents": "ALPHA-1\n",
+      "contents": "ALPHA-2\n",
       "unchanged": true
     },
     {
       "afterInput": 6,
-      "contents": "ALPHA-1\n",
+      "contents": "ALPHA-2\n",
       "unchanged": true
     }
   ]
@@ -2279,49 +2279,136 @@ Yooo! I'm Alpha. What can I help you with today?
   "steps": [
     {
       "afterInput": 1,
-      "contents": "ALPHA-1\nT|0|dGFzayAx\nT|0|dGFzayAy\nT|0|dGFzayAz\nT|0|dGFzayA0\nT|0|dGFzayA1\nT|0|dGFzayA2\nT|0|dGFzayA3\nT|0|dGFzayA4\nT|0|dGFzayA5\nT|0|dGFzayAxMA==\nT|0|dGFzayAxMQ==\nT|0|dGFzayAxMg==\nT|0|dGFzayAxMw==\nT|0|dGFzayAxNA==\nT|0|dGFzayAxNQ==\nT|0|dGFzayAxNg==\nT|0|dGFzayAxNw==\nT|0|dGFzayAxOA==\nT|0|dGFzayAxOQ==\nT|0|dGFzayAyMA==\nT|0|dGFzayAyMQ==\nT|0|dGFzayAyMg==\nT|0|dGFzayAyMw==\nT|0|dGFzayAyNA==\nT|0|dGFzayAyNQ==\nT|0|dGFzayAyNg==\nT|0|dGFzayAyNw==\nT|0|dGFzayAyOA==\nT|0|dGFzayAyOQ==\nT|0|dGFzayAzMA==\nT|0|dGFzayAzMQ==\nT|0|dGFzayAzMg==\nT|0|dGFzayAzMw==\nT|0|dGFzayAzNA==\nT|0|dGFzayAzNQ==\nT|0|dGFzayAzNg==\nT|0|dGFzayAzNw==\nT|0|dGFzayAzOA==\nT|0|dGFzayAzOQ==\nT|0|dGFzayA0MA==\nT|0|dGFzayA0MQ==\nT|0|dGFzayA0Mg==\nT|0|dGFzayA0Mw==\nT|0|dGFzayA0NA==\nT|0|dGFzayA0NQ==\nT|0|dGFzayA0Ng==\nT|0|dGFzayA0Nw==\nT|0|dGFzayA0OA==\nT|0|dGFzayA0OQ==\nT|0|dGFzayA1MA==\nT|0|dGFzayA1MQ==\nT|0|dGFzayA1Mg==\nT|0|dGFzayA1Mw==\nT|0|dGFzayA1NA==\nT|0|dGFzayA1NQ==\nT|0|dGFzayA1Ng==\nT|0|dGFzayA1Nw==\nT|0|dGFzayA1OA==\nT|0|dGFzayA1OQ==\nT|0|dGFzayA2MA==\nT|0|dGFzayA2MQ==\nT|0|dGFzayA2Mg==\nT|0|dGFzayA2Mw==\nT|0|dGFzayA2NA==\nT|0|dGFzayA2NQ==\nT|0|dGFzayA2Ng==\nT|0|dGFzayA2Nw==\nT|0|dGFzayA2OA==\nT|0|dGFzayA2OQ==\nT|0|dGFzayA3MA==\nT|0|dGFzayA3MQ==\nT|0|dGFzayA3Mg==\nT|0|dGFzayA3Mw==\nT|0|dGFzayA3NA==\nT|0|dGFzayA3NQ==\nT|0|dGFzayA3Ng==\nT|0|dGFzayA3Nw==\nT|0|dGFzayA3OA==\nT|0|dGFzayA3OQ==\nT|0|dGFzayA4MA==\nT|0|dGFzayA4MQ==\nT|0|dGFzayA4Mg==\nT|0|dGFzayA4Mw==\nT|0|dGFzayA4NA==\nT|0|dGFzayA4NQ==\nT|0|dGFzayA4Ng==\nT|0|dGFzayA4Nw==\nT|0|dGFzayA4OA==\nT|0|dGFzayA4OQ==\nT|0|dGFzayA5MA==\nT|0|dGFzayA5MQ==\nT|0|dGFzayA5Mg==\nT|0|dGFzayA5Mw==\nT|0|dGFzayA5NA==\nT|0|dGFzayA5NQ==\nT|0|dGFzayA5Ng==\nT|0|dGFzayA5Nw==\nT|0|dGFzayA5OA==\nT|0|dGFzayA5OQ==\nT|0|dGFzayAxMDA=\nT|1|dGFzayAxMDE=\n"
+      "contents": "ALPHA-2\nT | 0 | task 1\nT | 0 | task 2\nT | 0 | task 3\nT | 0 | task 4\nT | 0 | task 5\nT | 0 | task 6\nT | 0 | task 7\nT | 0 | task 8\nT | 0 | task 9\nT | 0 | task 10\nT | 0 | task 11\nT | 0 | task 12\nT | 0 | task 13\nT | 0 | task 14\nT | 0 | task 15\nT | 0 | task 16\nT | 0 | task 17\nT | 0 | task 18\nT | 0 | task 19\nT | 0 | task 20\nT | 0 | task 21\nT | 0 | task 22\nT | 0 | task 23\nT | 0 | task 24\nT | 0 | task 25\nT | 0 | task 26\nT | 0 | task 27\nT | 0 | task 28\nT | 0 | task 29\nT | 0 | task 30\nT | 0 | task 31\nT | 0 | task 32\nT | 0 | task 33\nT | 0 | task 34\nT | 0 | task 35\nT | 0 | task 36\nT | 0 | task 37\nT | 0 | task 38\nT | 0 | task 39\nT | 0 | task 40\nT | 0 | task 41\nT | 0 | task 42\nT | 0 | task 43\nT | 0 | task 44\nT | 0 | task 45\nT | 0 | task 46\nT | 0 | task 47\nT | 0 | task 48\nT | 0 | task 49\nT | 0 | task 50\nT | 0 | task 51\nT | 0 | task 52\nT | 0 | task 53\nT | 0 | task 54\nT | 0 | task 55\nT | 0 | task 56\nT | 0 | task 57\nT | 0 | task 58\nT | 0 | task 59\nT | 0 | task 60\nT | 0 | task 61\nT | 0 | task 62\nT | 0 | task 63\nT | 0 | task 64\nT | 0 | task 65\nT | 0 | task 66\nT | 0 | task 67\nT | 0 | task 68\nT | 0 | task 69\nT | 0 | task 70\nT | 0 | task 71\nT | 0 | task 72\nT | 0 | task 73\nT | 0 | task 74\nT | 0 | task 75\nT | 0 | task 76\nT | 0 | task 77\nT | 0 | task 78\nT | 0 | task 79\nT | 0 | task 80\nT | 0 | task 81\nT | 0 | task 82\nT | 0 | task 83\nT | 0 | task 84\nT | 0 | task 85\nT | 0 | task 86\nT | 0 | task 87\nT | 0 | task 88\nT | 0 | task 89\nT | 0 | task 90\nT | 0 | task 91\nT | 0 | task 92\nT | 0 | task 93\nT | 0 | task 94\nT | 0 | task 95\nT | 0 | task 96\nT | 0 | task 97\nT | 0 | task 98\nT | 0 | task 99\nT | 0 | task 100\nT | 1 | task 101\n"
     },
     {
       "afterInput": 2,
-      "contents": "ALPHA-1\nT|0|dGFzayAx\nT|0|dGFzayAy\nT|0|dGFzayAz\nT|0|dGFzayA0\nT|0|dGFzayA1\nT|0|dGFzayA2\nT|0|dGFzayA3\nT|0|dGFzayA4\nT|0|dGFzayA5\nT|0|dGFzayAxMA==\nT|0|dGFzayAxMQ==\nT|0|dGFzayAxMg==\nT|0|dGFzayAxMw==\nT|0|dGFzayAxNA==\nT|0|dGFzayAxNQ==\nT|0|dGFzayAxNg==\nT|0|dGFzayAxNw==\nT|0|dGFzayAxOA==\nT|0|dGFzayAxOQ==\nT|0|dGFzayAyMA==\nT|0|dGFzayAyMQ==\nT|0|dGFzayAyMg==\nT|0|dGFzayAyMw==\nT|0|dGFzayAyNA==\nT|0|dGFzayAyNQ==\nT|0|dGFzayAyNg==\nT|0|dGFzayAyNw==\nT|0|dGFzayAyOA==\nT|0|dGFzayAyOQ==\nT|0|dGFzayAzMA==\nT|0|dGFzayAzMQ==\nT|0|dGFzayAzMg==\nT|0|dGFzayAzMw==\nT|0|dGFzayAzNA==\nT|0|dGFzayAzNQ==\nT|0|dGFzayAzNg==\nT|0|dGFzayAzNw==\nT|0|dGFzayAzOA==\nT|0|dGFzayAzOQ==\nT|0|dGFzayA0MA==\nT|0|dGFzayA0MQ==\nT|0|dGFzayA0Mg==\nT|0|dGFzayA0Mw==\nT|0|dGFzayA0NA==\nT|0|dGFzayA0NQ==\nT|0|dGFzayA0Ng==\nT|0|dGFzayA0Nw==\nT|0|dGFzayA0OA==\nT|0|dGFzayA0OQ==\nT|0|dGFzayA1MA==\nT|0|dGFzayA1MQ==\nT|0|dGFzayA1Mg==\nT|0|dGFzayA1Mw==\nT|0|dGFzayA1NA==\nT|0|dGFzayA1NQ==\nT|0|dGFzayA1Ng==\nT|0|dGFzayA1Nw==\nT|0|dGFzayA1OA==\nT|0|dGFzayA1OQ==\nT|0|dGFzayA2MA==\nT|0|dGFzayA2MQ==\nT|0|dGFzayA2Mg==\nT|0|dGFzayA2Mw==\nT|0|dGFzayA2NA==\nT|0|dGFzayA2NQ==\nT|0|dGFzayA2Ng==\nT|0|dGFzayA2Nw==\nT|0|dGFzayA2OA==\nT|0|dGFzayA2OQ==\nT|0|dGFzayA3MA==\nT|0|dGFzayA3MQ==\nT|0|dGFzayA3Mg==\nT|0|dGFzayA3Mw==\nT|0|dGFzayA3NA==\nT|0|dGFzayA3NQ==\nT|0|dGFzayA3Ng==\nT|0|dGFzayA3Nw==\nT|0|dGFzayA3OA==\nT|0|dGFzayA3OQ==\nT|0|dGFzayA4MA==\nT|0|dGFzayA4MQ==\nT|0|dGFzayA4Mg==\nT|0|dGFzayA4Mw==\nT|0|dGFzayA4NA==\nT|0|dGFzayA4NQ==\nT|0|dGFzayA4Ng==\nT|0|dGFzayA4Nw==\nT|0|dGFzayA4OA==\nT|0|dGFzayA4OQ==\nT|0|dGFzayA5MA==\nT|0|dGFzayA5MQ==\nT|0|dGFzayA5Mg==\nT|0|dGFzayA5Mw==\nT|0|dGFzayA5NA==\nT|0|dGFzayA5NQ==\nT|0|dGFzayA5Ng==\nT|0|dGFzayA5Nw==\nT|0|dGFzayA5OA==\nT|0|dGFzayA5OQ==\nT|0|dGFzayAxMDA=\nT|1|dGFzayAxMDE=\n",
+      "contents": "ALPHA-2\nT | 0 | task 1\nT | 0 | task 2\nT | 0 | task 3\nT | 0 | task 4\nT | 0 | task 5\nT | 0 | task 6\nT | 0 | task 7\nT | 0 | task 8\nT | 0 | task 9\nT | 0 | task 10\nT | 0 | task 11\nT | 0 | task 12\nT | 0 | task 13\nT | 0 | task 14\nT | 0 | task 15\nT | 0 | task 16\nT | 0 | task 17\nT | 0 | task 18\nT | 0 | task 19\nT | 0 | task 20\nT | 0 | task 21\nT | 0 | task 22\nT | 0 | task 23\nT | 0 | task 24\nT | 0 | task 25\nT | 0 | task 26\nT | 0 | task 27\nT | 0 | task 28\nT | 0 | task 29\nT | 0 | task 30\nT | 0 | task 31\nT | 0 | task 32\nT | 0 | task 33\nT | 0 | task 34\nT | 0 | task 35\nT | 0 | task 36\nT | 0 | task 37\nT | 0 | task 38\nT | 0 | task 39\nT | 0 | task 40\nT | 0 | task 41\nT | 0 | task 42\nT | 0 | task 43\nT | 0 | task 44\nT | 0 | task 45\nT | 0 | task 46\nT | 0 | task 47\nT | 0 | task 48\nT | 0 | task 49\nT | 0 | task 50\nT | 0 | task 51\nT | 0 | task 52\nT | 0 | task 53\nT | 0 | task 54\nT | 0 | task 55\nT | 0 | task 56\nT | 0 | task 57\nT | 0 | task 58\nT | 0 | task 59\nT | 0 | task 60\nT | 0 | task 61\nT | 0 | task 62\nT | 0 | task 63\nT | 0 | task 64\nT | 0 | task 65\nT | 0 | task 66\nT | 0 | task 67\nT | 0 | task 68\nT | 0 | task 69\nT | 0 | task 70\nT | 0 | task 71\nT | 0 | task 72\nT | 0 | task 73\nT | 0 | task 74\nT | 0 | task 75\nT | 0 | task 76\nT | 0 | task 77\nT | 0 | task 78\nT | 0 | task 79\nT | 0 | task 80\nT | 0 | task 81\nT | 0 | task 82\nT | 0 | task 83\nT | 0 | task 84\nT | 0 | task 85\nT | 0 | task 86\nT | 0 | task 87\nT | 0 | task 88\nT | 0 | task 89\nT | 0 | task 90\nT | 0 | task 91\nT | 0 | task 92\nT | 0 | task 93\nT | 0 | task 94\nT | 0 | task 95\nT | 0 | task 96\nT | 0 | task 97\nT | 0 | task 98\nT | 0 | task 99\nT | 0 | task 100\nT | 1 | task 101\n",
       "unchanged": true
     },
     {
       "afterInput": 3,
-      "contents": "ALPHA-1\nT|0|dGFzayAx\nT|0|dGFzayAy\nT|0|dGFzayAz\nT|0|dGFzayA0\nT|0|dGFzayA1\nT|0|dGFzayA2\nT|0|dGFzayA3\nT|0|dGFzayA4\nT|0|dGFzayA5\nT|0|dGFzayAxMA==\nT|0|dGFzayAxMQ==\nT|0|dGFzayAxMg==\nT|0|dGFzayAxMw==\nT|0|dGFzayAxNA==\nT|0|dGFzayAxNQ==\nT|0|dGFzayAxNg==\nT|0|dGFzayAxNw==\nT|0|dGFzayAxOA==\nT|0|dGFzayAxOQ==\nT|0|dGFzayAyMA==\nT|0|dGFzayAyMQ==\nT|0|dGFzayAyMg==\nT|0|dGFzayAyMw==\nT|0|dGFzayAyNA==\nT|0|dGFzayAyNQ==\nT|0|dGFzayAyNg==\nT|0|dGFzayAyNw==\nT|0|dGFzayAyOA==\nT|0|dGFzayAyOQ==\nT|0|dGFzayAzMA==\nT|0|dGFzayAzMQ==\nT|0|dGFzayAzMg==\nT|0|dGFzayAzMw==\nT|0|dGFzayAzNA==\nT|0|dGFzayAzNQ==\nT|0|dGFzayAzNg==\nT|0|dGFzayAzNw==\nT|0|dGFzayAzOA==\nT|0|dGFzayAzOQ==\nT|0|dGFzayA0MA==\nT|0|dGFzayA0MQ==\nT|0|dGFzayA0Mg==\nT|0|dGFzayA0Mw==\nT|0|dGFzayA0NA==\nT|0|dGFzayA0NQ==\nT|0|dGFzayA0Ng==\nT|0|dGFzayA0Nw==\nT|0|dGFzayA0OA==\nT|0|dGFzayA0OQ==\nT|0|dGFzayA1MA==\nT|0|dGFzayA1MQ==\nT|0|dGFzayA1Mg==\nT|0|dGFzayA1Mw==\nT|0|dGFzayA1NA==\nT|0|dGFzayA1NQ==\nT|0|dGFzayA1Ng==\nT|0|dGFzayA1Nw==\nT|0|dGFzayA1OA==\nT|0|dGFzayA1OQ==\nT|0|dGFzayA2MA==\nT|0|dGFzayA2MQ==\nT|0|dGFzayA2Mg==\nT|0|dGFzayA2Mw==\nT|0|dGFzayA2NA==\nT|0|dGFzayA2NQ==\nT|0|dGFzayA2Ng==\nT|0|dGFzayA2Nw==\nT|0|dGFzayA2OA==\nT|0|dGFzayA2OQ==\nT|0|dGFzayA3MA==\nT|0|dGFzayA3MQ==\nT|0|dGFzayA3Mg==\nT|0|dGFzayA3Mw==\nT|0|dGFzayA3NA==\nT|0|dGFzayA3NQ==\nT|0|dGFzayA3Ng==\nT|0|dGFzayA3Nw==\nT|0|dGFzayA3OA==\nT|0|dGFzayA3OQ==\nT|0|dGFzayA4MA==\nT|0|dGFzayA4MQ==\nT|0|dGFzayA4Mg==\nT|0|dGFzayA4Mw==\nT|0|dGFzayA4NA==\nT|0|dGFzayA4NQ==\nT|0|dGFzayA4Ng==\nT|0|dGFzayA4Nw==\nT|0|dGFzayA4OA==\nT|0|dGFzayA4OQ==\nT|0|dGFzayA5MA==\nT|0|dGFzayA5MQ==\nT|0|dGFzayA5Mg==\nT|0|dGFzayA5Mw==\nT|0|dGFzayA5NA==\nT|0|dGFzayA5NQ==\nT|0|dGFzayA5Ng==\nT|0|dGFzayA5Nw==\nT|0|dGFzayA5OA==\nT|0|dGFzayA5OQ==\nT|0|dGFzayAxMDA=\nT|1|dGFzayAxMDE=\n",
+      "contents": "ALPHA-2\nT | 0 | task 1\nT | 0 | task 2\nT | 0 | task 3\nT | 0 | task 4\nT | 0 | task 5\nT | 0 | task 6\nT | 0 | task 7\nT | 0 | task 8\nT | 0 | task 9\nT | 0 | task 10\nT | 0 | task 11\nT | 0 | task 12\nT | 0 | task 13\nT | 0 | task 14\nT | 0 | task 15\nT | 0 | task 16\nT | 0 | task 17\nT | 0 | task 18\nT | 0 | task 19\nT | 0 | task 20\nT | 0 | task 21\nT | 0 | task 22\nT | 0 | task 23\nT | 0 | task 24\nT | 0 | task 25\nT | 0 | task 26\nT | 0 | task 27\nT | 0 | task 28\nT | 0 | task 29\nT | 0 | task 30\nT | 0 | task 31\nT | 0 | task 32\nT | 0 | task 33\nT | 0 | task 34\nT | 0 | task 35\nT | 0 | task 36\nT | 0 | task 37\nT | 0 | task 38\nT | 0 | task 39\nT | 0 | task 40\nT | 0 | task 41\nT | 0 | task 42\nT | 0 | task 43\nT | 0 | task 44\nT | 0 | task 45\nT | 0 | task 46\nT | 0 | task 47\nT | 0 | task 48\nT | 0 | task 49\nT | 0 | task 50\nT | 0 | task 51\nT | 0 | task 52\nT | 0 | task 53\nT | 0 | task 54\nT | 0 | task 55\nT | 0 | task 56\nT | 0 | task 57\nT | 0 | task 58\nT | 0 | task 59\nT | 0 | task 60\nT | 0 | task 61\nT | 0 | task 62\nT | 0 | task 63\nT | 0 | task 64\nT | 0 | task 65\nT | 0 | task 66\nT | 0 | task 67\nT | 0 | task 68\nT | 0 | task 69\nT | 0 | task 70\nT | 0 | task 71\nT | 0 | task 72\nT | 0 | task 73\nT | 0 | task 74\nT | 0 | task 75\nT | 0 | task 76\nT | 0 | task 77\nT | 0 | task 78\nT | 0 | task 79\nT | 0 | task 80\nT | 0 | task 81\nT | 0 | task 82\nT | 0 | task 83\nT | 0 | task 84\nT | 0 | task 85\nT | 0 | task 86\nT | 0 | task 87\nT | 0 | task 88\nT | 0 | task 89\nT | 0 | task 90\nT | 0 | task 91\nT | 0 | task 92\nT | 0 | task 93\nT | 0 | task 94\nT | 0 | task 95\nT | 0 | task 96\nT | 0 | task 97\nT | 0 | task 98\nT | 0 | task 99\nT | 0 | task 100\nT | 1 | task 101\n",
       "unchanged": true
     }
   ]
 }
 ```
 
+### UI-24: Load and resave readable special characters
+
+**Aim:** Restore readable todos, deadlines, and events; preserve pipes, backslashes, Unicode, empty time fields, and task status through saves.
+
+**Inputs:**
+
+```text
+list
+mark 1
+unmark 1
+bye
+```
+
+**Expected output:**
+
+```text
+ █████╗ ██╗     ██████╗ ██╗  ██╗ █████╗ 
+██╔══██╗██║     ██╔══██╗██║  ██║██╔══██╗
+███████║██║     ██████╔╝███████║███████║
+██╔══██║██║     ██╔═══╝ ██╔══██║██╔══██║
+██║  ██║███████╗██║     ██║  ██║██║  ██║
+╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝
+Yooo! I'm Alpha. What can I help you with today?
+    ____________________________________________________________
+     Here are the tasks in your list:
+     1.[T][ ] read | café \ notes
+     2.[D][X] book (by: )
+     3.[E][ ] meeting (from: noon to: 2pm)
+    ____________________________________________________________
+     Nice! I've marked this task as done:
+       [T][X] read | café \ notes
+    ____________________________________________________________
+     OK, I've marked this task as not done yet:
+       [T][ ] read | café \ notes
+    ____________________________________________________________
+     Bye. Hope to see you again soon!
+    ____________________________________________________________
+```
+
+**File checkpoints:**
+
+```json
+{
+  "initialFile": "ALPHA-2\nT | 0 | read \\| café \\\\ notes\nD | 1 | book | \nE | 0 | meeting | noon | 2pm\n",
+  "steps": [
+    {
+      "afterInput": 1,
+      "contents": "ALPHA-2\nT | 0 | read \\| café \\\\ notes\nD | 1 | book | \nE | 0 | meeting | noon | 2pm\n",
+      "unchanged": true
+    },
+    {
+      "afterInput": 2,
+      "contents": "ALPHA-2\nT | 1 | read \\| café \\\\ notes\nD | 1 | book | \nE | 0 | meeting | noon | 2pm\n"
+    },
+    {
+      "afterInput": 3,
+      "contents": "ALPHA-2\nT | 0 | read \\| café \\\\ notes\nD | 1 | book | \nE | 0 | meeting | noon | 2pm\n"
+    },
+    {
+      "afterInput": 4,
+      "contents": "ALPHA-2\nT | 0 | read \\| café \\\\ notes\nD | 1 | book | \nE | 0 | meeting | noon | 2pm\n",
+      "unchanged": true
+    }
+  ]
+}
+```
+
+### UI-25: Reject an invalid readable escape
+
+**Aim:** Report malformed readable input and preserve the original file.
+
+**Inputs:**
+
+```text
+```
+
+**Expected output:**
+
+```text
+ █████╗ ██╗     ██████╗ ██╗  ██╗ █████╗ 
+██╔══██╗██║     ██╔══██╗██║  ██║██╔══██╗
+███████║██║     ██████╔╝███████║███████║
+██╔══██║██║     ██╔═══╝ ██╔══██║██╔══██║
+██║  ██║███████╗██║     ██║  ██║██║  ██║
+╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝
+Yooo! I'm Alpha. What can I help you with today?
+    ____________________________________________________________
+     Cannot load data/alpha.txt: Invalid task at line 2: Unknown escape sequence. The file has not been changed.
+    ____________________________________________________________
+```
+
+**File checkpoints:**
+
+```json
+{
+  "initialFile": "ALPHA-2\nT | 0 | bad\\q\n",
+  "steps": []
+}
+```
+
 ## Latest test session
 
 
-- Date/time: 2026-09-15T14:25:21.374152+08:00
+- Date/time: 2026-09-16T13:18:30.794114+08:00
 
 - Branch: master
 
-- Commit: bb9a94cf535ccf593878d75438bb2b8c54876377
+- Commit: c849078d4f65d8d0bae12bfcc037f0fc09d2cf89
 
 - Working tree at start:
 ```text
-A  .gitattributes
-M  .gitignore
-M  README.md
-A  build.gradle
-A  gradle/wrapper/gradle-wrapper.jar
-A  gradle/wrapper/gradle-wrapper.properties
-A  gradlew
-A  gradlew.bat
-A  settings.gradle
-M  src/main/java/alpha/Alpha.java
-A  src/main/java/alpha/Storage.java
-M  src/main/java/alpha/task/Deadline.java
-M  src/main/java/alpha/task/Event.java
-A  test/run-ui-tests.py
-M  test/ui-test-plan.md
-A  test/ui-test-session-write-only.md
+ M README.md
+ M src/main/java/alpha/Storage.java
+ M test/ui-test-plan.md
 ```
 
 - OS: Linux 6.6.87.2-microsoft-standard-WSL2; UTF-8; 10-second timeout.
@@ -2334,15 +2421,15 @@ OpenJDK 64-Bit Server VM (build 25.0.3+9-2-24.04.2-Ubuntu, mixed mode, sharing)
 javac 25.0.3
 ```
 
-- Compile command: `/usr/lib/jvm/java-25-openjdk-amd64/bin/javac -encoding UTF-8 -d /tmp/alpha-ui-8o85fkvr/classes /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/Alpha.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/AlphaException.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/Storage.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/task/Deadline.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/task/Event.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/task/Task.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/task/Todo.java`
+- Compile command: `/usr/lib/jvm/java-25-openjdk-amd64/bin/javac -encoding UTF-8 -d /tmp/alpha-ui-dg3o811l/classes /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/Alpha.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/AlphaException.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/Storage.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/task/Deadline.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/task/Event.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/task/Task.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/task/Todo.java`
 
-- Launch command: `/usr/lib/jvm/java-25-openjdk-amd64/bin/java -Dfile.encoding=UTF-8 -cp /tmp/alpha-ui-8o85fkvr/classes alpha.Alpha`
+- Launch command: `/usr/lib/jvm/java-25-openjdk-amd64/bin/java -Dfile.encoding=UTF-8 -cp /tmp/alpha-ui-dg3o811l/classes alpha.Alpha`
 
 
 ### UI-01 result
 
 
-- Working directory: `/tmp/alpha-ui-8o85fkvr/UI-01`
+- Working directory: `/tmp/alpha-ui-dg3o811l/UI-01`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -2372,7 +2459,7 @@ RESULT: PASS
 ### UI-02 result
 
 
-- Working directory: `/tmp/alpha-ui-8o85fkvr/UI-02`
+- Working directory: `/tmp/alpha-ui-dg3o811l/UI-02`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -2398,7 +2485,7 @@ RESULT: PASS
 ### UI-03 result
 
 
-- Working directory: `/tmp/alpha-ui-8o85fkvr/UI-03`
+- Working directory: `/tmp/alpha-ui-dg3o811l/UI-03`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -2445,7 +2532,7 @@ RESULT: PASS
 ### UI-04 result
 
 
-- Working directory: `/tmp/alpha-ui-8o85fkvr/UI-04`
+- Working directory: `/tmp/alpha-ui-dg3o811l/UI-04`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -2500,7 +2587,7 @@ RESULT: PASS
 ### UI-05 result
 
 
-- Working directory: `/tmp/alpha-ui-8o85fkvr/UI-05`
+- Working directory: `/tmp/alpha-ui-dg3o811l/UI-05`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -2597,7 +2684,7 @@ RESULT: PASS
 ### UI-06 result
 
 
-- Working directory: `/tmp/alpha-ui-8o85fkvr/UI-06`
+- Working directory: `/tmp/alpha-ui-dg3o811l/UI-06`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -2804,7 +2891,7 @@ RESULT: PASS
 ### UI-07 result
 
 
-- Working directory: `/tmp/alpha-ui-8o85fkvr/UI-07`
+- Working directory: `/tmp/alpha-ui-dg3o811l/UI-07`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -2851,7 +2938,7 @@ RESULT: PASS
 ### UI-08 result
 
 
-- Working directory: `/tmp/alpha-ui-8o85fkvr/UI-08`
+- Working directory: `/tmp/alpha-ui-dg3o811l/UI-08`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -2914,7 +3001,7 @@ RESULT: PASS
 ### UI-09 result
 
 
-- Working directory: `/tmp/alpha-ui-8o85fkvr/UI-09`
+- Working directory: `/tmp/alpha-ui-dg3o811l/UI-09`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -2966,7 +3053,7 @@ RESULT: PASS
 ### UI-10 result
 
 
-- Working directory: `/tmp/alpha-ui-8o85fkvr/UI-10`
+- Working directory: `/tmp/alpha-ui-dg3o811l/UI-10`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -3013,7 +3100,7 @@ RESULT: PASS
 ### UI-11 result
 
 
-- Working directory: `/tmp/alpha-ui-8o85fkvr/UI-11`
+- Working directory: `/tmp/alpha-ui-dg3o811l/UI-11`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -3762,7 +3849,7 @@ RESULT: PASS
 ### UI-12 result
 
 
-- Working directory: `/tmp/alpha-ui-8o85fkvr/UI-12`
+- Working directory: `/tmp/alpha-ui-dg3o811l/UI-12`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -3817,7 +3904,7 @@ RESULT: PASS
 ### UI-13 result
 
 
-- Working directory: `/tmp/alpha-ui-8o85fkvr/UI-13`
+- Working directory: `/tmp/alpha-ui-dg3o811l/UI-13`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -3855,7 +3942,7 @@ RESULT: PASS
 ### UI-14 result
 
 
-- Working directory: `/tmp/alpha-ui-8o85fkvr/UI-14`
+- Working directory: `/tmp/alpha-ui-dg3o811l/UI-14`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -3907,7 +3994,7 @@ RESULT: PASS
 ### UI-15 result
 
 
-- Working directory: `/tmp/alpha-ui-8o85fkvr/UI-15`
+- Working directory: `/tmp/alpha-ui-dg3o811l/UI-15`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -3945,7 +4032,7 @@ RESULT: PASS
 ### UI-16 result
 
 
-- Working directory: `/tmp/alpha-ui-8o85fkvr/UI-16`
+- Working directory: `/tmp/alpha-ui-dg3o811l/UI-16`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -3997,7 +4084,7 @@ RESULT: PASS
 ### UI-17 result
 
 
-- Working directory: `/tmp/alpha-ui-8o85fkvr/UI-17`
+- Working directory: `/tmp/alpha-ui-dg3o811l/UI-17`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -4031,7 +4118,7 @@ RESULT: PASS
 ### UI-18 result
 
 
-- Working directory: `/tmp/alpha-ui-8o85fkvr/UI-18`
+- Working directory: `/tmp/alpha-ui-dg3o811l/UI-18`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -4056,7 +4143,7 @@ RESULT: PASS
 ### UI-19 result
 
 
-- Working directory: `/tmp/alpha-ui-8o85fkvr/UI-19`
+- Working directory: `/tmp/alpha-ui-dg3o811l/UI-19`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -4081,7 +4168,7 @@ RESULT: PASS
 ### UI-20 result
 
 
-- Working directory: `/tmp/alpha-ui-8o85fkvr/UI-20`
+- Working directory: `/tmp/alpha-ui-dg3o811l/UI-20`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -4106,7 +4193,7 @@ RESULT: PASS
 ### UI-21 result
 
 
-- Working directory: `/tmp/alpha-ui-8o85fkvr/UI-21`
+- Working directory: `/tmp/alpha-ui-dg3o811l/UI-21`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -4131,7 +4218,7 @@ RESULT: PASS
 ### UI-22 result
 
 
-- Working directory: `/tmp/alpha-ui-8o85fkvr/UI-22`
+- Working directory: `/tmp/alpha-ui-dg3o811l/UI-22`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -4180,7 +4267,7 @@ RESULT: PASS
 ### UI-23 result
 
 
-- Working directory: `/tmp/alpha-ui-8o85fkvr/UI-23`
+- Working directory: `/tmp/alpha-ui-dg3o811l/UI-23`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -4311,6 +4398,71 @@ RESULT: PASS
 ```
 
 
+### UI-24 result
+
+
+- Working directory: `/tmp/alpha-ui-dg3o811l/UI-24`
+
+- Exit: 0; timeout: False; stderr: ''.
+
+```text
+=== UI-24: Load and resave readable special characters ===
+INPUT
+list
+mark 1
+unmark 1
+bye
+OUTPUT
+ █████╗ ██╗     ██████╗ ██╗  ██╗ █████╗ 
+██╔══██╗██║     ██╔══██╗██║  ██║██╔══██╗
+███████║██║     ██████╔╝███████║███████║
+██╔══██║██║     ██╔═══╝ ██╔══██║██╔══██║
+██║  ██║███████╗██║     ██║  ██║██║  ██║
+╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝
+Yooo! I'm Alpha. What can I help you with today?
+    ____________________________________________________________
+     Here are the tasks in your list:
+     1.[T][ ] read | café \ notes
+     2.[D][X] book (by: )
+     3.[E][ ] meeting (from: noon to: 2pm)
+    ____________________________________________________________
+     Nice! I've marked this task as done:
+       [T][X] read | café \ notes
+    ____________________________________________________________
+     OK, I've marked this task as not done yet:
+       [T][ ] read | café \ notes
+    ____________________________________________________________
+     Bye. Hope to see you again soon!
+    ____________________________________________________________
+RESULT: PASS
+```
+
+
+### UI-25 result
+
+
+- Working directory: `/tmp/alpha-ui-dg3o811l/UI-25`
+
+- Exit: 0; timeout: False; stderr: ''.
+
+```text
+=== UI-25: Reject an invalid readable escape ===
+INPUT
+OUTPUT
+ █████╗ ██╗     ██████╗ ██╗  ██╗ █████╗ 
+██╔══██╗██║     ██╔══██╗██║  ██║██╔══██╗
+███████║██║     ██████╔╝███████║███████║
+██╔══██║██║     ██╔═══╝ ██╔══██║██╔══██║
+██║  ██║███████╗██║     ██║  ██║██║  ██║
+╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝
+Yooo! I'm Alpha. What can I help you with today?
+    ____________________________________________________________
+     Cannot load data/alpha.txt: Invalid task at line 2: Unknown escape sequence. The file has not been changed.
+    ____________________________________________________________
+RESULT: PASS
+```
+
+
 Overall: PASS
 
 - UI-01: PASS
@@ -4336,4 +4488,6 @@ Overall: PASS
 - UI-21: PASS
 - UI-22: PASS
 - UI-23: PASS
+- UI-24: PASS
+- UI-25: PASS
 
