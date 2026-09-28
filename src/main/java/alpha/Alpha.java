@@ -7,14 +7,13 @@ import alpha.task.Todo;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 /**
  * Runs the Alpha chatbot command-line application.
  */
 public class Alpha {
-    private static final String DIVIDER = "    ____________________________________________________________";
-    private static final Storage STORAGE = new Storage(Path.of("data", "alpha.txt"));
+    private final Ui ui = new Ui();
+    private final Storage storage = new Storage(Path.of("data", "alpha.txt"));
 
     /**
      * Greets the user, restores saved tasks, manages them, and exits on {@code bye}.
@@ -24,40 +23,38 @@ public class Alpha {
      * @param args Command-line arguments, which are not used.
      */
     public static void main(String[] args) {
-        String banner = " █████╗ ██╗     ██████╗ ██╗  ██╗ █████╗ \n"
-                + "██╔══██╗██║     ██╔══██╗██║  ██║██╔══██╗\n"
-                + "███████║██║     ██████╔╝███████║███████║\n"
-                + "██╔══██║██║     ██╔═══╝ ██╔══██║██╔══██║\n"
-                + "██║  ██║███████╗██║     ██║  ██║██║  ██║\n"
-                + "╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝\n";
-        System.out.print(banner);
-        System.out.println("Yooo! I'm Alpha. What can I help you with today?");
-        System.out.println(DIVIDER);
+        new Alpha().run();
+    }
+
+    /**
+     * Restores tasks and handles commands until exit, end of input, or a loading error.
+     */
+    public void run() {
+        ui.showWelcome();
 
         ArrayList<Task> tasks = new ArrayList<>();
         try {
-            STORAGE.load(tasks);
+            storage.load(tasks);
         } catch (AlphaException exception) {
-            printError(exception.getMessage());
-            System.out.println(DIVIDER);
+            ui.showError(exception.getMessage());
+            ui.showDivider();
             return;
         }
-        Scanner scanner = new Scanner(System.in);
-        while (scanner.hasNextLine()) {
-            String command = scanner.nextLine();
+        while (ui.hasNextCommand()) {
+            String command = ui.readCommand();
 
             if (command.equals("bye")) {
-                System.out.println("     Bye. Hope to see you again soon!");
-                System.out.println(DIVIDER);
+                ui.showGoodbye();
+                ui.showDivider();
                 break;
             }
 
             try {
                 processCommand(command, tasks);
             } catch (AlphaException exception) {
-                printError(exception.getMessage());
+                ui.showError(exception.getMessage());
             }
-            System.out.println(DIVIDER);
+            ui.showDivider();
         }
     }
 
@@ -68,13 +65,10 @@ public class Alpha {
      * @param tasks The list of tasks.
      * @throws AlphaException If the command is invalid or its change cannot be saved.
      */
-    private static void processCommand(String command, ArrayList<Task> tasks)
+    private void processCommand(String command, ArrayList<Task> tasks)
             throws AlphaException {
         if (command.equals("list")) {
-            System.out.println("     Here are the tasks in your list:");
-            for (int i = 0; i < tasks.size(); i++) {
-                System.out.println("     " + (i + 1) + "." + tasks.get(i));
-            }
+            ui.showTasks(tasks);
         } else if (command.equals("mark") || command.startsWith("mark ")) {
             markTask(command, tasks);
         } else if (command.equals("unmark") || command.startsWith("unmark ")) {
@@ -99,22 +93,21 @@ public class Alpha {
      * @param tasks The list of tasks.
      * @throws AlphaException If the task number is invalid or its change cannot be saved.
      */
-    private static void markTask(String command, ArrayList<Task> tasks)
+    private void markTask(String command, ArrayList<Task> tasks)
             throws AlphaException {
         int index = parseIndex(command, "mark".length(), tasks.size());
 
         boolean wasDone = tasks.get(index).getStatusIcon().equals("X");
         tasks.get(index).markAsDone();
         try {
-            STORAGE.save(tasks);
+            storage.save(tasks);
         } catch (AlphaException exception) {
             if (!wasDone) {
                 tasks.get(index).markAsNotDone();
             }
             throw exception;
         }
-        System.out.println("     Nice! I've marked this task as done:");
-        System.out.println("       " + tasks.get(index));
+        ui.showMarked(tasks.get(index));
     }
 
     /**
@@ -124,22 +117,21 @@ public class Alpha {
      * @param tasks The list of tasks.
      * @throws AlphaException If the task number is invalid or its change cannot be saved.
      */
-    private static void unmarkTask(String command, ArrayList<Task> tasks)
+    private void unmarkTask(String command, ArrayList<Task> tasks)
             throws AlphaException {
         int index = parseIndex(command, "unmark".length(), tasks.size());
 
         boolean wasDone = tasks.get(index).getStatusIcon().equals("X");
         tasks.get(index).markAsNotDone();
         try {
-            STORAGE.save(tasks);
+            storage.save(tasks);
         } catch (AlphaException exception) {
             if (wasDone) {
                 tasks.get(index).markAsDone();
             }
             throw exception;
         }
-        System.out.println("     OK, I've marked this task as not done yet:");
-        System.out.println("       " + tasks.get(index));
+        ui.showUnmarked(tasks.get(index));
     }
 
     /**
@@ -149,20 +141,18 @@ public class Alpha {
      * @param tasks The list of tasks.
      * @throws AlphaException If the task number is missing, invalid, or deletion cannot be saved.
      */
-    private static void deleteTask(String command, ArrayList<Task> tasks)
+    private void deleteTask(String command, ArrayList<Task> tasks)
             throws AlphaException {
         int index = parseIndex(command, "delete".length(), tasks.size());
         Task deletedTask = tasks.remove(index);
         try {
-            STORAGE.save(tasks);
+            storage.save(tasks);
         } catch (AlphaException exception) {
             tasks.add(index, deletedTask);
             throw exception;
         }
 
-        System.out.println("     Noted. I've removed this task:");
-        System.out.println("       " + deletedTask);
-        System.out.println("     Now you have " + tasks.size() + " tasks in the list.");
+        ui.showDeleted(deletedTask, tasks.size());
     }
 
     /**
@@ -192,22 +182,13 @@ public class Alpha {
     }
 
     /**
-     * Prints the given error message indented as chatbot output.
-     *
-     * @param message The error message to display.
-     */
-    private static void printError(String message) {
-        System.out.println("     " + message);
-    }
-
-    /**
      * Adds a ToDo task described in the given command to the task list.
      *
      * @param command The user's input, for example, "todo borrow book".
      * @param tasks The list of tasks.
      * @throws AlphaException If the description is empty.
      */
-    private static void addTodo(String command, ArrayList<Task> tasks)
+    private void addTodo(String command, ArrayList<Task> tasks)
             throws AlphaException {
         String description = command.length() > "todo ".length()
                 ? command.substring("todo ".length()).trim()
@@ -216,7 +197,7 @@ public class Alpha {
             throw new AlphaException("Bro, please add a description...");
         }
         tasks.add(new Todo(description));
-        printAdded(tasks);
+        saveAddition(tasks);
     }
 
     /**
@@ -227,7 +208,7 @@ public class Alpha {
      * @param tasks The list of tasks.
      * @throws AlphaException If the description is empty.
      */
-    private static void addDeadline(String command, ArrayList<Task> tasks)
+    private void addDeadline(String command, ArrayList<Task> tasks)
             throws AlphaException {
         String body = command.length() > "deadline ".length()
                 ? command.substring("deadline ".length()).trim()
@@ -239,7 +220,7 @@ public class Alpha {
         }
         String by = parts.length > 1 ? parts[1] : "";
         tasks.add(new Deadline(description, by));
-        printAdded(tasks);
+        saveAddition(tasks);
     }
 
     /**
@@ -250,7 +231,7 @@ public class Alpha {
      * @param tasks The list of tasks.
      * @throws AlphaException If the description is empty.
      */
-    private static void addEvent(String command, ArrayList<Task> tasks)
+    private void addEvent(String command, ArrayList<Task> tasks)
             throws AlphaException {
         String body = command.length() > "event ".length()
                 ? command.substring("event ".length()).trim()
@@ -264,7 +245,7 @@ public class Alpha {
         String from = times[0];
         String to = times.length > 1 ? times[1] : "";
         tasks.add(new Event(description, from, to));
-        printAdded(tasks);
+        saveAddition(tasks);
     }
 
     /**
@@ -273,15 +254,13 @@ public class Alpha {
      * @param tasks The list of tasks.
      * @throws AlphaException If the addition cannot be saved.
      */
-    private static void printAdded(ArrayList<Task> tasks) throws AlphaException {
+    private void saveAddition(ArrayList<Task> tasks) throws AlphaException {
         try {
-            STORAGE.save(tasks);
+            storage.save(tasks);
         } catch (AlphaException exception) {
             tasks.remove(tasks.size() - 1);
             throw exception;
         }
-        System.out.println("     Got it. I've added this task:");
-        System.out.println("       " + tasks.get(tasks.size() - 1));
-        System.out.println("     Now you have " + tasks.size() + " tasks in the list.");
+        ui.showAdded(tasks.get(tasks.size() - 1), tasks.size());
     }
 }
