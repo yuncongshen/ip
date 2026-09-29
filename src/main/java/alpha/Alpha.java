@@ -1,9 +1,6 @@
 package alpha;
 
-import alpha.task.Deadline;
-import alpha.task.Event;
 import alpha.task.Task;
-import alpha.task.Todo;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -12,6 +9,7 @@ import java.util.ArrayList;
  * Runs the Alpha chatbot command-line application.
  */
 public class Alpha {
+    private final Parser parser = new Parser();
     private final Ui ui = new Ui();
     private final Storage storage = new Storage(Path.of("data", "alpha.txt"));
 
@@ -43,14 +41,14 @@ public class Alpha {
         while (ui.hasNextCommand()) {
             String command = ui.readCommand();
 
-            if (command.equals("bye")) {
-                ui.showGoodbye();
-                ui.showDivider();
-                break;
-            }
-
             try {
-                processCommand(command, tasks);
+                Parser.CommandType commandType = parser.parseCommandType(command);
+                if (commandType == Parser.CommandType.BYE) {
+                    ui.showGoodbye();
+                    ui.showDivider();
+                    break;
+                }
+                processCommand(commandType, command, tasks);
             } catch (AlphaException exception) {
                 ui.showError(exception.getMessage());
             }
@@ -61,42 +59,35 @@ public class Alpha {
     /**
      * Processes a non-exit command and updates the task list.
      *
+     * @param commandType The recognized non-exit operation.
      * @param command The user's command.
      * @param tasks The list of tasks.
      * @throws AlphaException If the command is invalid or its change cannot be saved.
      */
-    private void processCommand(String command, ArrayList<Task> tasks)
+    private void processCommand(Parser.CommandType commandType, String command, ArrayList<Task> tasks)
             throws AlphaException {
-        if (command.equals("list")) {
-            ui.showTasks(tasks);
-        } else if (command.equals("mark") || command.startsWith("mark ")) {
-            markTask(command, tasks);
-        } else if (command.equals("unmark") || command.startsWith("unmark ")) {
-            unmarkTask(command, tasks);
-        } else if (command.equals("delete") || command.startsWith("delete ")) {
-            deleteTask(command, tasks);
-        } else if (command.equals("todo") || command.startsWith("todo ")) {
-            addTodo(command, tasks);
-        } else if (command.equals("deadline") || command.startsWith("deadline ")) {
-            addDeadline(command, tasks);
-        } else if (command.equals("event") || command.startsWith("event ")) {
-            addEvent(command, tasks);
-        } else {
-            throw new AlphaException("Bro, I don't know what that means...");
+        switch (commandType) {
+        case LIST -> ui.showTasks(tasks);
+        case MARK -> markTask(parser.parseIndex(command, tasks.size()), tasks);
+        case UNMARK -> unmarkTask(parser.parseIndex(command, tasks.size()), tasks);
+        case DELETE -> deleteTask(parser.parseIndex(command, tasks.size()), tasks);
+        case TODO, DEADLINE, EVENT -> {
+            tasks.add(parser.parseTask(command));
+            saveAddition(tasks);
+        }
+        default -> throw new IllegalArgumentException("Exit commands are handled by run.");
         }
     }
 
     /**
-     * Marks the task at the one-based index in the given command as done.
+     * Marks the task at the validated zero-based index as done.
      *
-     * @param command The user's input, for example, "mark 2".
+     * @param index The validated zero-based task index.
      * @param tasks The list of tasks.
-     * @throws AlphaException If the task number is invalid or its change cannot be saved.
+     * @throws AlphaException If the change cannot be saved.
      */
-    private void markTask(String command, ArrayList<Task> tasks)
+    private void markTask(int index, ArrayList<Task> tasks)
             throws AlphaException {
-        int index = parseIndex(command, "mark".length(), tasks.size());
-
         boolean wasDone = tasks.get(index).getStatusIcon().equals("X");
         tasks.get(index).markAsDone();
         try {
@@ -111,16 +102,14 @@ public class Alpha {
     }
 
     /**
-     * Marks the task at the one-based index in the given command as not done.
+     * Marks the task at the validated zero-based index as not done.
      *
-     * @param command The user's input, for example, "unmark 2".
+     * @param index The validated zero-based task index.
      * @param tasks The list of tasks.
-     * @throws AlphaException If the task number is invalid or its change cannot be saved.
+     * @throws AlphaException If the change cannot be saved.
      */
-    private void unmarkTask(String command, ArrayList<Task> tasks)
+    private void unmarkTask(int index, ArrayList<Task> tasks)
             throws AlphaException {
-        int index = parseIndex(command, "unmark".length(), tasks.size());
-
         boolean wasDone = tasks.get(index).getStatusIcon().equals("X");
         tasks.get(index).markAsNotDone();
         try {
@@ -137,13 +126,12 @@ public class Alpha {
     /**
      * Deletes a task while preserving the order of the remaining tasks.
      *
-     * @param command The user's input, for example, "delete 3".
+     * @param index The validated zero-based task index.
      * @param tasks The list of tasks.
-     * @throws AlphaException If the task number is missing, invalid, or deletion cannot be saved.
+     * @throws AlphaException If the deletion cannot be saved.
      */
-    private void deleteTask(String command, ArrayList<Task> tasks)
+    private void deleteTask(int index, ArrayList<Task> tasks)
             throws AlphaException {
-        int index = parseIndex(command, "delete".length(), tasks.size());
         Task deletedTask = tasks.remove(index);
         try {
             storage.save(tasks);
@@ -153,99 +141,6 @@ public class Alpha {
         }
 
         ui.showDeleted(deletedTask, tasks.size());
-    }
-
-    /**
-     * Parses the task number from the given command into a zero-based index.
-     *
-     * @param command The user's input, for example, "mark 2".
-     * @param prefixLength The length of the command prefix, for example, "mark ".
-     * @param taskCount The number of tasks stored.
-     * @return The zero-based task index.
-     * @throws AlphaException If the number is not a valid positive integer
-     *                        or does not refer to a stored task.
-     */
-    private static int parseIndex(String command, int prefixLength, int taskCount)
-            throws AlphaException {
-        int taskNumber;
-        try {
-            taskNumber = Integer.parseInt(command.substring(prefixLength).trim());
-        } catch (NumberFormatException exception) {
-            throw new AlphaException("Please give me a task number, e.g. \"mark 2\"...");
-        }
-
-        if (taskNumber <= 0 || taskNumber > taskCount) {
-            throw new AlphaException("There is no task with that number...");
-        }
-
-        return taskNumber - 1;
-    }
-
-    /**
-     * Adds a ToDo task described in the given command to the task list.
-     *
-     * @param command The user's input, for example, "todo borrow book".
-     * @param tasks The list of tasks.
-     * @throws AlphaException If the description is empty.
-     */
-    private void addTodo(String command, ArrayList<Task> tasks)
-            throws AlphaException {
-        String description = command.length() > "todo ".length()
-                ? command.substring("todo ".length()).trim()
-                : "";
-        if (description.isEmpty()) {
-            throw new AlphaException("Bro, please add a description...");
-        }
-        tasks.add(new Todo(description));
-        saveAddition(tasks);
-    }
-
-    /**
-     * Adds a Deadline task described in the given command to the task list.
-     * The description and deadline are separated by the "/by" marker.
-     *
-     * @param command The user's input, for example, "deadline return book /by Sunday".
-     * @param tasks The list of tasks.
-     * @throws AlphaException If the description is empty.
-     */
-    private void addDeadline(String command, ArrayList<Task> tasks)
-            throws AlphaException {
-        String body = command.length() > "deadline ".length()
-                ? command.substring("deadline ".length()).trim()
-                : "";
-        String[] parts = body.split(" /by ", 2);
-        String description = parts[0];
-        if (description.isEmpty()) {
-            throw new AlphaException("Bro, please add a description...");
-        }
-        String by = parts.length > 1 ? parts[1] : "";
-        tasks.add(new Deadline(description, by));
-        saveAddition(tasks);
-    }
-
-    /**
-     * Adds an Event task described in the given command to the task list.
-     * The description and start/end datetimes are separated by the "/from" and "/to" markers.
-     *
-     * @param command The user's input, for example, "event meeting /from Mon 2pm /to 4pm".
-     * @param tasks The list of tasks.
-     * @throws AlphaException If the description is empty.
-     */
-    private void addEvent(String command, ArrayList<Task> tasks)
-            throws AlphaException {
-        String body = command.length() > "event ".length()
-                ? command.substring("event ".length()).trim()
-                : "";
-        String[] parts = body.split(" /from ", 2);
-        String description = parts[0];
-        if (description.isEmpty()) {
-            throw new AlphaException("Bro, please add a description...");
-        }
-        String[] times = parts.length > 1 ? parts[1].split(" /to ", 2) : new String[] {"", ""};
-        String from = times[0];
-        String to = times.length > 1 ? times[1] : "";
-        tasks.add(new Event(description, from, to));
-        saveAddition(tasks);
     }
 
     /**

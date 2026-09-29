@@ -1,0 +1,151 @@
+package alpha;
+
+import alpha.task.Deadline;
+import alpha.task.Event;
+import alpha.task.Task;
+import alpha.task.Todo;
+
+/**
+ * Interprets command text without changing the task list, displaying output, or accessing storage.
+ */
+public class Parser {
+    /**
+     * Identifies the operations supported by the command-line interface.
+     */
+    public enum CommandType {
+        LIST, MARK, UNMARK, DELETE, TODO, DEADLINE, EVENT, BYE
+    }
+
+    /**
+     * Recognizes a command using the existing case-sensitive spelling and spacing rules.
+     *
+     * @param command The unmodified user input.
+     * @return The recognized operation.
+     * @throws AlphaException If the command is unknown.
+     */
+    public CommandType parseCommandType(String command) throws AlphaException {
+        if (command.equals("list")) {
+            return CommandType.LIST;
+        } else if (command.equals("bye")) {
+            return CommandType.BYE;
+        } else if (command.equals("mark") || command.startsWith("mark ")) {
+            return CommandType.MARK;
+        } else if (command.equals("unmark") || command.startsWith("unmark ")) {
+            return CommandType.UNMARK;
+        } else if (command.equals("delete") || command.startsWith("delete ")) {
+            return CommandType.DELETE;
+        } else if (command.equals("todo") || command.startsWith("todo ")) {
+            return CommandType.TODO;
+        } else if (command.equals("deadline") || command.startsWith("deadline ")) {
+            return CommandType.DEADLINE;
+        } else if (command.equals("event") || command.startsWith("event ")) {
+            return CommandType.EVENT;
+        }
+        throw new AlphaException("Bro, I don't know what that means...");
+    }
+
+    /**
+     * Creates a task from an addition command without adding it to a list.
+     * Missing time markers retain their existing empty-field behavior.
+     *
+     * @param command The unmodified user input.
+     * @return The task described by the command.
+     * @throws AlphaException If the command is not an addition or its description is empty.
+     */
+    public Task parseTask(String command) throws AlphaException {
+        return switch (parseCommandType(command)) {
+        case TODO -> parseTodo(command);
+        case DEADLINE -> parseDeadline(command);
+        case EVENT -> parseEvent(command);
+        default -> throw new AlphaException("Bro, I don't know what that means...");
+        };
+    }
+
+    /**
+     * Parses the task number from the given command into a zero-based index.
+     *
+     * @param command The user's input, for example, "mark 2".
+     * @param taskCount The number of tasks stored.
+     * @return The zero-based task index.
+     * @throws AlphaException If the number is not a valid positive integer
+     *                        or does not refer to a stored task.
+     */
+    public int parseIndex(String command, int taskCount)
+            throws AlphaException {
+        int separator = command.indexOf(' ');
+        String argument = separator < 0 ? "" : command.substring(separator).trim();
+        int taskNumber;
+        try {
+            taskNumber = Integer.parseInt(argument);
+        } catch (NumberFormatException exception) {
+            throw new AlphaException("Please give me a task number, e.g. \"mark 2\"...");
+        }
+
+        if (taskNumber <= 0 || taskNumber > taskCount) {
+            throw new AlphaException("There is no task with that number...");
+        }
+
+        return taskNumber - 1;
+    }
+
+    /**
+     * Creates a todo from the description in an addition command.
+     *
+     * @param command The user's input, for example, "todo borrow book".
+     * @throws AlphaException If the description is empty.
+     */
+    private Task parseTodo(String command)
+            throws AlphaException {
+        String description = command.length() > "todo ".length()
+                ? command.substring("todo ".length()).trim()
+                : "";
+        if (description.isEmpty()) {
+            throw new AlphaException("Bro, please add a description...");
+        }
+        return new Todo(description);
+    }
+
+    /**
+     * Creates a deadline from the description and optional time field.
+     * The description and deadline are separated by the "/by" marker.
+     *
+     * @param command The user's input, for example, "deadline return book /by Sunday".
+     * @throws AlphaException If the description is empty.
+     */
+    private Task parseDeadline(String command)
+            throws AlphaException {
+        String body = command.length() > "deadline ".length()
+                ? command.substring("deadline ".length()).trim()
+                : "";
+        String[] parts = body.split(" /by ", 2);
+        String description = parts[0];
+        if (description.isEmpty()) {
+            throw new AlphaException("Bro, please add a description...");
+        }
+        String by = parts.length > 1 ? parts[1] : "";
+        return new Deadline(description, by);
+    }
+
+    /**
+     * Creates an event from the description and optional time fields.
+     * The description and start/end datetimes are separated by the "/from" and "/to" markers.
+     *
+     * @param command The user's input, for example, "event meeting /from Mon 2pm /to 4pm".
+     * @throws AlphaException If the description is empty.
+     */
+    private Task parseEvent(String command)
+            throws AlphaException {
+        String body = command.length() > "event ".length()
+                ? command.substring("event ".length()).trim()
+                : "";
+        String[] parts = body.split(" /from ", 2);
+        String description = parts[0];
+        if (description.isEmpty()) {
+            throw new AlphaException("Bro, please add a description...");
+        }
+        String[] times = parts.length > 1 ? parts[1].split(" /to ", 2) : new String[] {"", ""};
+        String from = times[0];
+        String to = times.length > 1 ? times[1] : "";
+        return new Event(description, from, to);
+    }
+}
