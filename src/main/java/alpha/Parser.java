@@ -4,6 +4,7 @@ import alpha.command.AddCommand;
 import alpha.command.Command;
 import alpha.command.DeleteCommand;
 import alpha.command.ExitCommand;
+import alpha.command.FindCommand;
 import alpha.command.ListCommand;
 import alpha.command.MarkCommand;
 import alpha.command.OnCommand;
@@ -30,7 +31,7 @@ public class Parser {
      * Identifies the operations supported by the command-line interface.
      */
     private enum CommandType {
-        LIST, MARK, UNMARK, DELETE, TODO, DEADLINE, EVENT, BYE, ON
+        LIST, MARK, UNMARK, DELETE, TODO, DEADLINE, EVENT, BYE, ON, FIND
     }
 
     /**
@@ -59,6 +60,8 @@ public class Parser {
             return CommandType.EVENT;
         } else if (command.equals("on") || command.startsWith("on ")) {
             return CommandType.ON;
+        } else if (command.equals("find") || command.startsWith("find ")) {
+            return CommandType.FIND;
         }
         throw new AlphaException("Bro, I don't know what that means...");
     }
@@ -83,7 +86,19 @@ public class Parser {
         case DEADLINE -> new AddCommand(parseDeadline(command));
         case EVENT -> new AddCommand(parseEvent(command));
         case ON -> new OnCommand(parseQueryDate(command));
+        case FIND -> new FindCommand(parseKeyword(command));
         };
+    }
+
+    /**
+     * Extracts a literal search phrase and rejects missing or blank keywords.
+     */
+    private String parseKeyword(String command) throws AlphaException {
+        String keyword = command.substring("find".length()).strip();
+        if (keyword.isBlank()) {
+            throw new AlphaException("Please give me a keyword, e.g. \"find book\"...");
+        }
+        return keyword;
     }
 
     /**

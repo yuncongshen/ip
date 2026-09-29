@@ -3224,14 +3224,249 @@ Yooo! I'm Alpha. What can I help you with today?
 }
 ```
 
+### UI-36: Search descriptions across types and preserve original task numbers
+
+**Aim:** Match case-insensitive substrings and phrases, Unicode and literal punctuation; exclude date/time fields; check changes and file preservation.
+
+**Inputs:**
+
+```text
+find book
+find BOOK
+find   return book  
+find 2019
+find 1800
+find [
+find CAFÉ
+find .*
+unmark 3
+find book
+delete 1
+find book
+bye
+```
+
+**Expected output:**
+
+```text
+ █████╗ ██╗     ██████╗ ██╗  ██╗ █████╗ 
+██╔══██╗██║     ██╔══██╗██║  ██║██╔══██╗
+███████║██║     ██████╔╝███████║███████║
+██╔══██║██║     ██╔═══╝ ██╔══██║██╔══██║
+██║  ██║███████╗██║     ██║  ██║██║  ██║
+╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝
+Yooo! I'm Alpha. What can I help you with today?
+    ____________________________________________________________
+     Here are the matching tasks in your list:
+     1.[T][X] read book
+     3.[D][X] return BOOK (by: Dec 02 2019)
+     4.[E][ ] notebook meeting (from: 2019-12-02 to: 1800)
+    ____________________________________________________________
+     Here are the matching tasks in your list:
+     1.[T][X] read book
+     3.[D][X] return BOOK (by: Dec 02 2019)
+     4.[E][ ] notebook meeting (from: 2019-12-02 to: 1800)
+    ____________________________________________________________
+     Here are the matching tasks in your list:
+     3.[D][X] return BOOK (by: Dec 02 2019)
+    ____________________________________________________________
+     Here are the matching tasks in your list:
+     No matching tasks found.
+    ____________________________________________________________
+     Here are the matching tasks in your list:
+     No matching tasks found.
+    ____________________________________________________________
+     Here are the matching tasks in your list:
+     5.[T][ ] [draft] café
+    ____________________________________________________________
+     Here are the matching tasks in your list:
+     5.[T][ ] [draft] café
+    ____________________________________________________________
+     Here are the matching tasks in your list:
+     No matching tasks found.
+    ____________________________________________________________
+     OK, I've marked this task as not done yet:
+       [D][ ] return BOOK (by: Dec 02 2019)
+    ____________________________________________________________
+     Here are the matching tasks in your list:
+     1.[T][X] read book
+     3.[D][ ] return BOOK (by: Dec 02 2019)
+     4.[E][ ] notebook meeting (from: 2019-12-02 to: 1800)
+    ____________________________________________________________
+     Noted. I've removed this task:
+       [T][X] read book
+     Now you have 4 tasks in the list.
+    ____________________________________________________________
+     Here are the matching tasks in your list:
+     2.[D][ ] return BOOK (by: Dec 02 2019)
+     3.[E][ ] notebook meeting (from: 2019-12-02 to: 1800)
+    ____________________________________________________________
+     Bye. Hope to see you again soon!
+    ____________________________________________________________
+```
+
+**File checkpoints:**
+
+```json
+{
+  "initialFile": "ALPHA-2\nT | 1 | read book\nT | 0 | buy milk\nD | 1 | return BOOK | 2019-12-02\nE | 0 | notebook meeting | 2019-12-02 | 1800\nT | 0 | [draft] café\n",
+  "steps": [
+    {
+      "afterInput": 1,
+      "contents": "ALPHA-2\nT | 1 | read book\nT | 0 | buy milk\nD | 1 | return BOOK | 2019-12-02\nE | 0 | notebook meeting | 2019-12-02 | 1800\nT | 0 | [draft] café\n",
+      "unchanged": true
+    },
+    {
+      "afterInput": 2,
+      "contents": "ALPHA-2\nT | 1 | read book\nT | 0 | buy milk\nD | 1 | return BOOK | 2019-12-02\nE | 0 | notebook meeting | 2019-12-02 | 1800\nT | 0 | [draft] café\n",
+      "unchanged": true
+    },
+    {
+      "afterInput": 3,
+      "contents": "ALPHA-2\nT | 1 | read book\nT | 0 | buy milk\nD | 1 | return BOOK | 2019-12-02\nE | 0 | notebook meeting | 2019-12-02 | 1800\nT | 0 | [draft] café\n",
+      "unchanged": true
+    },
+    {
+      "afterInput": 4,
+      "contents": "ALPHA-2\nT | 1 | read book\nT | 0 | buy milk\nD | 1 | return BOOK | 2019-12-02\nE | 0 | notebook meeting | 2019-12-02 | 1800\nT | 0 | [draft] café\n",
+      "unchanged": true
+    },
+    {
+      "afterInput": 5,
+      "contents": "ALPHA-2\nT | 1 | read book\nT | 0 | buy milk\nD | 1 | return BOOK | 2019-12-02\nE | 0 | notebook meeting | 2019-12-02 | 1800\nT | 0 | [draft] café\n",
+      "unchanged": true
+    },
+    {
+      "afterInput": 6,
+      "contents": "ALPHA-2\nT | 1 | read book\nT | 0 | buy milk\nD | 1 | return BOOK | 2019-12-02\nE | 0 | notebook meeting | 2019-12-02 | 1800\nT | 0 | [draft] café\n",
+      "unchanged": true
+    },
+    {
+      "afterInput": 7,
+      "contents": "ALPHA-2\nT | 1 | read book\nT | 0 | buy milk\nD | 1 | return BOOK | 2019-12-02\nE | 0 | notebook meeting | 2019-12-02 | 1800\nT | 0 | [draft] café\n",
+      "unchanged": true
+    },
+    {
+      "afterInput": 8,
+      "contents": "ALPHA-2\nT | 1 | read book\nT | 0 | buy milk\nD | 1 | return BOOK | 2019-12-02\nE | 0 | notebook meeting | 2019-12-02 | 1800\nT | 0 | [draft] café\n",
+      "unchanged": true
+    },
+    {
+      "afterInput": 9,
+      "contents": "ALPHA-2\nT | 1 | read book\nT | 0 | buy milk\nD | 0 | return BOOK | 2019-12-02\nE | 0 | notebook meeting | 2019-12-02 | 1800\nT | 0 | [draft] café\n"
+    },
+    {
+      "afterInput": 10,
+      "contents": "ALPHA-2\nT | 1 | read book\nT | 0 | buy milk\nD | 0 | return BOOK | 2019-12-02\nE | 0 | notebook meeting | 2019-12-02 | 1800\nT | 0 | [draft] café\n",
+      "unchanged": true
+    },
+    {
+      "afterInput": 11,
+      "contents": "ALPHA-2\nT | 0 | buy milk\nD | 0 | return BOOK | 2019-12-02\nE | 0 | notebook meeting | 2019-12-02 | 1800\nT | 0 | [draft] café\n"
+    },
+    {
+      "afterInput": 12,
+      "contents": "ALPHA-2\nT | 0 | buy milk\nD | 0 | return BOOK | 2019-12-02\nE | 0 | notebook meeting | 2019-12-02 | 1800\nT | 0 | [draft] café\n",
+      "unchanged": true
+    },
+    {
+      "afterInput": 13,
+      "contents": "ALPHA-2\nT | 0 | buy milk\nD | 0 | return BOOK | 2019-12-02\nE | 0 | notebook meeting | 2019-12-02 | 1800\nT | 0 | [draft] café\n",
+      "unchanged": true
+    }
+  ]
+}
+```
+
+### UI-37: Reject empty keywords and search an empty list without creating data
+
+**Aim:** Reject bare and whitespace-only arguments, enforce the command boundary, recover, and keep the data directory absent.
+
+**Inputs:**
+
+```text
+find
+find   
+find 	
+finder book
+find book
+bye
+```
+
+**Expected output:**
+
+```text
+ █████╗ ██╗     ██████╗ ██╗  ██╗ █████╗ 
+██╔══██╗██║     ██╔══██╗██║  ██║██╔══██╗
+███████║██║     ██████╔╝███████║███████║
+██╔══██║██║     ██╔═══╝ ██╔══██║██╔══██║
+██║  ██║███████╗██║     ██║  ██║██║  ██║
+╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝
+Yooo! I'm Alpha. What can I help you with today?
+    ____________________________________________________________
+     Please give me a keyword, e.g. "find book"...
+    ____________________________________________________________
+     Please give me a keyword, e.g. "find book"...
+    ____________________________________________________________
+     Please give me a keyword, e.g. "find book"...
+    ____________________________________________________________
+     Bro, I don't know what that means...
+    ____________________________________________________________
+     Here are the matching tasks in your list:
+     No matching tasks found.
+    ____________________________________________________________
+     Bye. Hope to see you again soon!
+    ____________________________________________________________
+```
+
+**File checkpoints:**
+
+```json
+{
+  "initialFile": null,
+  "steps": [
+    {
+      "afterInput": 1,
+      "contents": null,
+      "unchanged": true
+    },
+    {
+      "afterInput": 2,
+      "contents": null,
+      "unchanged": true
+    },
+    {
+      "afterInput": 3,
+      "contents": null,
+      "unchanged": true
+    },
+    {
+      "afterInput": 4,
+      "contents": null,
+      "unchanged": true
+    },
+    {
+      "afterInput": 5,
+      "contents": null,
+      "unchanged": true
+    },
+    {
+      "afterInput": 6,
+      "contents": null,
+      "unchanged": true
+    }
+  ]
+}
+```
+
 ## Latest test session
 
 
-- Date/time: 2026-09-29T22:15:25.269929+08:00
+- Date/time: 2026-09-29T22:22:22.831459+08:00
 
 - Branch: master
 
-- Commit: 11722dc752674f79db367e4ee48faf588ffae555
+- Commit: 7a5e7c477ded1669af1b2604d80aad14cf36cdb6
 
 - Working tree at start:
 ```text
@@ -3241,7 +3476,7 @@ Yooo! I'm Alpha. What can I help you with today?
  M src/main/java/alpha/TaskList.java
  M src/main/java/alpha/Ui.java
  M test/ui-test-plan.md
-?? src/main/java/alpha/command/OnCommand.java
+?? src/main/java/alpha/command/FindCommand.java
 ```
 
 - OS: Linux 6.6.87.2-microsoft-standard-WSL2; UTF-8; 10-second timeout.
@@ -3254,15 +3489,15 @@ OpenJDK 64-Bit Server VM (build 25.0.3+9-2-24.04.2-Ubuntu, mixed mode, sharing)
 javac 25.0.3
 ```
 
-- Compile command: `/usr/lib/jvm/java-25-openjdk-amd64/bin/javac -encoding UTF-8 -d /tmp/alpha-ui-qfa6infh/classes /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/Alpha.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/AlphaException.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/Parser.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/Storage.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/TaskList.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/Ui.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/command/AddCommand.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/command/Command.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/command/DeleteCommand.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/command/ExitCommand.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/command/ListCommand.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/command/MarkCommand.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/command/OnCommand.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/command/UnmarkCommand.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/task/Deadline.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/task/Event.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/task/Task.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/task/Todo.java`
+- Compile command: `/usr/lib/jvm/java-25-openjdk-amd64/bin/javac -encoding UTF-8 -d /tmp/alpha-ui-ujyr4zum/classes /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/Alpha.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/AlphaException.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/Parser.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/Storage.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/TaskList.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/Ui.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/command/AddCommand.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/command/Command.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/command/DeleteCommand.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/command/ExitCommand.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/command/FindCommand.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/command/ListCommand.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/command/MarkCommand.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/command/OnCommand.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/command/UnmarkCommand.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/task/Deadline.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/task/Event.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/task/Task.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/task/Todo.java`
 
-- Launch command: `/usr/lib/jvm/java-25-openjdk-amd64/bin/java -Dfile.encoding=UTF-8 -cp /tmp/alpha-ui-qfa6infh/classes alpha.Alpha`
+- Launch command: `/usr/lib/jvm/java-25-openjdk-amd64/bin/java -Dfile.encoding=UTF-8 -cp /tmp/alpha-ui-ujyr4zum/classes alpha.Alpha`
 
 
 ### UI-01 result
 
 
-- Working directory: `/tmp/alpha-ui-qfa6infh/UI-01`
+- Working directory: `/tmp/alpha-ui-ujyr4zum/UI-01`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -3292,7 +3527,7 @@ RESULT: PASS
 ### UI-02 result
 
 
-- Working directory: `/tmp/alpha-ui-qfa6infh/UI-02`
+- Working directory: `/tmp/alpha-ui-ujyr4zum/UI-02`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -3318,7 +3553,7 @@ RESULT: PASS
 ### UI-03 result
 
 
-- Working directory: `/tmp/alpha-ui-qfa6infh/UI-03`
+- Working directory: `/tmp/alpha-ui-ujyr4zum/UI-03`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -3365,7 +3600,7 @@ RESULT: PASS
 ### UI-04 result
 
 
-- Working directory: `/tmp/alpha-ui-qfa6infh/UI-04`
+- Working directory: `/tmp/alpha-ui-ujyr4zum/UI-04`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -3420,7 +3655,7 @@ RESULT: PASS
 ### UI-05 result
 
 
-- Working directory: `/tmp/alpha-ui-qfa6infh/UI-05`
+- Working directory: `/tmp/alpha-ui-ujyr4zum/UI-05`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -3517,7 +3752,7 @@ RESULT: PASS
 ### UI-06 result
 
 
-- Working directory: `/tmp/alpha-ui-qfa6infh/UI-06`
+- Working directory: `/tmp/alpha-ui-ujyr4zum/UI-06`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -3724,7 +3959,7 @@ RESULT: PASS
 ### UI-07 result
 
 
-- Working directory: `/tmp/alpha-ui-qfa6infh/UI-07`
+- Working directory: `/tmp/alpha-ui-ujyr4zum/UI-07`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -3771,7 +4006,7 @@ RESULT: PASS
 ### UI-08 result
 
 
-- Working directory: `/tmp/alpha-ui-qfa6infh/UI-08`
+- Working directory: `/tmp/alpha-ui-ujyr4zum/UI-08`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -3834,7 +4069,7 @@ RESULT: PASS
 ### UI-09 result
 
 
-- Working directory: `/tmp/alpha-ui-qfa6infh/UI-09`
+- Working directory: `/tmp/alpha-ui-ujyr4zum/UI-09`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -3886,7 +4121,7 @@ RESULT: PASS
 ### UI-10 result
 
 
-- Working directory: `/tmp/alpha-ui-qfa6infh/UI-10`
+- Working directory: `/tmp/alpha-ui-ujyr4zum/UI-10`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -3930,7 +4165,7 @@ RESULT: PASS
 ### UI-11 result
 
 
-- Working directory: `/tmp/alpha-ui-qfa6infh/UI-11`
+- Working directory: `/tmp/alpha-ui-ujyr4zum/UI-11`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -4679,7 +4914,7 @@ RESULT: PASS
 ### UI-12 result
 
 
-- Working directory: `/tmp/alpha-ui-qfa6infh/UI-12`
+- Working directory: `/tmp/alpha-ui-ujyr4zum/UI-12`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -4734,7 +4969,7 @@ RESULT: PASS
 ### UI-13 result
 
 
-- Working directory: `/tmp/alpha-ui-qfa6infh/UI-13`
+- Working directory: `/tmp/alpha-ui-ujyr4zum/UI-13`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -4772,7 +5007,7 @@ RESULT: PASS
 ### UI-14 result
 
 
-- Working directory: `/tmp/alpha-ui-qfa6infh/UI-14`
+- Working directory: `/tmp/alpha-ui-ujyr4zum/UI-14`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -4824,7 +5059,7 @@ RESULT: PASS
 ### UI-15 result
 
 
-- Working directory: `/tmp/alpha-ui-qfa6infh/UI-15`
+- Working directory: `/tmp/alpha-ui-ujyr4zum/UI-15`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -4862,7 +5097,7 @@ RESULT: PASS
 ### UI-16 result
 
 
-- Working directory: `/tmp/alpha-ui-qfa6infh/UI-16`
+- Working directory: `/tmp/alpha-ui-ujyr4zum/UI-16`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -4914,7 +5149,7 @@ RESULT: PASS
 ### UI-17 result
 
 
-- Working directory: `/tmp/alpha-ui-qfa6infh/UI-17`
+- Working directory: `/tmp/alpha-ui-ujyr4zum/UI-17`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -4948,7 +5183,7 @@ RESULT: PASS
 ### UI-18 result
 
 
-- Working directory: `/tmp/alpha-ui-qfa6infh/UI-18`
+- Working directory: `/tmp/alpha-ui-ujyr4zum/UI-18`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -4973,7 +5208,7 @@ RESULT: PASS
 ### UI-19 result
 
 
-- Working directory: `/tmp/alpha-ui-qfa6infh/UI-19`
+- Working directory: `/tmp/alpha-ui-ujyr4zum/UI-19`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -4998,7 +5233,7 @@ RESULT: PASS
 ### UI-20 result
 
 
-- Working directory: `/tmp/alpha-ui-qfa6infh/UI-20`
+- Working directory: `/tmp/alpha-ui-ujyr4zum/UI-20`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -5023,7 +5258,7 @@ RESULT: PASS
 ### UI-21 result
 
 
-- Working directory: `/tmp/alpha-ui-qfa6infh/UI-21`
+- Working directory: `/tmp/alpha-ui-ujyr4zum/UI-21`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -5048,7 +5283,7 @@ RESULT: PASS
 ### UI-22 result
 
 
-- Working directory: `/tmp/alpha-ui-qfa6infh/UI-22`
+- Working directory: `/tmp/alpha-ui-ujyr4zum/UI-22`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -5097,7 +5332,7 @@ RESULT: PASS
 ### UI-23 result
 
 
-- Working directory: `/tmp/alpha-ui-qfa6infh/UI-23`
+- Working directory: `/tmp/alpha-ui-ujyr4zum/UI-23`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -5231,7 +5466,7 @@ RESULT: PASS
 ### UI-24 result
 
 
-- Working directory: `/tmp/alpha-ui-qfa6infh/UI-24`
+- Working directory: `/tmp/alpha-ui-ujyr4zum/UI-24`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -5271,7 +5506,7 @@ RESULT: PASS
 ### UI-25 result
 
 
-- Working directory: `/tmp/alpha-ui-qfa6infh/UI-25`
+- Working directory: `/tmp/alpha-ui-ujyr4zum/UI-25`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -5296,7 +5531,7 @@ RESULT: PASS
 ### UI-26 result
 
 
-- Working directory: `/tmp/alpha-ui-qfa6infh/UI-26`
+- Working directory: `/tmp/alpha-ui-ujyr4zum/UI-26`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -5368,7 +5603,7 @@ RESULT: PASS
 ### UI-27 result
 
 
-- Working directory: `/tmp/alpha-ui-qfa6infh/UI-27`
+- Working directory: `/tmp/alpha-ui-ujyr4zum/UI-27`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -5399,7 +5634,7 @@ RESULT: PASS
 ### UI-28 result
 
 
-- Working directory: `/tmp/alpha-ui-qfa6infh/UI-28`
+- Working directory: `/tmp/alpha-ui-ujyr4zum/UI-28`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -5424,7 +5659,7 @@ RESULT: PASS
 ### UI-29 result
 
 
-- Working directory: `/tmp/alpha-ui-qfa6infh/UI-29`
+- Working directory: `/tmp/alpha-ui-ujyr4zum/UI-29`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -5449,7 +5684,7 @@ RESULT: PASS
 ### UI-30 result
 
 
-- Working directory: `/tmp/alpha-ui-qfa6infh/UI-30`
+- Working directory: `/tmp/alpha-ui-ujyr4zum/UI-30`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -5538,7 +5773,7 @@ RESULT: PASS
 ### UI-31 result
 
 
-- Working directory: `/tmp/alpha-ui-qfa6infh/UI-31`
+- Working directory: `/tmp/alpha-ui-ujyr4zum/UI-31`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -5573,7 +5808,7 @@ RESULT: PASS
 ### UI-32 result
 
 
-- Working directory: `/tmp/alpha-ui-qfa6infh/UI-32`
+- Working directory: `/tmp/alpha-ui-ujyr4zum/UI-32`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -5598,7 +5833,7 @@ RESULT: PASS
 ### UI-33 result
 
 
-- Working directory: `/tmp/alpha-ui-qfa6infh/UI-33`
+- Working directory: `/tmp/alpha-ui-ujyr4zum/UI-33`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -5649,7 +5884,7 @@ RESULT: PASS
 ### UI-34 result
 
 
-- Working directory: `/tmp/alpha-ui-qfa6infh/UI-34`
+- Working directory: `/tmp/alpha-ui-ujyr4zum/UI-34`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -5711,7 +5946,7 @@ RESULT: PASS
 ### UI-35 result
 
 
-- Working directory: `/tmp/alpha-ui-qfa6infh/UI-35`
+- Working directory: `/tmp/alpha-ui-ujyr4zum/UI-35`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -5739,6 +5974,130 @@ Yooo! I'm Alpha. What can I help you with today?
      Now you have 0 tasks in the list.
     ____________________________________________________________
      No deadlines on Feb 29 2024.
+    ____________________________________________________________
+     Bye. Hope to see you again soon!
+    ____________________________________________________________
+RESULT: PASS
+```
+
+
+### UI-36 result
+
+
+- Working directory: `/tmp/alpha-ui-ujyr4zum/UI-36`
+
+- Exit: 0; timeout: False; stderr: ''.
+
+```text
+=== UI-36: Search descriptions across types and preserve original task numbers ===
+INPUT
+find book
+find BOOK
+find   return book  
+find 2019
+find 1800
+find [
+find CAFÉ
+find .*
+unmark 3
+find book
+delete 1
+find book
+bye
+OUTPUT
+ █████╗ ██╗     ██████╗ ██╗  ██╗ █████╗ 
+██╔══██╗██║     ██╔══██╗██║  ██║██╔══██╗
+███████║██║     ██████╔╝███████║███████║
+██╔══██║██║     ██╔═══╝ ██╔══██║██╔══██║
+██║  ██║███████╗██║     ██║  ██║██║  ██║
+╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝
+Yooo! I'm Alpha. What can I help you with today?
+    ____________________________________________________________
+     Here are the matching tasks in your list:
+     1.[T][X] read book
+     3.[D][X] return BOOK (by: Dec 02 2019)
+     4.[E][ ] notebook meeting (from: 2019-12-02 to: 1800)
+    ____________________________________________________________
+     Here are the matching tasks in your list:
+     1.[T][X] read book
+     3.[D][X] return BOOK (by: Dec 02 2019)
+     4.[E][ ] notebook meeting (from: 2019-12-02 to: 1800)
+    ____________________________________________________________
+     Here are the matching tasks in your list:
+     3.[D][X] return BOOK (by: Dec 02 2019)
+    ____________________________________________________________
+     Here are the matching tasks in your list:
+     No matching tasks found.
+    ____________________________________________________________
+     Here are the matching tasks in your list:
+     No matching tasks found.
+    ____________________________________________________________
+     Here are the matching tasks in your list:
+     5.[T][ ] [draft] café
+    ____________________________________________________________
+     Here are the matching tasks in your list:
+     5.[T][ ] [draft] café
+    ____________________________________________________________
+     Here are the matching tasks in your list:
+     No matching tasks found.
+    ____________________________________________________________
+     OK, I've marked this task as not done yet:
+       [D][ ] return BOOK (by: Dec 02 2019)
+    ____________________________________________________________
+     Here are the matching tasks in your list:
+     1.[T][X] read book
+     3.[D][ ] return BOOK (by: Dec 02 2019)
+     4.[E][ ] notebook meeting (from: 2019-12-02 to: 1800)
+    ____________________________________________________________
+     Noted. I've removed this task:
+       [T][X] read book
+     Now you have 4 tasks in the list.
+    ____________________________________________________________
+     Here are the matching tasks in your list:
+     2.[D][ ] return BOOK (by: Dec 02 2019)
+     3.[E][ ] notebook meeting (from: 2019-12-02 to: 1800)
+    ____________________________________________________________
+     Bye. Hope to see you again soon!
+    ____________________________________________________________
+RESULT: PASS
+```
+
+
+### UI-37 result
+
+
+- Working directory: `/tmp/alpha-ui-ujyr4zum/UI-37`
+
+- Exit: 0; timeout: False; stderr: ''.
+
+```text
+=== UI-37: Reject empty keywords and search an empty list without creating data ===
+INPUT
+find
+find   
+find 	
+finder book
+find book
+bye
+OUTPUT
+ █████╗ ██╗     ██████╗ ██╗  ██╗ █████╗ 
+██╔══██╗██║     ██╔══██╗██║  ██║██╔══██╗
+███████║██║     ██████╔╝███████║███████║
+██╔══██║██║     ██╔═══╝ ██╔══██║██╔══██║
+██║  ██║███████╗██║     ██║  ██║██║  ██║
+╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝
+Yooo! I'm Alpha. What can I help you with today?
+    ____________________________________________________________
+     Please give me a keyword, e.g. "find book"...
+    ____________________________________________________________
+     Please give me a keyword, e.g. "find book"...
+    ____________________________________________________________
+     Please give me a keyword, e.g. "find book"...
+    ____________________________________________________________
+     Bro, I don't know what that means...
+    ____________________________________________________________
+     Here are the matching tasks in your list:
+     No matching tasks found.
     ____________________________________________________________
      Bye. Hope to see you again soon!
     ____________________________________________________________
@@ -5783,4 +6142,6 @@ Overall: PASS
 - UI-33: PASS
 - UI-34: PASS
 - UI-35: PASS
+- UI-36: PASS
+- UI-37: PASS
 

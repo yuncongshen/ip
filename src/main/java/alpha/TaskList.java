@@ -6,6 +6,7 @@ import alpha.task.Task;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Owns the ordered task collection and its in-memory operations, independently of storage and display.
@@ -36,6 +37,23 @@ public class TaskList {
 
     public Task get(int index) {
         return tasks.get(index);
+    }
+
+    /**
+     * Returns indices of tasks whose descriptions contain the literal keyword, ignoring case.
+     * Preserves list order and includes all task types and completion states.
+     *
+     * @param keyword The nonblank keyword or phrase validated by the parser.
+     */
+    public List<Integer> findDescriptionIndices(String keyword) {
+        String query = keyword.toLowerCase(Locale.ROOT);
+        List<Integer> indices = new ArrayList<>();
+        for (int i = 0; i < tasks.size(); i++) {
+            if (tasks.get(i).getDescription().toLowerCase(Locale.ROOT).contains(query)) {
+                indices.add(i);
+            }
+        }
+        return indices;
     }
 
     /**

@@ -142,6 +142,23 @@ public class Ui {
         System.out.println("       " + task);
     }
 
+    /**
+     * Displays description-search results with their original task numbers.
+     *
+     * @param tasks The full task list.
+     * @param indices Matching zero-based indices in list order.
+     */
+    public void showMatchingTasks(List<Task> tasks, List<Integer> indices) {
+        System.out.println("     Here are the matching tasks in your list:");
+        if (indices.isEmpty()) {
+            System.out.println("     No matching tasks found.");
+            return;
+        }
+        for (int index : indices) {
+            System.out.println("     " + (index + 1) + "." + tasks.get(index));
+        }
+    }
+
     private void showTaskCount(int taskCount) {
         System.out.println("     Now you have " + taskCount + " tasks in the list.");
     }

@@ -17,7 +17,7 @@ public class Alpha {
     /**
      * Greets the user, restores saved tasks, manages them, and exits on {@code bye}.
      * Supported commands are {@code todo}, {@code deadline}, {@code event},
-     * {@code list}, {@code on}, {@code mark}, {@code unmark}, {@code delete}, and {@code bye}.
+     * {@code list}, {@code on}, {@code find}, {@code mark}, {@code unmark}, {@code delete}, and {@code bye}.
      *
      * @param args Command-line arguments, which are not used.
      */

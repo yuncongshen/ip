@@ -135,6 +135,17 @@ Alpha prints `No deadlines on Dec 02 2019.` when nothing matches.
 This command does not change tasks or write the save file. Todos and events are excluded;
 events still have free-text time fields. Invalid or impossible query dates produce an error.
 
+## Find tasks by description
+
+Use `find book` to search descriptions across todos, deadlines, and events, including completed tasks.
+Matching ignores case and uses literal substrings: `book` also matches `BOOK` and `notebook`.
+You can search for a phrase with `find return book`; surrounding spaces are ignored.
+Punctuation is literal, not a regular expression. Dates, time fields, and status labels are not searched.
+
+Results retain their original list order and task numbers, just like `on`, so the displayed numbers
+work with `mark`, `unmark`, and `delete`. Empty results show `No matching tasks found.`
+Missing or blank keywords produce an error. Searching does not modify tasks or the save file.
+
 ## Saving and loading tasks (Level-7)
 
 Run Alpha with the project root as its working directory. Successful `todo`, `deadline`, `event`,
