@@ -2933,22 +2933,315 @@ Yooo! I'm Alpha. What can I help you with today?
 }
 ```
 
+### UI-33: Query restored deadlines by calendar date and original number
+
+**Aim:** Match midnight, late and date-only deadlines regardless of status; exclude adjacent dates, todos and events; preserve numbering and query file state.
+
+**Inputs:**
+
+```text
+on 2019-12-02
+on 2/12/2019
+on 2019-12-04
+unmark 4
+on 2019-12-02
+bye
+```
+
+**Expected output:**
+
+```text
+ █████╗ ██╗     ██████╗ ██╗  ██╗ █████╗ 
+██╔══██╗██║     ██╔══██╗██║  ██║██╔══██╗
+███████║██║     ██████╔╝███████║███████║
+██╔══██║██║     ██╔═══╝ ██╔══██║██╔══██║
+██║  ██║███████╗██║     ██║  ██║██║  ██║
+╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝
+Yooo! I'm Alpha. What can I help you with today?
+    ____________________________________________________________
+     Here are your deadlines on Dec 02 2019:
+     2.[D][ ] midnight (by: Dec 02 2019, 00:00)
+     4.[D][X] late (by: Dec 02 2019, 23:59)
+     6.[D][ ] all day (by: Dec 02 2019)
+    ____________________________________________________________
+     Here are your deadlines on Dec 02 2019:
+     2.[D][ ] midnight (by: Dec 02 2019, 00:00)
+     4.[D][X] late (by: Dec 02 2019, 23:59)
+     6.[D][ ] all day (by: Dec 02 2019)
+    ____________________________________________________________
+     No deadlines on Dec 04 2019.
+    ____________________________________________________________
+     OK, I've marked this task as not done yet:
+       [D][ ] late (by: Dec 02 2019, 23:59)
+    ____________________________________________________________
+     Here are your deadlines on Dec 02 2019:
+     2.[D][ ] midnight (by: Dec 02 2019, 00:00)
+     4.[D][ ] late (by: Dec 02 2019, 23:59)
+     6.[D][ ] all day (by: Dec 02 2019)
+    ____________________________________________________________
+     Bye. Hope to see you again soon!
+    ____________________________________________________________
+```
+
+**File checkpoints:**
+
+```json
+{
+  "initialFile": "ALPHA-2\nT | 0 | todo\nD | 0 | midnight | 2019-12-02T00:00\nE | 0 | event | 2019-12-02 | 2019-12-03\nD | 1 | late | 2019-12-02T23:59\nD | 0 | tomorrow | 2019-12-03T00:00\nD | 0 | all day | 2019-12-02\nD | 0 | yesterday | 2019-12-01T23:59\n",
+  "steps": [
+    {
+      "afterInput": 1,
+      "contents": "ALPHA-2\nT | 0 | todo\nD | 0 | midnight | 2019-12-02T00:00\nE | 0 | event | 2019-12-02 | 2019-12-03\nD | 1 | late | 2019-12-02T23:59\nD | 0 | tomorrow | 2019-12-03T00:00\nD | 0 | all day | 2019-12-02\nD | 0 | yesterday | 2019-12-01T23:59\n",
+      "unchanged": true
+    },
+    {
+      "afterInput": 2,
+      "contents": "ALPHA-2\nT | 0 | todo\nD | 0 | midnight | 2019-12-02T00:00\nE | 0 | event | 2019-12-02 | 2019-12-03\nD | 1 | late | 2019-12-02T23:59\nD | 0 | tomorrow | 2019-12-03T00:00\nD | 0 | all day | 2019-12-02\nD | 0 | yesterday | 2019-12-01T23:59\n",
+      "unchanged": true
+    },
+    {
+      "afterInput": 3,
+      "contents": "ALPHA-2\nT | 0 | todo\nD | 0 | midnight | 2019-12-02T00:00\nE | 0 | event | 2019-12-02 | 2019-12-03\nD | 1 | late | 2019-12-02T23:59\nD | 0 | tomorrow | 2019-12-03T00:00\nD | 0 | all day | 2019-12-02\nD | 0 | yesterday | 2019-12-01T23:59\n",
+      "unchanged": true
+    },
+    {
+      "afterInput": 4,
+      "contents": "ALPHA-2\nT | 0 | todo\nD | 0 | midnight | 2019-12-02T00:00\nE | 0 | event | 2019-12-02 | 2019-12-03\nD | 0 | late | 2019-12-02T23:59\nD | 0 | tomorrow | 2019-12-03T00:00\nD | 0 | all day | 2019-12-02\nD | 0 | yesterday | 2019-12-01T23:59\n"
+    },
+    {
+      "afterInput": 5,
+      "contents": "ALPHA-2\nT | 0 | todo\nD | 0 | midnight | 2019-12-02T00:00\nE | 0 | event | 2019-12-02 | 2019-12-03\nD | 0 | late | 2019-12-02T23:59\nD | 0 | tomorrow | 2019-12-03T00:00\nD | 0 | all day | 2019-12-02\nD | 0 | yesterday | 2019-12-01T23:59\n",
+      "unchanged": true
+    },
+    {
+      "afterInput": 6,
+      "contents": "ALPHA-2\nT | 0 | todo\nD | 0 | midnight | 2019-12-02T00:00\nE | 0 | event | 2019-12-02 | 2019-12-03\nD | 0 | late | 2019-12-02T23:59\nD | 0 | tomorrow | 2019-12-03T00:00\nD | 0 | all day | 2019-12-02\nD | 0 | yesterday | 2019-12-01T23:59\n",
+      "unchanged": true
+    }
+  ]
+}
+```
+
+### UI-34: Reject invalid queries and leave first-run storage absent
+
+**Aim:** Reject missing, impossible, timed and malformed dates; accept a leap day with trimmed arguments; never create a data folder.
+
+**Inputs:**
+
+```text
+on
+on 
+on 2023-02-29
+on 31/4/2019
+on 2/12/2019 1800
+on tomorrow
+on 2019-12-02 extra
+on 12/31/2019
+on 2019-2-01
+only 2019-12-02
+on   29/02/2024  
+on 2024-02-29
+bye
+```
+
+**Expected output:**
+
+```text
+ █████╗ ██╗     ██████╗ ██╗  ██╗ █████╗ 
+██╔══██╗██║     ██╔══██╗██║  ██║██╔══██╗
+███████║██║     ██████╔╝███████║███████║
+██╔══██║██║     ██╔═══╝ ██╔══██║██╔══██║
+██║  ██║███████╗██║     ██║  ██║██║  ██║
+╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝
+Yooo! I'm Alpha. What can I help you with today?
+    ____________________________________________________________
+     Invalid query date; use on yyyy-MM-dd or on d/M/yyyy
+    ____________________________________________________________
+     Invalid query date; use on yyyy-MM-dd or on d/M/yyyy
+    ____________________________________________________________
+     Invalid query date; use on yyyy-MM-dd or on d/M/yyyy
+    ____________________________________________________________
+     Invalid query date; use on yyyy-MM-dd or on d/M/yyyy
+    ____________________________________________________________
+     Invalid query date; use on yyyy-MM-dd or on d/M/yyyy
+    ____________________________________________________________
+     Invalid query date; use on yyyy-MM-dd or on d/M/yyyy
+    ____________________________________________________________
+     Invalid query date; use on yyyy-MM-dd or on d/M/yyyy
+    ____________________________________________________________
+     Invalid query date; use on yyyy-MM-dd or on d/M/yyyy
+    ____________________________________________________________
+     Invalid query date; use on yyyy-MM-dd or on d/M/yyyy
+    ____________________________________________________________
+     Bro, I don't know what that means...
+    ____________________________________________________________
+     No deadlines on Feb 29 2024.
+    ____________________________________________________________
+     No deadlines on Feb 29 2024.
+    ____________________________________________________________
+     Bye. Hope to see you again soon!
+    ____________________________________________________________
+```
+
+**File checkpoints:**
+
+```json
+{
+  "initialFile": null,
+  "steps": [
+    {
+      "afterInput": 1,
+      "contents": null,
+      "unchanged": true
+    },
+    {
+      "afterInput": 2,
+      "contents": null,
+      "unchanged": true
+    },
+    {
+      "afterInput": 3,
+      "contents": null,
+      "unchanged": true
+    },
+    {
+      "afterInput": 4,
+      "contents": null,
+      "unchanged": true
+    },
+    {
+      "afterInput": 5,
+      "contents": null,
+      "unchanged": true
+    },
+    {
+      "afterInput": 6,
+      "contents": null,
+      "unchanged": true
+    },
+    {
+      "afterInput": 7,
+      "contents": null,
+      "unchanged": true
+    },
+    {
+      "afterInput": 8,
+      "contents": null,
+      "unchanged": true
+    },
+    {
+      "afterInput": 9,
+      "contents": null,
+      "unchanged": true
+    },
+    {
+      "afterInput": 10,
+      "contents": null,
+      "unchanged": true
+    },
+    {
+      "afterInput": 11,
+      "contents": null,
+      "unchanged": true
+    },
+    {
+      "afterInput": 12,
+      "contents": null,
+      "unchanged": true
+    },
+    {
+      "afterInput": 13,
+      "contents": null,
+      "unchanged": true
+    }
+  ]
+}
+```
+
+### UI-35: Query reflects changes to the active task list
+
+**Aim:** Find a leap-day deadline, delete it using its displayed number, and query again without stale results.
+
+**Inputs:**
+
+```text
+on 2024-02-29
+delete 1
+on 29/2/2024
+bye
+```
+
+**Expected output:**
+
+```text
+ █████╗ ██╗     ██████╗ ██╗  ██╗ █████╗ 
+██╔══██╗██║     ██╔══██╗██║  ██║██╔══██╗
+███████║██║     ██████╔╝███████║███████║
+██╔══██║██║     ██╔═══╝ ██╔══██║██╔══██║
+██║  ██║███████╗██║     ██║  ██║██║  ██║
+╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝
+Yooo! I'm Alpha. What can I help you with today?
+    ____________________________________________________________
+     Here are your deadlines on Feb 29 2024:
+     1.[D][ ] leap (by: Feb 29 2024, 18:00)
+    ____________________________________________________________
+     Noted. I've removed this task:
+       [D][ ] leap (by: Feb 29 2024, 18:00)
+     Now you have 0 tasks in the list.
+    ____________________________________________________________
+     No deadlines on Feb 29 2024.
+    ____________________________________________________________
+     Bye. Hope to see you again soon!
+    ____________________________________________________________
+```
+
+**File checkpoints:**
+
+```json
+{
+  "initialFile": "ALPHA-2\nD | 0 | leap | 2024-02-29T18:00\n",
+  "steps": [
+    {
+      "afterInput": 1,
+      "contents": "ALPHA-2\nD | 0 | leap | 2024-02-29T18:00\n",
+      "unchanged": true
+    },
+    {
+      "afterInput": 2,
+      "contents": "ALPHA-2\n"
+    },
+    {
+      "afterInput": 3,
+      "contents": "ALPHA-2\n",
+      "unchanged": true
+    },
+    {
+      "afterInput": 4,
+      "contents": "ALPHA-2\n",
+      "unchanged": true
+    }
+  ]
+}
+```
+
 ## Latest test session
 
 
-- Date/time: 2026-09-29T22:07:21.695632+08:00
+- Date/time: 2026-09-29T22:15:25.269929+08:00
 
 - Branch: master
 
-- Commit: 704aea7feafd6e2f56aa43f76ed49ca8290bc9fd
+- Commit: 11722dc752674f79db367e4ee48faf588ffae555
 
 - Working tree at start:
 ```text
  M README.md
+ M src/main/java/alpha/Alpha.java
  M src/main/java/alpha/Parser.java
- M src/main/java/alpha/Storage.java
- M src/main/java/alpha/task/Deadline.java
+ M src/main/java/alpha/TaskList.java
+ M src/main/java/alpha/Ui.java
  M test/ui-test-plan.md
+?? src/main/java/alpha/command/OnCommand.java
 ```
 
 - OS: Linux 6.6.87.2-microsoft-standard-WSL2; UTF-8; 10-second timeout.
@@ -2961,15 +3254,15 @@ OpenJDK 64-Bit Server VM (build 25.0.3+9-2-24.04.2-Ubuntu, mixed mode, sharing)
 javac 25.0.3
 ```
 
-- Compile command: `/usr/lib/jvm/java-25-openjdk-amd64/bin/javac -encoding UTF-8 -d /tmp/alpha-ui-f2ankocr/classes /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/Alpha.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/AlphaException.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/Parser.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/Storage.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/TaskList.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/Ui.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/command/AddCommand.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/command/Command.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/command/DeleteCommand.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/command/ExitCommand.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/command/ListCommand.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/command/MarkCommand.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/command/UnmarkCommand.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/task/Deadline.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/task/Event.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/task/Task.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/task/Todo.java`
+- Compile command: `/usr/lib/jvm/java-25-openjdk-amd64/bin/javac -encoding UTF-8 -d /tmp/alpha-ui-qfa6infh/classes /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/Alpha.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/AlphaException.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/Parser.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/Storage.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/TaskList.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/Ui.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/command/AddCommand.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/command/Command.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/command/DeleteCommand.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/command/ExitCommand.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/command/ListCommand.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/command/MarkCommand.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/command/OnCommand.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/command/UnmarkCommand.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/task/Deadline.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/task/Event.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/task/Task.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/task/Todo.java`
 
-- Launch command: `/usr/lib/jvm/java-25-openjdk-amd64/bin/java -Dfile.encoding=UTF-8 -cp /tmp/alpha-ui-f2ankocr/classes alpha.Alpha`
+- Launch command: `/usr/lib/jvm/java-25-openjdk-amd64/bin/java -Dfile.encoding=UTF-8 -cp /tmp/alpha-ui-qfa6infh/classes alpha.Alpha`
 
 
 ### UI-01 result
 
 
-- Working directory: `/tmp/alpha-ui-f2ankocr/UI-01`
+- Working directory: `/tmp/alpha-ui-qfa6infh/UI-01`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -2999,7 +3292,7 @@ RESULT: PASS
 ### UI-02 result
 
 
-- Working directory: `/tmp/alpha-ui-f2ankocr/UI-02`
+- Working directory: `/tmp/alpha-ui-qfa6infh/UI-02`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -3025,7 +3318,7 @@ RESULT: PASS
 ### UI-03 result
 
 
-- Working directory: `/tmp/alpha-ui-f2ankocr/UI-03`
+- Working directory: `/tmp/alpha-ui-qfa6infh/UI-03`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -3072,7 +3365,7 @@ RESULT: PASS
 ### UI-04 result
 
 
-- Working directory: `/tmp/alpha-ui-f2ankocr/UI-04`
+- Working directory: `/tmp/alpha-ui-qfa6infh/UI-04`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -3127,7 +3420,7 @@ RESULT: PASS
 ### UI-05 result
 
 
-- Working directory: `/tmp/alpha-ui-f2ankocr/UI-05`
+- Working directory: `/tmp/alpha-ui-qfa6infh/UI-05`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -3224,7 +3517,7 @@ RESULT: PASS
 ### UI-06 result
 
 
-- Working directory: `/tmp/alpha-ui-f2ankocr/UI-06`
+- Working directory: `/tmp/alpha-ui-qfa6infh/UI-06`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -3431,7 +3724,7 @@ RESULT: PASS
 ### UI-07 result
 
 
-- Working directory: `/tmp/alpha-ui-f2ankocr/UI-07`
+- Working directory: `/tmp/alpha-ui-qfa6infh/UI-07`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -3478,7 +3771,7 @@ RESULT: PASS
 ### UI-08 result
 
 
-- Working directory: `/tmp/alpha-ui-f2ankocr/UI-08`
+- Working directory: `/tmp/alpha-ui-qfa6infh/UI-08`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -3541,7 +3834,7 @@ RESULT: PASS
 ### UI-09 result
 
 
-- Working directory: `/tmp/alpha-ui-f2ankocr/UI-09`
+- Working directory: `/tmp/alpha-ui-qfa6infh/UI-09`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -3593,7 +3886,7 @@ RESULT: PASS
 ### UI-10 result
 
 
-- Working directory: `/tmp/alpha-ui-f2ankocr/UI-10`
+- Working directory: `/tmp/alpha-ui-qfa6infh/UI-10`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -3637,7 +3930,7 @@ RESULT: PASS
 ### UI-11 result
 
 
-- Working directory: `/tmp/alpha-ui-f2ankocr/UI-11`
+- Working directory: `/tmp/alpha-ui-qfa6infh/UI-11`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -4386,7 +4679,7 @@ RESULT: PASS
 ### UI-12 result
 
 
-- Working directory: `/tmp/alpha-ui-f2ankocr/UI-12`
+- Working directory: `/tmp/alpha-ui-qfa6infh/UI-12`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -4441,7 +4734,7 @@ RESULT: PASS
 ### UI-13 result
 
 
-- Working directory: `/tmp/alpha-ui-f2ankocr/UI-13`
+- Working directory: `/tmp/alpha-ui-qfa6infh/UI-13`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -4479,7 +4772,7 @@ RESULT: PASS
 ### UI-14 result
 
 
-- Working directory: `/tmp/alpha-ui-f2ankocr/UI-14`
+- Working directory: `/tmp/alpha-ui-qfa6infh/UI-14`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -4531,7 +4824,7 @@ RESULT: PASS
 ### UI-15 result
 
 
-- Working directory: `/tmp/alpha-ui-f2ankocr/UI-15`
+- Working directory: `/tmp/alpha-ui-qfa6infh/UI-15`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -4569,7 +4862,7 @@ RESULT: PASS
 ### UI-16 result
 
 
-- Working directory: `/tmp/alpha-ui-f2ankocr/UI-16`
+- Working directory: `/tmp/alpha-ui-qfa6infh/UI-16`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -4621,7 +4914,7 @@ RESULT: PASS
 ### UI-17 result
 
 
-- Working directory: `/tmp/alpha-ui-f2ankocr/UI-17`
+- Working directory: `/tmp/alpha-ui-qfa6infh/UI-17`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -4655,7 +4948,7 @@ RESULT: PASS
 ### UI-18 result
 
 
-- Working directory: `/tmp/alpha-ui-f2ankocr/UI-18`
+- Working directory: `/tmp/alpha-ui-qfa6infh/UI-18`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -4680,7 +4973,7 @@ RESULT: PASS
 ### UI-19 result
 
 
-- Working directory: `/tmp/alpha-ui-f2ankocr/UI-19`
+- Working directory: `/tmp/alpha-ui-qfa6infh/UI-19`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -4705,7 +4998,7 @@ RESULT: PASS
 ### UI-20 result
 
 
-- Working directory: `/tmp/alpha-ui-f2ankocr/UI-20`
+- Working directory: `/tmp/alpha-ui-qfa6infh/UI-20`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -4730,7 +5023,7 @@ RESULT: PASS
 ### UI-21 result
 
 
-- Working directory: `/tmp/alpha-ui-f2ankocr/UI-21`
+- Working directory: `/tmp/alpha-ui-qfa6infh/UI-21`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -4755,7 +5048,7 @@ RESULT: PASS
 ### UI-22 result
 
 
-- Working directory: `/tmp/alpha-ui-f2ankocr/UI-22`
+- Working directory: `/tmp/alpha-ui-qfa6infh/UI-22`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -4804,7 +5097,7 @@ RESULT: PASS
 ### UI-23 result
 
 
-- Working directory: `/tmp/alpha-ui-f2ankocr/UI-23`
+- Working directory: `/tmp/alpha-ui-qfa6infh/UI-23`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -4938,7 +5231,7 @@ RESULT: PASS
 ### UI-24 result
 
 
-- Working directory: `/tmp/alpha-ui-f2ankocr/UI-24`
+- Working directory: `/tmp/alpha-ui-qfa6infh/UI-24`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -4978,7 +5271,7 @@ RESULT: PASS
 ### UI-25 result
 
 
-- Working directory: `/tmp/alpha-ui-f2ankocr/UI-25`
+- Working directory: `/tmp/alpha-ui-qfa6infh/UI-25`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -5003,7 +5296,7 @@ RESULT: PASS
 ### UI-26 result
 
 
-- Working directory: `/tmp/alpha-ui-f2ankocr/UI-26`
+- Working directory: `/tmp/alpha-ui-qfa6infh/UI-26`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -5075,7 +5368,7 @@ RESULT: PASS
 ### UI-27 result
 
 
-- Working directory: `/tmp/alpha-ui-f2ankocr/UI-27`
+- Working directory: `/tmp/alpha-ui-qfa6infh/UI-27`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -5106,7 +5399,7 @@ RESULT: PASS
 ### UI-28 result
 
 
-- Working directory: `/tmp/alpha-ui-f2ankocr/UI-28`
+- Working directory: `/tmp/alpha-ui-qfa6infh/UI-28`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -5131,7 +5424,7 @@ RESULT: PASS
 ### UI-29 result
 
 
-- Working directory: `/tmp/alpha-ui-f2ankocr/UI-29`
+- Working directory: `/tmp/alpha-ui-qfa6infh/UI-29`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -5156,7 +5449,7 @@ RESULT: PASS
 ### UI-30 result
 
 
-- Working directory: `/tmp/alpha-ui-f2ankocr/UI-30`
+- Working directory: `/tmp/alpha-ui-qfa6infh/UI-30`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -5245,7 +5538,7 @@ RESULT: PASS
 ### UI-31 result
 
 
-- Working directory: `/tmp/alpha-ui-f2ankocr/UI-31`
+- Working directory: `/tmp/alpha-ui-qfa6infh/UI-31`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -5280,7 +5573,7 @@ RESULT: PASS
 ### UI-32 result
 
 
-- Working directory: `/tmp/alpha-ui-f2ankocr/UI-32`
+- Working directory: `/tmp/alpha-ui-qfa6infh/UI-32`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -5297,6 +5590,157 @@ OUTPUT
 Yooo! I'm Alpha. What can I help you with today?
     ____________________________________________________________
      Cannot load data/alpha.txt: Invalid task at line 2: Invalid deadline; use yyyy-MM-dd or d/M/yyyy HHmm (e.g., 2/12/2019 1800). The file has not been changed.
+    ____________________________________________________________
+RESULT: PASS
+```
+
+
+### UI-33 result
+
+
+- Working directory: `/tmp/alpha-ui-qfa6infh/UI-33`
+
+- Exit: 0; timeout: False; stderr: ''.
+
+```text
+=== UI-33: Query restored deadlines by calendar date and original number ===
+INPUT
+on 2019-12-02
+on 2/12/2019
+on 2019-12-04
+unmark 4
+on 2019-12-02
+bye
+OUTPUT
+ █████╗ ██╗     ██████╗ ██╗  ██╗ █████╗ 
+██╔══██╗██║     ██╔══██╗██║  ██║██╔══██╗
+███████║██║     ██████╔╝███████║███████║
+██╔══██║██║     ██╔═══╝ ██╔══██║██╔══██║
+██║  ██║███████╗██║     ██║  ██║██║  ██║
+╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝
+Yooo! I'm Alpha. What can I help you with today?
+    ____________________________________________________________
+     Here are your deadlines on Dec 02 2019:
+     2.[D][ ] midnight (by: Dec 02 2019, 00:00)
+     4.[D][X] late (by: Dec 02 2019, 23:59)
+     6.[D][ ] all day (by: Dec 02 2019)
+    ____________________________________________________________
+     Here are your deadlines on Dec 02 2019:
+     2.[D][ ] midnight (by: Dec 02 2019, 00:00)
+     4.[D][X] late (by: Dec 02 2019, 23:59)
+     6.[D][ ] all day (by: Dec 02 2019)
+    ____________________________________________________________
+     No deadlines on Dec 04 2019.
+    ____________________________________________________________
+     OK, I've marked this task as not done yet:
+       [D][ ] late (by: Dec 02 2019, 23:59)
+    ____________________________________________________________
+     Here are your deadlines on Dec 02 2019:
+     2.[D][ ] midnight (by: Dec 02 2019, 00:00)
+     4.[D][ ] late (by: Dec 02 2019, 23:59)
+     6.[D][ ] all day (by: Dec 02 2019)
+    ____________________________________________________________
+     Bye. Hope to see you again soon!
+    ____________________________________________________________
+RESULT: PASS
+```
+
+
+### UI-34 result
+
+
+- Working directory: `/tmp/alpha-ui-qfa6infh/UI-34`
+
+- Exit: 0; timeout: False; stderr: ''.
+
+```text
+=== UI-34: Reject invalid queries and leave first-run storage absent ===
+INPUT
+on
+on 
+on 2023-02-29
+on 31/4/2019
+on 2/12/2019 1800
+on tomorrow
+on 2019-12-02 extra
+on 12/31/2019
+on 2019-2-01
+only 2019-12-02
+on   29/02/2024  
+on 2024-02-29
+bye
+OUTPUT
+ █████╗ ██╗     ██████╗ ██╗  ██╗ █████╗ 
+██╔══██╗██║     ██╔══██╗██║  ██║██╔══██╗
+███████║██║     ██████╔╝███████║███████║
+██╔══██║██║     ██╔═══╝ ██╔══██║██╔══██║
+██║  ██║███████╗██║     ██║  ██║██║  ██║
+╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝
+Yooo! I'm Alpha. What can I help you with today?
+    ____________________________________________________________
+     Invalid query date; use on yyyy-MM-dd or on d/M/yyyy
+    ____________________________________________________________
+     Invalid query date; use on yyyy-MM-dd or on d/M/yyyy
+    ____________________________________________________________
+     Invalid query date; use on yyyy-MM-dd or on d/M/yyyy
+    ____________________________________________________________
+     Invalid query date; use on yyyy-MM-dd or on d/M/yyyy
+    ____________________________________________________________
+     Invalid query date; use on yyyy-MM-dd or on d/M/yyyy
+    ____________________________________________________________
+     Invalid query date; use on yyyy-MM-dd or on d/M/yyyy
+    ____________________________________________________________
+     Invalid query date; use on yyyy-MM-dd or on d/M/yyyy
+    ____________________________________________________________
+     Invalid query date; use on yyyy-MM-dd or on d/M/yyyy
+    ____________________________________________________________
+     Invalid query date; use on yyyy-MM-dd or on d/M/yyyy
+    ____________________________________________________________
+     Bro, I don't know what that means...
+    ____________________________________________________________
+     No deadlines on Feb 29 2024.
+    ____________________________________________________________
+     No deadlines on Feb 29 2024.
+    ____________________________________________________________
+     Bye. Hope to see you again soon!
+    ____________________________________________________________
+RESULT: PASS
+```
+
+
+### UI-35 result
+
+
+- Working directory: `/tmp/alpha-ui-qfa6infh/UI-35`
+
+- Exit: 0; timeout: False; stderr: ''.
+
+```text
+=== UI-35: Query reflects changes to the active task list ===
+INPUT
+on 2024-02-29
+delete 1
+on 29/2/2024
+bye
+OUTPUT
+ █████╗ ██╗     ██████╗ ██╗  ██╗ █████╗ 
+██╔══██╗██║     ██╔══██╗██║  ██║██╔══██╗
+███████║██║     ██████╔╝███████║███████║
+██╔══██║██║     ██╔═══╝ ██╔══██║██╔══██║
+██║  ██║███████╗██║     ██║  ██║██║  ██║
+╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝
+Yooo! I'm Alpha. What can I help you with today?
+    ____________________________________________________________
+     Here are your deadlines on Feb 29 2024:
+     1.[D][ ] leap (by: Feb 29 2024, 18:00)
+    ____________________________________________________________
+     Noted. I've removed this task:
+       [D][ ] leap (by: Feb 29 2024, 18:00)
+     Now you have 0 tasks in the list.
+    ____________________________________________________________
+     No deadlines on Feb 29 2024.
+    ____________________________________________________________
+     Bye. Hope to see you again soon!
     ____________________________________________________________
 RESULT: PASS
 ```
@@ -5336,4 +5780,7 @@ Overall: PASS
 - UI-30: PASS
 - UI-31: PASS
 - UI-32: PASS
+- UI-33: PASS
+- UI-34: PASS
+- UI-35: PASS
 

@@ -1,7 +1,9 @@
 package alpha;
 
+import alpha.task.Deadline;
 import alpha.task.Task;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +36,22 @@ public class TaskList {
 
     public Task get(int index) {
         return tasks.get(index);
+    }
+
+    /**
+     * Returns indices of deadlines on the given calendar date, regardless of time or completion status.
+     * Indices preserve the original list order and numbering; events and todos are excluded.
+     *
+     * @param date The date to match.
+     */
+    public List<Integer> findDeadlineIndices(LocalDate date) {
+        List<Integer> indices = new ArrayList<>();
+        for (int i = 0; i < tasks.size(); i++) {
+            if (tasks.get(i) instanceof Deadline deadline && deadline.getBy().toLocalDate().equals(date)) {
+                indices.add(i);
+            }
+        }
+        return indices;
     }
 
     /**

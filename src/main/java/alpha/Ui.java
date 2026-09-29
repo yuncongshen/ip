@@ -2,7 +2,10 @@ package alpha;
 
 import alpha.task.Task;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 import java.util.Scanner;
 
 /**
@@ -73,6 +76,25 @@ public class Ui {
         System.out.println("     Here are the tasks in your list:");
         for (int i = 0; i < tasks.size(); i++) {
             System.out.println("     " + (i + 1) + "." + tasks.get(i));
+        }
+    }
+
+    /**
+     * Displays matching deadlines with their original task numbers, or an explicit empty result.
+     *
+     * @param date The requested date.
+     * @param tasks The full list of tasks.
+     * @param indices The matching zero-based indices in list order.
+     */
+    public void showDeadlinesOn(LocalDate date, List<Task> tasks, List<Integer> indices) {
+        String displayDate = date.format(DateTimeFormatter.ofPattern("MMM dd uuuu", Locale.ENGLISH));
+        if (indices.isEmpty()) {
+            System.out.println("     No deadlines on " + displayDate + ".");
+            return;
+        }
+        System.out.println("     Here are your deadlines on " + displayDate + ":");
+        for (int index : indices) {
+            System.out.println("     " + (index + 1) + "." + tasks.get(index));
         }
     }
 

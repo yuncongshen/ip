@@ -124,6 +124,17 @@ without changing the file. With Alpha closed, back up the file and replace those
 intended full dates before restarting. Base64 snapshots need their date field encoded in Base64,
 or conversion to the documented readable format. This update does not change existing files automatically.
 
+## Find deadlines on a date
+
+Use `on 2019-12-02` or `on 2/12/2019` to list deadlines on 2 December 2019.
+The query accepts a date without a time and includes completed and incomplete deadlines,
+whether date-only or timed (including midnight and 23:59). Results keep their original
+list order and task numbers, so you can use those numbers with `mark`, `unmark`, or `delete`.
+Alpha prints `No deadlines on Dec 02 2019.` when nothing matches.
+
+This command does not change tasks or write the save file. Todos and events are excluded;
+events still have free-text time fields. Invalid or impossible query dates produce an error.
+
 ## Saving and loading tasks (Level-7)
 
 Run Alpha with the project root as its working directory. Successful `todo`, `deadline`, `event`,

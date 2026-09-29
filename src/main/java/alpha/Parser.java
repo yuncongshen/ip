@@ -6,21 +6,31 @@ import alpha.command.DeleteCommand;
 import alpha.command.ExitCommand;
 import alpha.command.ListCommand;
 import alpha.command.MarkCommand;
+import alpha.command.OnCommand;
 import alpha.command.UnmarkCommand;
 import alpha.task.Deadline;
 import alpha.task.Event;
 import alpha.task.Task;
 import alpha.task.Todo;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.time.format.ResolverStyle;
+import java.util.Locale;
+
 /**
  * Interprets command text without changing the task list, displaying output, or accessing storage.
  */
 public class Parser {
+    private static final DateTimeFormatter QUERY_DATE = DateTimeFormatter.ofPattern("d/M/uuuu", Locale.ENGLISH)
+            .withResolverStyle(ResolverStyle.STRICT);
+
     /**
      * Identifies the operations supported by the command-line interface.
      */
     private enum CommandType {
-        LIST, MARK, UNMARK, DELETE, TODO, DEADLINE, EVENT, BYE
+        LIST, MARK, UNMARK, DELETE, TODO, DEADLINE, EVENT, BYE, ON
     }
 
     /**
@@ -47,6 +57,8 @@ public class Parser {
             return CommandType.DEADLINE;
         } else if (command.equals("event") || command.startsWith("event ")) {
             return CommandType.EVENT;
+        } else if (command.equals("on") || command.startsWith("on ")) {
+            return CommandType.ON;
         }
         throw new AlphaException("Bro, I don't know what that means...");
     }
@@ -70,7 +82,25 @@ public class Parser {
         case TODO -> new AddCommand(parseTodo(command));
         case DEADLINE -> new AddCommand(parseDeadline(command));
         case EVENT -> new AddCommand(parseEvent(command));
+        case ON -> new OnCommand(parseQueryDate(command));
         };
+    }
+
+    /**
+     * Parses a calendar date for a query, rejecting times and impossible dates.
+     */
+    private LocalDate parseQueryDate(String command) throws AlphaException {
+        String date = command.substring("on".length()).trim();
+        try {
+            if (date.matches("[0-9]{4}-[0-9]{2}-[0-9]{2}")) {
+                return LocalDate.parse(date);
+            } else if (date.matches("[0-9]{1,2}/[0-9]{1,2}/[0-9]{4}")) {
+                return LocalDate.parse(date, QUERY_DATE);
+            }
+        } catch (DateTimeParseException exception) {
+            throw new AlphaException("Invalid query date; use on yyyy-MM-dd or on d/M/yyyy");
+        }
+        throw new AlphaException("Invalid query date; use on yyyy-MM-dd or on d/M/yyyy");
     }
 
     /**
