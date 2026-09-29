@@ -12,7 +12,10 @@ import java.util.Scanner;
  * Reads console commands and displays responses without changing tasks or saving data.
  */
 public class Ui {
-    private static final String DIVIDER = "    ____________________________________________________________";
+    private static final String MESSAGE_INDENT = "     ";
+    private static final String TASK_INDENT = MESSAGE_INDENT + "  ";
+    private static final String DIVIDER_INDENT = "    ";
+    private static final String DIVIDER = "____________________________________________________________";
     private final Scanner scanner = new Scanner(System.in);
 
     /**
@@ -39,8 +42,8 @@ public class Ui {
                 + "██╔══██║██║     ██╔═══╝ ██╔══██║██╔══██║\n"
                 + "██║  ██║███████╗██║     ██║  ██║██║  ██║\n"
                 + "╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝\n";
-        System.out.print(banner);
-        System.out.println("Yooo! I'm Alpha. What can I help you with today?");
+        printMessage(banner);
+        printMessage("Yooo! I'm Alpha. What can I help you with today?");
         showDivider();
     }
 
@@ -48,14 +51,14 @@ public class Ui {
      * Displays a separator after a complete response.
      */
     public void showDivider() {
-        System.out.println(DIVIDER);
+        printMessage(DIVIDER, DIVIDER_INDENT);
     }
 
     /**
      * Displays the farewell for an explicit exit command.
      */
     public void showGoodbye() {
-        System.out.println("     Bye. Hope to see you again soon!");
+        printMessage("Bye. Hope to see you again soon!");
     }
 
     /**
@@ -64,7 +67,7 @@ public class Ui {
      * @param message The error message to display.
      */
     public void showError(String message) {
-        System.out.println("     " + message);
+        printMessage(message);
     }
 
     /**
@@ -73,9 +76,9 @@ public class Ui {
      * @param tasks The tasks to display.
      */
     public void showTasks(List<Task> tasks) {
-        System.out.println("     Here are the tasks in your list:");
+        printMessage("Here are the tasks in your list:");
         for (int i = 0; i < tasks.size(); i++) {
-            System.out.println("     " + (i + 1) + "." + tasks.get(i));
+            printMessage((i + 1) + "." + tasks.get(i));
         }
     }
 
@@ -89,12 +92,12 @@ public class Ui {
     public void showDeadlinesOn(LocalDate date, List<Task> tasks, List<Integer> indices) {
         String displayDate = date.format(DateTimeFormatter.ofPattern("MMM dd uuuu", Locale.ENGLISH));
         if (indices.isEmpty()) {
-            System.out.println("     No deadlines on " + displayDate + ".");
+            printMessage("No deadlines on " + displayDate + ".");
             return;
         }
-        System.out.println("     Here are your deadlines on " + displayDate + ":");
+        printMessage("Here are your deadlines on " + displayDate + ":");
         for (int index : indices) {
-            System.out.println("     " + (index + 1) + "." + tasks.get(index));
+            printMessage((index + 1) + "." + tasks.get(index));
         }
     }
 
@@ -105,8 +108,8 @@ public class Ui {
      * @param taskCount The number of tasks after adding.
      */
     public void showAdded(Task task, int taskCount) {
-        System.out.println("     Got it. I've added this task:");
-        System.out.println("       " + task);
+        printMessage("Got it. I've added this task:");
+        printMessage(task.toString(), TASK_INDENT);
         showTaskCount(taskCount);
     }
 
@@ -117,8 +120,8 @@ public class Ui {
      * @param taskCount The number of tasks remaining.
      */
     public void showDeleted(Task task, int taskCount) {
-        System.out.println("     Noted. I've removed this task:");
-        System.out.println("       " + task);
+        printMessage("Noted. I've removed this task:");
+        printMessage(task.toString(), TASK_INDENT);
         showTaskCount(taskCount);
     }
 
@@ -128,8 +131,8 @@ public class Ui {
      * @param task The updated task.
      */
     public void showMarked(Task task) {
-        System.out.println("     Nice! I've marked this task as done:");
-        System.out.println("       " + task);
+        printMessage("Nice! I've marked this task as done:");
+        printMessage(task.toString(), TASK_INDENT);
     }
 
     /**
@@ -138,8 +141,8 @@ public class Ui {
      * @param task The updated task.
      */
     public void showUnmarked(Task task) {
-        System.out.println("     OK, I've marked this task as not done yet:");
-        System.out.println("       " + task);
+        printMessage("OK, I've marked this task as not done yet:");
+        printMessage(task.toString(), TASK_INDENT);
     }
 
     /**
@@ -149,13 +152,13 @@ public class Ui {
      * @param indices Matching zero-based indices in list order.
      */
     public void showMatchingTasks(List<Task> tasks, List<Integer> indices) {
-        System.out.println("     Here are the matching tasks in your list:");
+        printMessage("Here are the matching tasks in your list:");
         if (indices.isEmpty()) {
-            System.out.println("     No matching tasks found.");
+            printMessage("No matching tasks found.");
             return;
         }
         for (int index : indices) {
-            System.out.println("     " + (index + 1) + "." + tasks.get(index));
+            printMessage((index + 1) + "." + tasks.get(index));
         }
     }
 
@@ -165,6 +168,20 @@ public class Ui {
      * @param taskCount The updated number of tasks.
      */
     private void showTaskCount(int taskCount) {
-        System.out.println("     Now you have " + taskCount + " tasks in the list.");
+        printMessage("Now you have " + taskCount + " tasks in the list.");
+    }
+
+    /**
+     * Prints every line of a response with the standard message indentation.
+     */
+    private void printMessage(String message) {
+        printMessage(message, MESSAGE_INDENT);
+    }
+
+    /**
+     * Applies the chosen indentation to each line, including multiline banners.
+     */
+    private void printMessage(String message, String indentation) {
+        message.lines().forEach(line -> System.out.println(indentation + line));
     }
 }
