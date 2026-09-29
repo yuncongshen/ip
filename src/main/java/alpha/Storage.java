@@ -222,7 +222,7 @@ public class Storage {
         String status = task.getStatusIcon().equals("X") ? "1" : "0";
         String body = status + " | " + escape(task.getDescription());
         if (task instanceof Deadline deadline) {
-            return "D | " + body + " | " + escape(deadline.getBy());
+            return "D | " + body + " | " + deadline.toStorageString();
         } else if (task instanceof Event event) {
             return "E | " + body + " | " + escape(event.getFrom()) + " | " + escape(event.getTo());
         } else if (task instanceof Todo) {

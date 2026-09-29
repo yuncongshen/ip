@@ -82,6 +82,48 @@ has not been executed in this environment.
 References: [Shadow application integration](https://gradleup.com/shadow/application-plugin/) and
 [Gradle Java compatibility](https://docs.gradle.org/current/userguide/compatibility.html).
 
+## Deadline dates
+
+Create a deadline with a full date in `yyyy-MM-dd` format (year-month-day):
+
+```text
+deadline return book /by 2019-10-15
+```
+
+Alpha stores the deadline as a Java `LocalDateTime`, tracking whether a time was supplied,
+and displays this date-only input as:
+
+```text
+[D][ ] return book (by: Oct 15 2019)
+```
+
+Day-first slash dates are also accepted, with an optional 24-hour time:
+
+```text
+deadline return book /by 2/12/2019 1800
+deadline return book /by 02/12/2019 18:00
+```
+
+Both mean 2 December 2019 at 6pm and display as `[D][ ] return book (by: Dec 02 2019, 18:00)`.
+Use one or two digits for the day/month and four digits for the year. Time must be `HHmm` or `HH:mm`;
+`0000` means midnight, and `2359` means 11:59pm. Slash dates without a time also work.
+Date-only deadlines do not display a time; an explicit midnight deadline displays `00:00`.
+
+Month names are always English. Dates and times are validated strictly: `2024-02-29` is valid,
+but `2023-02-29`, `31/4/2019 1800`, and `2/12/2019 2400` are rejected.
+Missing dates, natural-language dates, AM/PM times, seconds, and time zones are unsupported.
+Rejected commands leave tasks and the save file unchanged. Event time fields remain free text.
+
+The save file retains ISO dates, such as `D | 0 | return book | 2019-10-15`, or ISO datetimes,
+such as `D | 0 | return book | 2019-12-02T18:00`. Both reload without depending on the display
+format or computer locale; explicit midnight and date-only values remain distinct.
+The ISO datetime format is also accepted as input. Existing snapshot formats are still
+recognized, but their deadline fields must contain a supported date or datetime. Old values such as `June 6th`
+or blank deadline dates cannot be converted reliably: Alpha reports the affected line and exits
+without changing the file. With Alpha closed, back up the file and replace those fields with the
+intended full dates before restarting. Base64 snapshots need their date field encoded in Base64,
+or conversion to the documented readable format. This update does not change existing files automatically.
+
 ## Saving and loading tasks (Level-7)
 
 Run Alpha with the project root as its working directory. Successful `todo`, `deadline`, `event`,
@@ -96,7 +138,7 @@ the task type (`T`, `D`, or `E`), completion flag (`0` or `1`), description, and
 ```text
 ALPHA-2
 T | 0 | read book
-D | 1 | return book | June 6th
+D | 1 | return book | 2019-06-06
 E | 0 | project meeting | Monday 2pm | Monday 4pm
 ```
 
@@ -110,7 +152,8 @@ whole. Tasks use an ArrayList, so there is no fixed 100-task limit, including wh
 Special characters are escaped: `\|` for a literal pipe, `\\` for a backslash, and `\n`, `\r`, `\t` for
 newline, carriage return, and tab. Keep the spaces around field separators when editing a file manually.
 
-Existing Base64 (`ALPHA-1`) and earlier display-format snapshots still load and are converted to readable text
+Existing Base64 (`ALPHA-1`) and earlier display-format snapshots with valid ISO deadline dates still load
+and are converted to readable text
 on the next successful task change. Use the rebuilt JAR; older releases cannot read `ALPHA-2` files. If an old
 record has ambiguous time separators, Alpha rejects it rather than guessing how its fields were divided.
 

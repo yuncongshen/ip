@@ -118,11 +118,11 @@ public class Parser {
     }
 
     /**
-     * Creates a deadline from the description and optional time field.
+     * Creates a deadline from the description and required date with an optional time.
      * The description and deadline are separated by the "/by" marker.
      *
-     * @param command The user's input, for example, "deadline return book /by Sunday".
-     * @throws AlphaException If the description is empty.
+     * @param command The user's input, for example, "deadline return book /by 2019-10-15".
+     * @throws AlphaException If the description is empty or the date is invalid.
      */
     private Task parseDeadline(String command)
             throws AlphaException {
@@ -135,7 +135,11 @@ public class Parser {
             throw new AlphaException("Bro, please add a description...");
         }
         String by = parts.length > 1 ? parts[1] : "";
-        return new Deadline(description, by);
+        try {
+            return new Deadline(description, by);
+        } catch (IllegalArgumentException exception) {
+            throw new AlphaException(exception.getMessage());
+        }
     }
 
     /**

@@ -31,6 +31,8 @@ JSON `\n` represents a literal newline in the expected file. It is not text stor
 
 ## Scope
 
+Deadline fixtures use ISO dates; output uses English month names. UI-10 now requires a deadline date. UI-26 through UI-29 cover leap dates, invalid input, restart, and preservation of incompatible saved dates.
+
 The happy path creates the data directory and rewrites a versioned snapshot after successful add, mark, and unmark commands.
 Deletion now saves automatically and rolls back if saving fails. Save failures now roll back the command; atomic replacement and external-edit checks protect existing snapshots.
 UI-14 covers restoring and updating existing tasks; UI-15 covers an empty file. UI-12 and UI-13 also cover startup without a save file.
@@ -107,7 +109,7 @@ Yooo! I'm Alpha. What can I help you with today?
 
 ```text
 todo read book
-deadline return book /by June 6th
+deadline return book /by 2019-06-06
 event project meeting /from Aug 6th 2pm /to 4pm
 list
 bye
@@ -129,7 +131,7 @@ Yooo! I'm Alpha. What can I help you with today?
      Now you have 1 tasks in the list.
     ____________________________________________________________
      Got it. I've added this task:
-       [D][ ] return book (by: June 6th)
+       [D][ ] return book (by: Jun 06 2019)
      Now you have 2 tasks in the list.
     ____________________________________________________________
      Got it. I've added this task:
@@ -138,7 +140,7 @@ Yooo! I'm Alpha. What can I help you with today?
     ____________________________________________________________
      Here are the tasks in your list:
      1.[T][ ] read book
-     2.[D][ ] return book (by: June 6th)
+     2.[D][ ] return book (by: Jun 06 2019)
      3.[E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
     ____________________________________________________________
      Bye. Hope to see you again soon!
@@ -207,7 +209,7 @@ Yooo! I'm Alpha. What can I help you with today?
 
 ```text
 todo read book
-deadline return book /by June 6th
+deadline return book /by 2019-06-06
 event project meeting /from Aug 6th 2pm /to 4pm
 todo borrow book
 mark 3
@@ -240,7 +242,7 @@ Yooo! I'm Alpha. What can I help you with today?
      Now you have 1 tasks in the list.
     ____________________________________________________________
      Got it. I've added this task:
-       [D][ ] return book (by: June 6th)
+       [D][ ] return book (by: Jun 06 2019)
      Now you have 2 tasks in the list.
     ____________________________________________________________
      Got it. I've added this task:
@@ -255,7 +257,7 @@ Yooo! I'm Alpha. What can I help you with today?
        [E][X] project meeting (from: Aug 6th 2pm to: 4pm)
     ____________________________________________________________
      Noted. I've removed this task:
-       [D][ ] return book (by: June 6th)
+       [D][ ] return book (by: Jun 06 2019)
      Now you have 3 tasks in the list.
     ____________________________________________________________
      Here are the tasks in your list:
@@ -660,9 +662,9 @@ Yooo! I'm Alpha. What can I help you with today?
     ____________________________________________________________
 ```
 
-### UI-10: Missing time markers compatibility
+### UI-10: Required deadline date and optional event times
 
-**Aim:** Record existing acceptance of descriptions without time markers; this is a compatibility baseline, not a new validation requirement.
+**Aim:** Reject a deadline without a date while retaining optional event time behavior.
 
 **Inputs:**
 
@@ -685,22 +687,19 @@ bye
 ╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝
 Yooo! I'm Alpha. What can I help you with today?
     ____________________________________________________________
-     Got it. I've added this task:
-       [D][ ] return book (by: )
-     Now you have 1 tasks in the list.
+     Invalid deadline; use yyyy-MM-dd or d/M/yyyy HHmm (e.g., 2/12/2019 1800)
     ____________________________________________________________
      Got it. I've added this task:
        [E][ ] meeting (from:  to: )
-     Now you have 2 tasks in the list.
+     Now you have 1 tasks in the list.
     ____________________________________________________________
      Got it. I've added this task:
        [E][ ] lunch (from: noon to: )
-     Now you have 3 tasks in the list.
+     Now you have 2 tasks in the list.
     ____________________________________________________________
      Here are the tasks in your list:
-     1.[D][ ] return book (by: )
-     2.[E][ ] meeting (from:  to: )
-     3.[E][ ] lunch (from: noon to: )
+     1.[E][ ] meeting (from:  to: )
+     2.[E][ ] lunch (from: noon to: )
     ____________________________________________________________
      Bye. Hope to see you again soon!
     ____________________________________________________________
@@ -1462,7 +1461,7 @@ Yooo! I'm Alpha. What can I help you with today?
 
 ```text
 todo read book
-deadline return book /by June 6th
+deadline return book /by 2019-06-06
 event project meeting /from Aug 6th 2pm /to 4pm
 mark 1
 unmark 1
@@ -1486,7 +1485,7 @@ Yooo! I'm Alpha. What can I help you with today?
      Now you have 1 tasks in the list.
     ____________________________________________________________
      Got it. I've added this task:
-       [D][ ] return book (by: June 6th)
+       [D][ ] return book (by: Jun 06 2019)
      Now you have 2 tasks in the list.
     ____________________________________________________________
      Got it. I've added this task:
@@ -1501,7 +1500,7 @@ Yooo! I'm Alpha. What can I help you with today?
     ____________________________________________________________
      Here are the tasks in your list:
      1.[T][ ] read book
-     2.[D][ ] return book (by: June 6th)
+     2.[D][ ] return book (by: Jun 06 2019)
      3.[E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
     ____________________________________________________________
      Bye. Hope to see you again soon!
@@ -1520,28 +1519,28 @@ Yooo! I'm Alpha. What can I help you with today?
     },
     {
       "afterInput": 2,
-      "contents": "ALPHA-2\nT | 0 | read book\nD | 0 | return book | June 6th\n"
+      "contents": "ALPHA-2\nT | 0 | read book\nD | 0 | return book | 2019-06-06\n"
     },
     {
       "afterInput": 3,
-      "contents": "ALPHA-2\nT | 0 | read book\nD | 0 | return book | June 6th\nE | 0 | project meeting | Aug 6th 2pm | 4pm\n"
+      "contents": "ALPHA-2\nT | 0 | read book\nD | 0 | return book | 2019-06-06\nE | 0 | project meeting | Aug 6th 2pm | 4pm\n"
     },
     {
       "afterInput": 4,
-      "contents": "ALPHA-2\nT | 1 | read book\nD | 0 | return book | June 6th\nE | 0 | project meeting | Aug 6th 2pm | 4pm\n"
+      "contents": "ALPHA-2\nT | 1 | read book\nD | 0 | return book | 2019-06-06\nE | 0 | project meeting | Aug 6th 2pm | 4pm\n"
     },
     {
       "afterInput": 5,
-      "contents": "ALPHA-2\nT | 0 | read book\nD | 0 | return book | June 6th\nE | 0 | project meeting | Aug 6th 2pm | 4pm\n"
+      "contents": "ALPHA-2\nT | 0 | read book\nD | 0 | return book | 2019-06-06\nE | 0 | project meeting | Aug 6th 2pm | 4pm\n"
     },
     {
       "afterInput": 6,
-      "contents": "ALPHA-2\nT | 0 | read book\nD | 0 | return book | June 6th\nE | 0 | project meeting | Aug 6th 2pm | 4pm\n",
+      "contents": "ALPHA-2\nT | 0 | read book\nD | 0 | return book | 2019-06-06\nE | 0 | project meeting | Aug 6th 2pm | 4pm\n",
       "unchanged": true
     },
     {
       "afterInput": 7,
-      "contents": "ALPHA-2\nT | 0 | read book\nD | 0 | return book | June 6th\nE | 0 | project meeting | Aug 6th 2pm | 4pm\n",
+      "contents": "ALPHA-2\nT | 0 | read book\nD | 0 | return book | 2019-06-06\nE | 0 | project meeting | Aug 6th 2pm | 4pm\n",
       "unchanged": true
     }
   ]
@@ -1648,14 +1647,14 @@ Yooo! I'm Alpha. What can I help you with today?
     ____________________________________________________________
      Here are the tasks in your list:
      1.[T][X] read book
-     2.[D][ ] return book (by: June 6th)
+     2.[D][ ] return book (by: Jun 06 2019)
      3.[E][X] project meeting (from: Aug 6th 2pm to: 4pm)
     ____________________________________________________________
      OK, I've marked this task as not done yet:
        [E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
     ____________________________________________________________
      Nice! I've marked this task as done:
-       [D][X] return book (by: June 6th)
+       [D][X] return book (by: Jun 06 2019)
     ____________________________________________________________
      Got it. I've added this task:
        [T][ ] café
@@ -1663,7 +1662,7 @@ Yooo! I'm Alpha. What can I help you with today?
     ____________________________________________________________
      Here are the tasks in your list:
      1.[T][X] read book
-     2.[D][X] return book (by: June 6th)
+     2.[D][X] return book (by: Jun 06 2019)
      3.[E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
      4.[T][ ] café
     ____________________________________________________________
@@ -1675,33 +1674,33 @@ Yooo! I'm Alpha. What can I help you with today?
 
 ```json
 {
-  "initialFile": "[T][X] read book\n[D][ ] return book (by: June 6th)\n[E][X] project meeting (from: Aug 6th 2pm to: 4pm)\n",
+  "initialFile": "[T][X] read book\n[D][ ] return book (by: 2019-06-06)\n[E][X] project meeting (from: Aug 6th 2pm to: 4pm)\n",
   "steps": [
     {
       "afterInput": 1,
-      "contents": "[T][X] read book\n[D][ ] return book (by: June 6th)\n[E][X] project meeting (from: Aug 6th 2pm to: 4pm)\n",
+      "contents": "[T][X] read book\n[D][ ] return book (by: 2019-06-06)\n[E][X] project meeting (from: Aug 6th 2pm to: 4pm)\n",
       "unchanged": true
     },
     {
       "afterInput": 2,
-      "contents": "ALPHA-2\nT | 1 | read book\nD | 0 | return book | June 6th\nE | 0 | project meeting | Aug 6th 2pm | 4pm\n"
+      "contents": "ALPHA-2\nT | 1 | read book\nD | 0 | return book | 2019-06-06\nE | 0 | project meeting | Aug 6th 2pm | 4pm\n"
     },
     {
       "afterInput": 3,
-      "contents": "ALPHA-2\nT | 1 | read book\nD | 1 | return book | June 6th\nE | 0 | project meeting | Aug 6th 2pm | 4pm\n"
+      "contents": "ALPHA-2\nT | 1 | read book\nD | 1 | return book | 2019-06-06\nE | 0 | project meeting | Aug 6th 2pm | 4pm\n"
     },
     {
       "afterInput": 4,
-      "contents": "ALPHA-2\nT | 1 | read book\nD | 1 | return book | June 6th\nE | 0 | project meeting | Aug 6th 2pm | 4pm\nT | 0 | café\n"
+      "contents": "ALPHA-2\nT | 1 | read book\nD | 1 | return book | 2019-06-06\nE | 0 | project meeting | Aug 6th 2pm | 4pm\nT | 0 | café\n"
     },
     {
       "afterInput": 5,
-      "contents": "ALPHA-2\nT | 1 | read book\nD | 1 | return book | June 6th\nE | 0 | project meeting | Aug 6th 2pm | 4pm\nT | 0 | café\n",
+      "contents": "ALPHA-2\nT | 1 | read book\nD | 1 | return book | 2019-06-06\nE | 0 | project meeting | Aug 6th 2pm | 4pm\nT | 0 | café\n",
       "unchanged": true
     },
     {
       "afterInput": 6,
-      "contents": "ALPHA-2\nT | 1 | read book\nD | 1 | return book | June 6th\nE | 0 | project meeting | Aug 6th 2pm | 4pm\nT | 0 | café\n",
+      "contents": "ALPHA-2\nT | 1 | read book\nD | 1 | return book | 2019-06-06\nE | 0 | project meeting | Aug 6th 2pm | 4pm\nT | 0 | café\n",
       "unchanged": true
     }
   ]
@@ -1802,14 +1801,14 @@ Yooo! I'm Alpha. What can I help you with today?
     ____________________________________________________________
      Here are the tasks in your list:
      1.[T][X] read book
-     2.[D][ ] return book (by: June 6th)
+     2.[D][ ] return book (by: Jun 06 2019)
      3.[E][X] project meeting (from: Aug 6th 2pm to: 4pm)
     ____________________________________________________________
      OK, I've marked this task as not done yet:
        [E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
     ____________________________________________________________
      Nice! I've marked this task as done:
-       [D][X] return book (by: June 6th)
+       [D][X] return book (by: Jun 06 2019)
     ____________________________________________________________
      Got it. I've added this task:
        [T][ ] café
@@ -1817,7 +1816,7 @@ Yooo! I'm Alpha. What can I help you with today?
     ____________________________________________________________
      Here are the tasks in your list:
      1.[T][X] read book
-     2.[D][X] return book (by: June 6th)
+     2.[D][X] return book (by: Jun 06 2019)
      3.[E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
      4.[T][ ] café
     ____________________________________________________________
@@ -1829,33 +1828,33 @@ Yooo! I'm Alpha. What can I help you with today?
 
 ```json
 {
-  "initialFile": "ALPHA-1\nT|1|cmVhZCBib29r\nD|0|cmV0dXJuIGJvb2s=|SnVuZSA2dGg=\nE|1|cHJvamVjdCBtZWV0aW5n|QXVnIDZ0aCAycG0=|NHBt\n",
+  "initialFile": "ALPHA-1\nT|1|cmVhZCBib29r\nD|0|cmV0dXJuIGJvb2s=|MjAxOS0wNi0wNg==\nE|1|cHJvamVjdCBtZWV0aW5n|QXVnIDZ0aCAycG0=|NHBt\n",
   "steps": [
     {
       "afterInput": 1,
-      "contents": "ALPHA-1\nT|1|cmVhZCBib29r\nD|0|cmV0dXJuIGJvb2s=|SnVuZSA2dGg=\nE|1|cHJvamVjdCBtZWV0aW5n|QXVnIDZ0aCAycG0=|NHBt\n",
+      "contents": "ALPHA-1\nT|1|cmVhZCBib29r\nD|0|cmV0dXJuIGJvb2s=|MjAxOS0wNi0wNg==\nE|1|cHJvamVjdCBtZWV0aW5n|QXVnIDZ0aCAycG0=|NHBt\n",
       "unchanged": true
     },
     {
       "afterInput": 2,
-      "contents": "ALPHA-2\nT | 1 | read book\nD | 0 | return book | June 6th\nE | 0 | project meeting | Aug 6th 2pm | 4pm\n"
+      "contents": "ALPHA-2\nT | 1 | read book\nD | 0 | return book | 2019-06-06\nE | 0 | project meeting | Aug 6th 2pm | 4pm\n"
     },
     {
       "afterInput": 3,
-      "contents": "ALPHA-2\nT | 1 | read book\nD | 1 | return book | June 6th\nE | 0 | project meeting | Aug 6th 2pm | 4pm\n"
+      "contents": "ALPHA-2\nT | 1 | read book\nD | 1 | return book | 2019-06-06\nE | 0 | project meeting | Aug 6th 2pm | 4pm\n"
     },
     {
       "afterInput": 4,
-      "contents": "ALPHA-2\nT | 1 | read book\nD | 1 | return book | June 6th\nE | 0 | project meeting | Aug 6th 2pm | 4pm\nT | 0 | café\n"
+      "contents": "ALPHA-2\nT | 1 | read book\nD | 1 | return book | 2019-06-06\nE | 0 | project meeting | Aug 6th 2pm | 4pm\nT | 0 | café\n"
     },
     {
       "afterInput": 5,
-      "contents": "ALPHA-2\nT | 1 | read book\nD | 1 | return book | June 6th\nE | 0 | project meeting | Aug 6th 2pm | 4pm\nT | 0 | café\n",
+      "contents": "ALPHA-2\nT | 1 | read book\nD | 1 | return book | 2019-06-06\nE | 0 | project meeting | Aug 6th 2pm | 4pm\nT | 0 | café\n",
       "unchanged": true
     },
     {
       "afterInput": 6,
-      "contents": "ALPHA-2\nT | 1 | read book\nD | 1 | return book | June 6th\nE | 0 | project meeting | Aug 6th 2pm | 4pm\nT | 0 | café\n",
+      "contents": "ALPHA-2\nT | 1 | read book\nD | 1 | return book | 2019-06-06\nE | 0 | project meeting | Aug 6th 2pm | 4pm\nT | 0 | café\n",
       "unchanged": true
     }
   ]
@@ -2080,7 +2079,7 @@ bye
 Yooo! I'm Alpha. What can I help you with today?
     ____________________________________________________________
      Noted. I've removed this task:
-       [D][ ] return book (by: June 6th)
+       [D][ ] return book (by: Jun 06 2019)
      Now you have 2 tasks in the list.
     ____________________________________________________________
      Here are the tasks in your list:
@@ -2105,7 +2104,7 @@ Yooo! I'm Alpha. What can I help you with today?
 
 ```json
 {
-  "initialFile": "ALPHA-1\nT|1|cmVhZCBib29r\nD|0|cmV0dXJuIGJvb2s=|SnVuZSA2dGg=\nE|0|bWVldGluZw==|TW9uZGF5|VHVlc2RheQ==\n",
+  "initialFile": "ALPHA-1\nT|1|cmVhZCBib29r\nD|0|cmV0dXJuIGJvb2s=|MjAxOS0wNi0wNg==\nE|0|bWVldGluZw==|TW9uZGF5|VHVlc2RheQ==\n",
   "steps": [
     {
       "afterInput": 1,
@@ -2297,7 +2296,7 @@ Yooo! I'm Alpha. What can I help you with today?
 
 ### UI-24: Load and resave readable special characters
 
-**Aim:** Restore readable todos, deadlines, and events; preserve pipes, backslashes, Unicode, empty time fields, and task status through saves.
+**Aim:** Restore readable todos, deadlines, and events; preserve pipes, backslashes, Unicode, deadline dates, and task status through saves.
 
 **Inputs:**
 
@@ -2321,7 +2320,7 @@ Yooo! I'm Alpha. What can I help you with today?
     ____________________________________________________________
      Here are the tasks in your list:
      1.[T][ ] read | café \ notes
-     2.[D][X] book (by: )
+     2.[D][X] book (by: Feb 29 2024)
      3.[E][ ] meeting (from: noon to: 2pm)
     ____________________________________________________________
      Nice! I've marked this task as done:
@@ -2338,24 +2337,24 @@ Yooo! I'm Alpha. What can I help you with today?
 
 ```json
 {
-  "initialFile": "ALPHA-2\nT | 0 | read \\| café \\\\ notes\nD | 1 | book | \nE | 0 | meeting | noon | 2pm\n",
+  "initialFile": "ALPHA-2\nT | 0 | read \\| café \\\\ notes\nD | 1 | book | 2024-02-29\nE | 0 | meeting | noon | 2pm\n",
   "steps": [
     {
       "afterInput": 1,
-      "contents": "ALPHA-2\nT | 0 | read \\| café \\\\ notes\nD | 1 | book | \nE | 0 | meeting | noon | 2pm\n",
+      "contents": "ALPHA-2\nT | 0 | read \\| café \\\\ notes\nD | 1 | book | 2024-02-29\nE | 0 | meeting | noon | 2pm\n",
       "unchanged": true
     },
     {
       "afterInput": 2,
-      "contents": "ALPHA-2\nT | 1 | read \\| café \\\\ notes\nD | 1 | book | \nE | 0 | meeting | noon | 2pm\n"
+      "contents": "ALPHA-2\nT | 1 | read \\| café \\\\ notes\nD | 1 | book | 2024-02-29\nE | 0 | meeting | noon | 2pm\n"
     },
     {
       "afterInput": 3,
-      "contents": "ALPHA-2\nT | 0 | read \\| café \\\\ notes\nD | 1 | book | \nE | 0 | meeting | noon | 2pm\n"
+      "contents": "ALPHA-2\nT | 0 | read \\| café \\\\ notes\nD | 1 | book | 2024-02-29\nE | 0 | meeting | noon | 2pm\n"
     },
     {
       "afterInput": 4,
-      "contents": "ALPHA-2\nT | 0 | read \\| café \\\\ notes\nD | 1 | book | \nE | 0 | meeting | noon | 2pm\n",
+      "contents": "ALPHA-2\nT | 0 | read \\| café \\\\ notes\nD | 1 | book | 2024-02-29\nE | 0 | meeting | noon | 2pm\n",
       "unchanged": true
     }
   ]
@@ -2395,21 +2394,561 @@ Yooo! I'm Alpha. What can I help you with today?
 }
 ```
 
+### UI-26: Validate dates and preserve tasks after rejected input
+
+**Aim:** Accept a leap day, reject impossible and unsupported dates, recover, and save ISO text with status.
+
+**Inputs:**
+
+```text
+deadline leap day /by 2024-02-29
+deadline invalid /by 2023-02-29
+deadline invalid /by 2019-04-31
+deadline invalid /by 2019-13-01
+deadline invalid /by 2019-00-10
+deadline invalid /by 2019-10-00
+deadline invalid /by 2019-2-01
+deadline invalid /by 2/12/2019 2400
+deadline invalid /by tomorrow
+deadline invalid /by
+deadline invalid /by 2019-10-15 extra
+deadline invalid
+list
+mark 1
+bye
+```
+
+**Expected output:**
+
+```text
+ █████╗ ██╗     ██████╗ ██╗  ██╗ █████╗ 
+██╔══██╗██║     ██╔══██╗██║  ██║██╔══██╗
+███████║██║     ██████╔╝███████║███████║
+██╔══██║██║     ██╔═══╝ ██╔══██║██╔══██║
+██║  ██║███████╗██║     ██║  ██║██║  ██║
+╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝
+Yooo! I'm Alpha. What can I help you with today?
+    ____________________________________________________________
+     Got it. I've added this task:
+       [D][ ] leap day (by: Feb 29 2024)
+     Now you have 1 tasks in the list.
+    ____________________________________________________________
+     Invalid deadline; use yyyy-MM-dd or d/M/yyyy HHmm (e.g., 2/12/2019 1800)
+    ____________________________________________________________
+     Invalid deadline; use yyyy-MM-dd or d/M/yyyy HHmm (e.g., 2/12/2019 1800)
+    ____________________________________________________________
+     Invalid deadline; use yyyy-MM-dd or d/M/yyyy HHmm (e.g., 2/12/2019 1800)
+    ____________________________________________________________
+     Invalid deadline; use yyyy-MM-dd or d/M/yyyy HHmm (e.g., 2/12/2019 1800)
+    ____________________________________________________________
+     Invalid deadline; use yyyy-MM-dd or d/M/yyyy HHmm (e.g., 2/12/2019 1800)
+    ____________________________________________________________
+     Invalid deadline; use yyyy-MM-dd or d/M/yyyy HHmm (e.g., 2/12/2019 1800)
+    ____________________________________________________________
+     Invalid deadline; use yyyy-MM-dd or d/M/yyyy HHmm (e.g., 2/12/2019 1800)
+    ____________________________________________________________
+     Invalid deadline; use yyyy-MM-dd or d/M/yyyy HHmm (e.g., 2/12/2019 1800)
+    ____________________________________________________________
+     Invalid deadline; use yyyy-MM-dd or d/M/yyyy HHmm (e.g., 2/12/2019 1800)
+    ____________________________________________________________
+     Invalid deadline; use yyyy-MM-dd or d/M/yyyy HHmm (e.g., 2/12/2019 1800)
+    ____________________________________________________________
+     Invalid deadline; use yyyy-MM-dd or d/M/yyyy HHmm (e.g., 2/12/2019 1800)
+    ____________________________________________________________
+     Here are the tasks in your list:
+     1.[D][ ] leap day (by: Feb 29 2024)
+    ____________________________________________________________
+     Nice! I've marked this task as done:
+       [D][X] leap day (by: Feb 29 2024)
+    ____________________________________________________________
+     Bye. Hope to see you again soon!
+    ____________________________________________________________
+```
+
+**File checkpoints:**
+
+```json
+{
+  "initialFile": null,
+  "steps": [
+    {
+      "afterInput": 1,
+      "contents": "ALPHA-2\nD | 0 | leap day | 2024-02-29\n"
+    },
+    {
+      "afterInput": 2,
+      "contents": "ALPHA-2\nD | 0 | leap day | 2024-02-29\n",
+      "unchanged": true
+    },
+    {
+      "afterInput": 3,
+      "contents": "ALPHA-2\nD | 0 | leap day | 2024-02-29\n",
+      "unchanged": true
+    },
+    {
+      "afterInput": 4,
+      "contents": "ALPHA-2\nD | 0 | leap day | 2024-02-29\n",
+      "unchanged": true
+    },
+    {
+      "afterInput": 5,
+      "contents": "ALPHA-2\nD | 0 | leap day | 2024-02-29\n",
+      "unchanged": true
+    },
+    {
+      "afterInput": 6,
+      "contents": "ALPHA-2\nD | 0 | leap day | 2024-02-29\n",
+      "unchanged": true
+    },
+    {
+      "afterInput": 7,
+      "contents": "ALPHA-2\nD | 0 | leap day | 2024-02-29\n",
+      "unchanged": true
+    },
+    {
+      "afterInput": 8,
+      "contents": "ALPHA-2\nD | 0 | leap day | 2024-02-29\n",
+      "unchanged": true
+    },
+    {
+      "afterInput": 9,
+      "contents": "ALPHA-2\nD | 0 | leap day | 2024-02-29\n",
+      "unchanged": true
+    },
+    {
+      "afterInput": 10,
+      "contents": "ALPHA-2\nD | 0 | leap day | 2024-02-29\n",
+      "unchanged": true
+    },
+    {
+      "afterInput": 11,
+      "contents": "ALPHA-2\nD | 0 | leap day | 2024-02-29\n",
+      "unchanged": true
+    },
+    {
+      "afterInput": 12,
+      "contents": "ALPHA-2\nD | 0 | leap day | 2024-02-29\n",
+      "unchanged": true
+    },
+    {
+      "afterInput": 13,
+      "contents": "ALPHA-2\nD | 0 | leap day | 2024-02-29\n",
+      "unchanged": true
+    },
+    {
+      "afterInput": 14,
+      "contents": "ALPHA-2\nD | 1 | leap day | 2024-02-29\n"
+    },
+    {
+      "afterInput": 15,
+      "contents": "ALPHA-2\nD | 1 | leap day | 2024-02-29\n",
+      "unchanged": true
+    }
+  ]
+}
+```
+
+### UI-27: Restore typed deadline dates without rewriting
+
+**Aim:** Restore ISO dates and completion flags, display English months, and leave the snapshot unchanged.
+
+**Inputs:**
+
+```text
+list
+bye
+```
+
+**Expected output:**
+
+```text
+ █████╗ ██╗     ██████╗ ██╗  ██╗ █████╗ 
+██╔══██╗██║     ██╔══██╗██║  ██║██╔══██╗
+███████║██║     ██████╔╝███████║███████║
+██╔══██║██║     ██╔═══╝ ██╔══██║██╔══██║
+██║  ██║███████╗██║     ██║  ██║██║  ██║
+╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝
+Yooo! I'm Alpha. What can I help you with today?
+    ____________________________________________________________
+     Here are the tasks in your list:
+     1.[D][X] leap day (by: Feb 29 2024)
+     2.[D][ ] return book (by: Oct 15 2019)
+    ____________________________________________________________
+     Bye. Hope to see you again soon!
+    ____________________________________________________________
+```
+
+**File checkpoints:**
+
+```json
+{
+  "initialFile": "ALPHA-2\nD | 1 | leap day | 2024-02-29\nD | 0 | return book | 2019-10-15\n",
+  "steps": [
+    {
+      "afterInput": 1,
+      "contents": "ALPHA-2\nD | 1 | leap day | 2024-02-29\nD | 0 | return book | 2019-10-15\n",
+      "unchanged": true
+    },
+    {
+      "afterInput": 2,
+      "contents": "ALPHA-2\nD | 1 | leap day | 2024-02-29\nD | 0 | return book | 2019-10-15\n",
+      "unchanged": true
+    }
+  ]
+}
+```
+
+### UI-28: Reject an impossible saved deadline date
+
+**Aim:** Report the invalid date and its line, exit safely, and preserve the original bytes.
+
+**Inputs:**
+
+```text
+```
+
+**Expected output:**
+
+```text
+ █████╗ ██╗     ██████╗ ██╗  ██╗ █████╗ 
+██╔══██╗██║     ██╔══██╗██║  ██║██╔══██╗
+███████║██║     ██████╔╝███████║███████║
+██╔══██║██║     ██╔═══╝ ██╔══██║██╔══██║
+██║  ██║███████╗██║     ██║  ██║██║  ██║
+╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝
+Yooo! I'm Alpha. What can I help you with today?
+    ____________________________________________________________
+     Cannot load data/alpha.txt: Invalid task at line 2: Invalid deadline; use yyyy-MM-dd or d/M/yyyy HHmm (e.g., 2/12/2019 1800). The file has not been changed.
+    ____________________________________________________________
+```
+
+**File checkpoints:**
+
+```json
+{
+  "initialFile": "ALPHA-2\nD | 0 | return book | 2023-02-29\n",
+  "steps": []
+}
+```
+
+### UI-29: Preserve old free-text deadlines without guessing a year
+
+**Aim:** Report the invalid date and its line, exit safely, and preserve the original bytes.
+
+**Inputs:**
+
+```text
+```
+
+**Expected output:**
+
+```text
+ █████╗ ██╗     ██████╗ ██╗  ██╗ █████╗ 
+██╔══██╗██║     ██╔══██╗██║  ██║██╔══██╗
+███████║██║     ██████╔╝███████║███████║
+██╔══██║██║     ██╔═══╝ ██╔══██║██╔══██║
+██║  ██║███████╗██║     ██║  ██║██║  ██║
+╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝
+Yooo! I'm Alpha. What can I help you with today?
+    ____________________________________________________________
+     Cannot load data/alpha.txt: Invalid task at line 2: Invalid deadline; use yyyy-MM-dd or d/M/yyyy HHmm (e.g., 2/12/2019 1800). The file has not been changed.
+    ____________________________________________________________
+```
+
+**File checkpoints:**
+
+```json
+{
+  "initialFile": "ALPHA-2\nD | 0 | return book | June 6th\n",
+  "steps": []
+}
+```
+
+### UI-30: Day-first deadline dates and strict 24-hour times
+
+**Aim:** Accept compact and colon times, midnight, leap day, and slash dates; reject invalid dates/times without saving.
+
+**Inputs:**
+
+```text
+deadline return book /by 2/12/2019 1800
+deadline midnight /by 29/02/2024 00:00
+deadline late /by 31/12/2024 2359
+deadline date only /by 2/12/2019
+deadline colon /by 02/12/2019 18:00
+deadline invalid /by 29/2/2023 1800
+deadline invalid /by 31/4/2019 1800
+deadline invalid /by 2/12/2019 2400
+deadline invalid /by 2/12/2019 1860
+deadline invalid /by 2/12/2019 18:60
+deadline invalid /by 2/12/2019 180
+deadline invalid /by 12/31/2019 1800
+deadline invalid /by 2/12/2019 6pm
+deadline invalid /by 2/12/2019 18:00:30
+deadline invalid /by 2/12/2019 1800 extra
+list
+bye
+```
+
+**Expected output:**
+
+```text
+ █████╗ ██╗     ██████╗ ██╗  ██╗ █████╗ 
+██╔══██╗██║     ██╔══██╗██║  ██║██╔══██╗
+███████║██║     ██████╔╝███████║███████║
+██╔══██║██║     ██╔═══╝ ██╔══██║██╔══██║
+██║  ██║███████╗██║     ██║  ██║██║  ██║
+╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝
+Yooo! I'm Alpha. What can I help you with today?
+    ____________________________________________________________
+     Got it. I've added this task:
+       [D][ ] return book (by: Dec 02 2019, 18:00)
+     Now you have 1 tasks in the list.
+    ____________________________________________________________
+     Got it. I've added this task:
+       [D][ ] midnight (by: Feb 29 2024, 00:00)
+     Now you have 2 tasks in the list.
+    ____________________________________________________________
+     Got it. I've added this task:
+       [D][ ] late (by: Dec 31 2024, 23:59)
+     Now you have 3 tasks in the list.
+    ____________________________________________________________
+     Got it. I've added this task:
+       [D][ ] date only (by: Dec 02 2019)
+     Now you have 4 tasks in the list.
+    ____________________________________________________________
+     Got it. I've added this task:
+       [D][ ] colon (by: Dec 02 2019, 18:00)
+     Now you have 5 tasks in the list.
+    ____________________________________________________________
+     Invalid deadline; use yyyy-MM-dd or d/M/yyyy HHmm (e.g., 2/12/2019 1800)
+    ____________________________________________________________
+     Invalid deadline; use yyyy-MM-dd or d/M/yyyy HHmm (e.g., 2/12/2019 1800)
+    ____________________________________________________________
+     Invalid deadline; use yyyy-MM-dd or d/M/yyyy HHmm (e.g., 2/12/2019 1800)
+    ____________________________________________________________
+     Invalid deadline; use yyyy-MM-dd or d/M/yyyy HHmm (e.g., 2/12/2019 1800)
+    ____________________________________________________________
+     Invalid deadline; use yyyy-MM-dd or d/M/yyyy HHmm (e.g., 2/12/2019 1800)
+    ____________________________________________________________
+     Invalid deadline; use yyyy-MM-dd or d/M/yyyy HHmm (e.g., 2/12/2019 1800)
+    ____________________________________________________________
+     Invalid deadline; use yyyy-MM-dd or d/M/yyyy HHmm (e.g., 2/12/2019 1800)
+    ____________________________________________________________
+     Invalid deadline; use yyyy-MM-dd or d/M/yyyy HHmm (e.g., 2/12/2019 1800)
+    ____________________________________________________________
+     Invalid deadline; use yyyy-MM-dd or d/M/yyyy HHmm (e.g., 2/12/2019 1800)
+    ____________________________________________________________
+     Invalid deadline; use yyyy-MM-dd or d/M/yyyy HHmm (e.g., 2/12/2019 1800)
+    ____________________________________________________________
+     Here are the tasks in your list:
+     1.[D][ ] return book (by: Dec 02 2019, 18:00)
+     2.[D][ ] midnight (by: Feb 29 2024, 00:00)
+     3.[D][ ] late (by: Dec 31 2024, 23:59)
+     4.[D][ ] date only (by: Dec 02 2019)
+     5.[D][ ] colon (by: Dec 02 2019, 18:00)
+    ____________________________________________________________
+     Bye. Hope to see you again soon!
+    ____________________________________________________________
+```
+
+**File checkpoints:**
+
+```json
+{
+  "initialFile": null,
+  "steps": [
+    {
+      "afterInput": 1,
+      "contents": "ALPHA-2\nD | 0 | return book | 2019-12-02T18:00\n"
+    },
+    {
+      "afterInput": 2,
+      "contents": "ALPHA-2\nD | 0 | return book | 2019-12-02T18:00\nD | 0 | midnight | 2024-02-29T00:00\n"
+    },
+    {
+      "afterInput": 3,
+      "contents": "ALPHA-2\nD | 0 | return book | 2019-12-02T18:00\nD | 0 | midnight | 2024-02-29T00:00\nD | 0 | late | 2024-12-31T23:59\n"
+    },
+    {
+      "afterInput": 4,
+      "contents": "ALPHA-2\nD | 0 | return book | 2019-12-02T18:00\nD | 0 | midnight | 2024-02-29T00:00\nD | 0 | late | 2024-12-31T23:59\nD | 0 | date only | 2019-12-02\n"
+    },
+    {
+      "afterInput": 5,
+      "contents": "ALPHA-2\nD | 0 | return book | 2019-12-02T18:00\nD | 0 | midnight | 2024-02-29T00:00\nD | 0 | late | 2024-12-31T23:59\nD | 0 | date only | 2019-12-02\nD | 0 | colon | 2019-12-02T18:00\n"
+    },
+    {
+      "afterInput": 6,
+      "contents": "ALPHA-2\nD | 0 | return book | 2019-12-02T18:00\nD | 0 | midnight | 2024-02-29T00:00\nD | 0 | late | 2024-12-31T23:59\nD | 0 | date only | 2019-12-02\nD | 0 | colon | 2019-12-02T18:00\n",
+      "unchanged": true
+    },
+    {
+      "afterInput": 7,
+      "contents": "ALPHA-2\nD | 0 | return book | 2019-12-02T18:00\nD | 0 | midnight | 2024-02-29T00:00\nD | 0 | late | 2024-12-31T23:59\nD | 0 | date only | 2019-12-02\nD | 0 | colon | 2019-12-02T18:00\n",
+      "unchanged": true
+    },
+    {
+      "afterInput": 8,
+      "contents": "ALPHA-2\nD | 0 | return book | 2019-12-02T18:00\nD | 0 | midnight | 2024-02-29T00:00\nD | 0 | late | 2024-12-31T23:59\nD | 0 | date only | 2019-12-02\nD | 0 | colon | 2019-12-02T18:00\n",
+      "unchanged": true
+    },
+    {
+      "afterInput": 9,
+      "contents": "ALPHA-2\nD | 0 | return book | 2019-12-02T18:00\nD | 0 | midnight | 2024-02-29T00:00\nD | 0 | late | 2024-12-31T23:59\nD | 0 | date only | 2019-12-02\nD | 0 | colon | 2019-12-02T18:00\n",
+      "unchanged": true
+    },
+    {
+      "afterInput": 10,
+      "contents": "ALPHA-2\nD | 0 | return book | 2019-12-02T18:00\nD | 0 | midnight | 2024-02-29T00:00\nD | 0 | late | 2024-12-31T23:59\nD | 0 | date only | 2019-12-02\nD | 0 | colon | 2019-12-02T18:00\n",
+      "unchanged": true
+    },
+    {
+      "afterInput": 11,
+      "contents": "ALPHA-2\nD | 0 | return book | 2019-12-02T18:00\nD | 0 | midnight | 2024-02-29T00:00\nD | 0 | late | 2024-12-31T23:59\nD | 0 | date only | 2019-12-02\nD | 0 | colon | 2019-12-02T18:00\n",
+      "unchanged": true
+    },
+    {
+      "afterInput": 12,
+      "contents": "ALPHA-2\nD | 0 | return book | 2019-12-02T18:00\nD | 0 | midnight | 2024-02-29T00:00\nD | 0 | late | 2024-12-31T23:59\nD | 0 | date only | 2019-12-02\nD | 0 | colon | 2019-12-02T18:00\n",
+      "unchanged": true
+    },
+    {
+      "afterInput": 13,
+      "contents": "ALPHA-2\nD | 0 | return book | 2019-12-02T18:00\nD | 0 | midnight | 2024-02-29T00:00\nD | 0 | late | 2024-12-31T23:59\nD | 0 | date only | 2019-12-02\nD | 0 | colon | 2019-12-02T18:00\n",
+      "unchanged": true
+    },
+    {
+      "afterInput": 14,
+      "contents": "ALPHA-2\nD | 0 | return book | 2019-12-02T18:00\nD | 0 | midnight | 2024-02-29T00:00\nD | 0 | late | 2024-12-31T23:59\nD | 0 | date only | 2019-12-02\nD | 0 | colon | 2019-12-02T18:00\n",
+      "unchanged": true
+    },
+    {
+      "afterInput": 15,
+      "contents": "ALPHA-2\nD | 0 | return book | 2019-12-02T18:00\nD | 0 | midnight | 2024-02-29T00:00\nD | 0 | late | 2024-12-31T23:59\nD | 0 | date only | 2019-12-02\nD | 0 | colon | 2019-12-02T18:00\n",
+      "unchanged": true
+    },
+    {
+      "afterInput": 16,
+      "contents": "ALPHA-2\nD | 0 | return book | 2019-12-02T18:00\nD | 0 | midnight | 2024-02-29T00:00\nD | 0 | late | 2024-12-31T23:59\nD | 0 | date only | 2019-12-02\nD | 0 | colon | 2019-12-02T18:00\n",
+      "unchanged": true
+    },
+    {
+      "afterInput": 17,
+      "contents": "ALPHA-2\nD | 0 | return book | 2019-12-02T18:00\nD | 0 | midnight | 2024-02-29T00:00\nD | 0 | late | 2024-12-31T23:59\nD | 0 | date only | 2019-12-02\nD | 0 | colon | 2019-12-02T18:00\n",
+      "unchanged": true
+    }
+  ]
+}
+```
+
+### UI-31: Reload and resave explicit midnight separately from a date
+
+**Aim:** Preserve the time-supplied flag on reload and status changes without adding a time to date-only tasks.
+
+**Inputs:**
+
+```text
+list
+mark 1
+bye
+```
+
+**Expected output:**
+
+```text
+ █████╗ ██╗     ██████╗ ██╗  ██╗ █████╗ 
+██╔══██╗██║     ██╔══██╗██║  ██║██╔══██╗
+███████║██║     ██████╔╝███████║███████║
+██╔══██║██║     ██╔═══╝ ██╔══██║██╔══██║
+██║  ██║███████╗██║     ██║  ██║██║  ██║
+╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝
+Yooo! I'm Alpha. What can I help you with today?
+    ____________________________________________________________
+     Here are the tasks in your list:
+     1.[D][ ] midnight (by: Feb 29 2024, 00:00)
+     2.[D][ ] date only (by: Feb 29 2024)
+    ____________________________________________________________
+     Nice! I've marked this task as done:
+       [D][X] midnight (by: Feb 29 2024, 00:00)
+    ____________________________________________________________
+     Bye. Hope to see you again soon!
+    ____________________________________________________________
+```
+
+**File checkpoints:**
+
+```json
+{
+  "initialFile": "ALPHA-2\nD | 0 | midnight | 2024-02-29T00:00\nD | 0 | date only | 2024-02-29\n",
+  "steps": [
+    {
+      "afterInput": 1,
+      "contents": "ALPHA-2\nD | 0 | midnight | 2024-02-29T00:00\nD | 0 | date only | 2024-02-29\n",
+      "unchanged": true
+    },
+    {
+      "afterInput": 2,
+      "contents": "ALPHA-2\nD | 1 | midnight | 2024-02-29T00:00\nD | 0 | date only | 2024-02-29\n"
+    },
+    {
+      "afterInput": 3,
+      "contents": "ALPHA-2\nD | 1 | midnight | 2024-02-29T00:00\nD | 0 | date only | 2024-02-29\n",
+      "unchanged": true
+    }
+  ]
+}
+```
+
+### UI-32: Reject invalid saved time without overwriting
+
+**Aim:** Reject a saved 24:00 time, report its line, and leave the snapshot untouched.
+
+**Inputs:**
+
+```text
+```
+
+**Expected output:**
+
+```text
+ █████╗ ██╗     ██████╗ ██╗  ██╗ █████╗ 
+██╔══██╗██║     ██╔══██╗██║  ██║██╔══██╗
+███████║██║     ██████╔╝███████║███████║
+██╔══██║██║     ██╔═══╝ ██╔══██║██╔══██║
+██║  ██║███████╗██║     ██║  ██║██║  ██║
+╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝
+Yooo! I'm Alpha. What can I help you with today?
+    ____________________________________________________________
+     Cannot load data/alpha.txt: Invalid task at line 2: Invalid deadline; use yyyy-MM-dd or d/M/yyyy HHmm (e.g., 2/12/2019 1800). The file has not been changed.
+    ____________________________________________________________
+```
+
+**File checkpoints:**
+
+```json
+{
+  "initialFile": "ALPHA-2\nD | 0 | bad time | 2019-12-02T24:00\n",
+  "steps": []
+}
+```
+
 ## Latest test session
 
 
-- Date/time: 2026-09-29T19:44:04.668600+08:00
+- Date/time: 2026-09-29T22:07:21.695632+08:00
 
 - Branch: master
 
-- Commit: 113fe50bdbebb39568c60a3831d3eaddc13abf8a
+- Commit: 704aea7feafd6e2f56aa43f76ed49ca8290bc9fd
 
 - Working tree at start:
 ```text
- M src/main/java/alpha/Alpha.java
+ M README.md
  M src/main/java/alpha/Parser.java
-?? src/main/java/alpha/command/ExitCommand.java
-?? src/main/java/alpha/command/ListCommand.java
+ M src/main/java/alpha/Storage.java
+ M src/main/java/alpha/task/Deadline.java
+ M test/ui-test-plan.md
 ```
 
 - OS: Linux 6.6.87.2-microsoft-standard-WSL2; UTF-8; 10-second timeout.
@@ -2422,15 +2961,15 @@ OpenJDK 64-Bit Server VM (build 25.0.3+9-2-24.04.2-Ubuntu, mixed mode, sharing)
 javac 25.0.3
 ```
 
-- Compile command: `/usr/lib/jvm/java-25-openjdk-amd64/bin/javac -encoding UTF-8 -d /tmp/alpha-ui-169hnl9u/classes /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/Alpha.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/AlphaException.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/Parser.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/Storage.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/TaskList.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/Ui.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/command/AddCommand.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/command/Command.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/command/DeleteCommand.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/command/ExitCommand.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/command/ListCommand.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/command/MarkCommand.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/command/UnmarkCommand.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/task/Deadline.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/task/Event.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/task/Task.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/task/Todo.java`
+- Compile command: `/usr/lib/jvm/java-25-openjdk-amd64/bin/javac -encoding UTF-8 -d /tmp/alpha-ui-f2ankocr/classes /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/Alpha.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/AlphaException.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/Parser.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/Storage.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/TaskList.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/Ui.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/command/AddCommand.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/command/Command.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/command/DeleteCommand.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/command/ExitCommand.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/command/ListCommand.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/command/MarkCommand.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/command/UnmarkCommand.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/task/Deadline.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/task/Event.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/task/Task.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/task/Todo.java`
 
-- Launch command: `/usr/lib/jvm/java-25-openjdk-amd64/bin/java -Dfile.encoding=UTF-8 -cp /tmp/alpha-ui-169hnl9u/classes alpha.Alpha`
+- Launch command: `/usr/lib/jvm/java-25-openjdk-amd64/bin/java -Dfile.encoding=UTF-8 -cp /tmp/alpha-ui-f2ankocr/classes alpha.Alpha`
 
 
 ### UI-01 result
 
 
-- Working directory: `/tmp/alpha-ui-169hnl9u/UI-01`
+- Working directory: `/tmp/alpha-ui-f2ankocr/UI-01`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -2460,7 +2999,7 @@ RESULT: PASS
 ### UI-02 result
 
 
-- Working directory: `/tmp/alpha-ui-169hnl9u/UI-02`
+- Working directory: `/tmp/alpha-ui-f2ankocr/UI-02`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -2486,7 +3025,7 @@ RESULT: PASS
 ### UI-03 result
 
 
-- Working directory: `/tmp/alpha-ui-169hnl9u/UI-03`
+- Working directory: `/tmp/alpha-ui-f2ankocr/UI-03`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -2494,7 +3033,7 @@ RESULT: PASS
 === UI-03: Add all task types ===
 INPUT
 todo read book
-deadline return book /by June 6th
+deadline return book /by 2019-06-06
 event project meeting /from Aug 6th 2pm /to 4pm
 list
 bye
@@ -2512,7 +3051,7 @@ Yooo! I'm Alpha. What can I help you with today?
      Now you have 1 tasks in the list.
     ____________________________________________________________
      Got it. I've added this task:
-       [D][ ] return book (by: June 6th)
+       [D][ ] return book (by: Jun 06 2019)
      Now you have 2 tasks in the list.
     ____________________________________________________________
      Got it. I've added this task:
@@ -2521,7 +3060,7 @@ Yooo! I'm Alpha. What can I help you with today?
     ____________________________________________________________
      Here are the tasks in your list:
      1.[T][ ] read book
-     2.[D][ ] return book (by: June 6th)
+     2.[D][ ] return book (by: Jun 06 2019)
      3.[E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
     ____________________________________________________________
      Bye. Hope to see you again soon!
@@ -2533,7 +3072,7 @@ RESULT: PASS
 ### UI-04 result
 
 
-- Working directory: `/tmp/alpha-ui-169hnl9u/UI-04`
+- Working directory: `/tmp/alpha-ui-f2ankocr/UI-04`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -2588,7 +3127,7 @@ RESULT: PASS
 ### UI-05 result
 
 
-- Working directory: `/tmp/alpha-ui-169hnl9u/UI-05`
+- Working directory: `/tmp/alpha-ui-f2ankocr/UI-05`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -2596,7 +3135,7 @@ RESULT: PASS
 === UI-05: Delete middle, last, first, and only task ===
 INPUT
 todo read book
-deadline return book /by June 6th
+deadline return book /by 2019-06-06
 event project meeting /from Aug 6th 2pm /to 4pm
 todo borrow book
 mark 3
@@ -2625,7 +3164,7 @@ Yooo! I'm Alpha. What can I help you with today?
      Now you have 1 tasks in the list.
     ____________________________________________________________
      Got it. I've added this task:
-       [D][ ] return book (by: June 6th)
+       [D][ ] return book (by: Jun 06 2019)
      Now you have 2 tasks in the list.
     ____________________________________________________________
      Got it. I've added this task:
@@ -2640,7 +3179,7 @@ Yooo! I'm Alpha. What can I help you with today?
        [E][X] project meeting (from: Aug 6th 2pm to: 4pm)
     ____________________________________________________________
      Noted. I've removed this task:
-       [D][ ] return book (by: June 6th)
+       [D][ ] return book (by: Jun 06 2019)
      Now you have 3 tasks in the list.
     ____________________________________________________________
      Here are the tasks in your list:
@@ -2685,7 +3224,7 @@ RESULT: PASS
 ### UI-06 result
 
 
-- Working directory: `/tmp/alpha-ui-169hnl9u/UI-06`
+- Working directory: `/tmp/alpha-ui-f2ankocr/UI-06`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -2892,7 +3431,7 @@ RESULT: PASS
 ### UI-07 result
 
 
-- Working directory: `/tmp/alpha-ui-169hnl9u/UI-07`
+- Working directory: `/tmp/alpha-ui-f2ankocr/UI-07`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -2939,7 +3478,7 @@ RESULT: PASS
 ### UI-08 result
 
 
-- Working directory: `/tmp/alpha-ui-169hnl9u/UI-08`
+- Working directory: `/tmp/alpha-ui-f2ankocr/UI-08`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -3002,7 +3541,7 @@ RESULT: PASS
 ### UI-09 result
 
 
-- Working directory: `/tmp/alpha-ui-169hnl9u/UI-09`
+- Working directory: `/tmp/alpha-ui-f2ankocr/UI-09`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -3054,12 +3593,12 @@ RESULT: PASS
 ### UI-10 result
 
 
-- Working directory: `/tmp/alpha-ui-169hnl9u/UI-10`
+- Working directory: `/tmp/alpha-ui-f2ankocr/UI-10`
 
 - Exit: 0; timeout: False; stderr: ''.
 
 ```text
-=== UI-10: Missing time markers compatibility ===
+=== UI-10: Required deadline date and optional event times ===
 INPUT
 deadline return book
 event meeting
@@ -3075,22 +3614,19 @@ OUTPUT
 ╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝
 Yooo! I'm Alpha. What can I help you with today?
     ____________________________________________________________
-     Got it. I've added this task:
-       [D][ ] return book (by: )
-     Now you have 1 tasks in the list.
+     Invalid deadline; use yyyy-MM-dd or d/M/yyyy HHmm (e.g., 2/12/2019 1800)
     ____________________________________________________________
      Got it. I've added this task:
        [E][ ] meeting (from:  to: )
-     Now you have 2 tasks in the list.
+     Now you have 1 tasks in the list.
     ____________________________________________________________
      Got it. I've added this task:
        [E][ ] lunch (from: noon to: )
-     Now you have 3 tasks in the list.
+     Now you have 2 tasks in the list.
     ____________________________________________________________
      Here are the tasks in your list:
-     1.[D][ ] return book (by: )
-     2.[E][ ] meeting (from:  to: )
-     3.[E][ ] lunch (from: noon to: )
+     1.[E][ ] meeting (from:  to: )
+     2.[E][ ] lunch (from: noon to: )
     ____________________________________________________________
      Bye. Hope to see you again soon!
     ____________________________________________________________
@@ -3101,7 +3637,7 @@ RESULT: PASS
 ### UI-11 result
 
 
-- Working directory: `/tmp/alpha-ui-169hnl9u/UI-11`
+- Working directory: `/tmp/alpha-ui-f2ankocr/UI-11`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -3850,7 +4386,7 @@ RESULT: PASS
 ### UI-12 result
 
 
-- Working directory: `/tmp/alpha-ui-169hnl9u/UI-12`
+- Working directory: `/tmp/alpha-ui-f2ankocr/UI-12`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -3858,7 +4394,7 @@ RESULT: PASS
 === UI-12: Save after every task change ===
 INPUT
 todo read book
-deadline return book /by June 6th
+deadline return book /by 2019-06-06
 event project meeting /from Aug 6th 2pm /to 4pm
 mark 1
 unmark 1
@@ -3878,7 +4414,7 @@ Yooo! I'm Alpha. What can I help you with today?
      Now you have 1 tasks in the list.
     ____________________________________________________________
      Got it. I've added this task:
-       [D][ ] return book (by: June 6th)
+       [D][ ] return book (by: Jun 06 2019)
      Now you have 2 tasks in the list.
     ____________________________________________________________
      Got it. I've added this task:
@@ -3893,7 +4429,7 @@ Yooo! I'm Alpha. What can I help you with today?
     ____________________________________________________________
      Here are the tasks in your list:
      1.[T][ ] read book
-     2.[D][ ] return book (by: June 6th)
+     2.[D][ ] return book (by: Jun 06 2019)
      3.[E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
     ____________________________________________________________
      Bye. Hope to see you again soon!
@@ -3905,7 +4441,7 @@ RESULT: PASS
 ### UI-13 result
 
 
-- Working directory: `/tmp/alpha-ui-169hnl9u/UI-13`
+- Working directory: `/tmp/alpha-ui-f2ankocr/UI-13`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -3943,7 +4479,7 @@ RESULT: PASS
 ### UI-14 result
 
 
-- Working directory: `/tmp/alpha-ui-169hnl9u/UI-14`
+- Working directory: `/tmp/alpha-ui-f2ankocr/UI-14`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -3967,14 +4503,14 @@ Yooo! I'm Alpha. What can I help you with today?
     ____________________________________________________________
      Here are the tasks in your list:
      1.[T][X] read book
-     2.[D][ ] return book (by: June 6th)
+     2.[D][ ] return book (by: Jun 06 2019)
      3.[E][X] project meeting (from: Aug 6th 2pm to: 4pm)
     ____________________________________________________________
      OK, I've marked this task as not done yet:
        [E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
     ____________________________________________________________
      Nice! I've marked this task as done:
-       [D][X] return book (by: June 6th)
+       [D][X] return book (by: Jun 06 2019)
     ____________________________________________________________
      Got it. I've added this task:
        [T][ ] café
@@ -3982,7 +4518,7 @@ Yooo! I'm Alpha. What can I help you with today?
     ____________________________________________________________
      Here are the tasks in your list:
      1.[T][X] read book
-     2.[D][X] return book (by: June 6th)
+     2.[D][X] return book (by: Jun 06 2019)
      3.[E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
      4.[T][ ] café
     ____________________________________________________________
@@ -3995,7 +4531,7 @@ RESULT: PASS
 ### UI-15 result
 
 
-- Working directory: `/tmp/alpha-ui-169hnl9u/UI-15`
+- Working directory: `/tmp/alpha-ui-f2ankocr/UI-15`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -4033,7 +4569,7 @@ RESULT: PASS
 ### UI-16 result
 
 
-- Working directory: `/tmp/alpha-ui-169hnl9u/UI-16`
+- Working directory: `/tmp/alpha-ui-f2ankocr/UI-16`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -4057,14 +4593,14 @@ Yooo! I'm Alpha. What can I help you with today?
     ____________________________________________________________
      Here are the tasks in your list:
      1.[T][X] read book
-     2.[D][ ] return book (by: June 6th)
+     2.[D][ ] return book (by: Jun 06 2019)
      3.[E][X] project meeting (from: Aug 6th 2pm to: 4pm)
     ____________________________________________________________
      OK, I've marked this task as not done yet:
        [E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
     ____________________________________________________________
      Nice! I've marked this task as done:
-       [D][X] return book (by: June 6th)
+       [D][X] return book (by: Jun 06 2019)
     ____________________________________________________________
      Got it. I've added this task:
        [T][ ] café
@@ -4072,7 +4608,7 @@ Yooo! I'm Alpha. What can I help you with today?
     ____________________________________________________________
      Here are the tasks in your list:
      1.[T][X] read book
-     2.[D][X] return book (by: June 6th)
+     2.[D][X] return book (by: Jun 06 2019)
      3.[E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
      4.[T][ ] café
     ____________________________________________________________
@@ -4085,7 +4621,7 @@ RESULT: PASS
 ### UI-17 result
 
 
-- Working directory: `/tmp/alpha-ui-169hnl9u/UI-17`
+- Working directory: `/tmp/alpha-ui-f2ankocr/UI-17`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -4119,7 +4655,7 @@ RESULT: PASS
 ### UI-18 result
 
 
-- Working directory: `/tmp/alpha-ui-169hnl9u/UI-18`
+- Working directory: `/tmp/alpha-ui-f2ankocr/UI-18`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -4144,7 +4680,7 @@ RESULT: PASS
 ### UI-19 result
 
 
-- Working directory: `/tmp/alpha-ui-169hnl9u/UI-19`
+- Working directory: `/tmp/alpha-ui-f2ankocr/UI-19`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -4169,7 +4705,7 @@ RESULT: PASS
 ### UI-20 result
 
 
-- Working directory: `/tmp/alpha-ui-169hnl9u/UI-20`
+- Working directory: `/tmp/alpha-ui-f2ankocr/UI-20`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -4194,7 +4730,7 @@ RESULT: PASS
 ### UI-21 result
 
 
-- Working directory: `/tmp/alpha-ui-169hnl9u/UI-21`
+- Working directory: `/tmp/alpha-ui-f2ankocr/UI-21`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -4219,7 +4755,7 @@ RESULT: PASS
 ### UI-22 result
 
 
-- Working directory: `/tmp/alpha-ui-169hnl9u/UI-22`
+- Working directory: `/tmp/alpha-ui-f2ankocr/UI-22`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -4242,7 +4778,7 @@ OUTPUT
 Yooo! I'm Alpha. What can I help you with today?
     ____________________________________________________________
      Noted. I've removed this task:
-       [D][ ] return book (by: June 6th)
+       [D][ ] return book (by: Jun 06 2019)
      Now you have 2 tasks in the list.
     ____________________________________________________________
      Here are the tasks in your list:
@@ -4268,7 +4804,7 @@ RESULT: PASS
 ### UI-23 result
 
 
-- Working directory: `/tmp/alpha-ui-169hnl9u/UI-23`
+- Working directory: `/tmp/alpha-ui-f2ankocr/UI-23`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -4402,7 +4938,7 @@ RESULT: PASS
 ### UI-24 result
 
 
-- Working directory: `/tmp/alpha-ui-169hnl9u/UI-24`
+- Working directory: `/tmp/alpha-ui-f2ankocr/UI-24`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -4424,7 +4960,7 @@ Yooo! I'm Alpha. What can I help you with today?
     ____________________________________________________________
      Here are the tasks in your list:
      1.[T][ ] read | café \ notes
-     2.[D][X] book (by: )
+     2.[D][X] book (by: Feb 29 2024)
      3.[E][ ] meeting (from: noon to: 2pm)
     ____________________________________________________________
      Nice! I've marked this task as done:
@@ -4442,7 +4978,7 @@ RESULT: PASS
 ### UI-25 result
 
 
-- Working directory: `/tmp/alpha-ui-169hnl9u/UI-25`
+- Working directory: `/tmp/alpha-ui-f2ankocr/UI-25`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -4459,6 +4995,308 @@ OUTPUT
 Yooo! I'm Alpha. What can I help you with today?
     ____________________________________________________________
      Cannot load data/alpha.txt: Invalid task at line 2: Unknown escape sequence. The file has not been changed.
+    ____________________________________________________________
+RESULT: PASS
+```
+
+
+### UI-26 result
+
+
+- Working directory: `/tmp/alpha-ui-f2ankocr/UI-26`
+
+- Exit: 0; timeout: False; stderr: ''.
+
+```text
+=== UI-26: Validate dates and preserve tasks after rejected input ===
+INPUT
+deadline leap day /by 2024-02-29
+deadline invalid /by 2023-02-29
+deadline invalid /by 2019-04-31
+deadline invalid /by 2019-13-01
+deadline invalid /by 2019-00-10
+deadline invalid /by 2019-10-00
+deadline invalid /by 2019-2-01
+deadline invalid /by 2/12/2019 2400
+deadline invalid /by tomorrow
+deadline invalid /by
+deadline invalid /by 2019-10-15 extra
+deadline invalid
+list
+mark 1
+bye
+OUTPUT
+ █████╗ ██╗     ██████╗ ██╗  ██╗ █████╗ 
+██╔══██╗██║     ██╔══██╗██║  ██║██╔══██╗
+███████║██║     ██████╔╝███████║███████║
+██╔══██║██║     ██╔═══╝ ██╔══██║██╔══██║
+██║  ██║███████╗██║     ██║  ██║██║  ██║
+╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝
+Yooo! I'm Alpha. What can I help you with today?
+    ____________________________________________________________
+     Got it. I've added this task:
+       [D][ ] leap day (by: Feb 29 2024)
+     Now you have 1 tasks in the list.
+    ____________________________________________________________
+     Invalid deadline; use yyyy-MM-dd or d/M/yyyy HHmm (e.g., 2/12/2019 1800)
+    ____________________________________________________________
+     Invalid deadline; use yyyy-MM-dd or d/M/yyyy HHmm (e.g., 2/12/2019 1800)
+    ____________________________________________________________
+     Invalid deadline; use yyyy-MM-dd or d/M/yyyy HHmm (e.g., 2/12/2019 1800)
+    ____________________________________________________________
+     Invalid deadline; use yyyy-MM-dd or d/M/yyyy HHmm (e.g., 2/12/2019 1800)
+    ____________________________________________________________
+     Invalid deadline; use yyyy-MM-dd or d/M/yyyy HHmm (e.g., 2/12/2019 1800)
+    ____________________________________________________________
+     Invalid deadline; use yyyy-MM-dd or d/M/yyyy HHmm (e.g., 2/12/2019 1800)
+    ____________________________________________________________
+     Invalid deadline; use yyyy-MM-dd or d/M/yyyy HHmm (e.g., 2/12/2019 1800)
+    ____________________________________________________________
+     Invalid deadline; use yyyy-MM-dd or d/M/yyyy HHmm (e.g., 2/12/2019 1800)
+    ____________________________________________________________
+     Invalid deadline; use yyyy-MM-dd or d/M/yyyy HHmm (e.g., 2/12/2019 1800)
+    ____________________________________________________________
+     Invalid deadline; use yyyy-MM-dd or d/M/yyyy HHmm (e.g., 2/12/2019 1800)
+    ____________________________________________________________
+     Invalid deadline; use yyyy-MM-dd or d/M/yyyy HHmm (e.g., 2/12/2019 1800)
+    ____________________________________________________________
+     Here are the tasks in your list:
+     1.[D][ ] leap day (by: Feb 29 2024)
+    ____________________________________________________________
+     Nice! I've marked this task as done:
+       [D][X] leap day (by: Feb 29 2024)
+    ____________________________________________________________
+     Bye. Hope to see you again soon!
+    ____________________________________________________________
+RESULT: PASS
+```
+
+
+### UI-27 result
+
+
+- Working directory: `/tmp/alpha-ui-f2ankocr/UI-27`
+
+- Exit: 0; timeout: False; stderr: ''.
+
+```text
+=== UI-27: Restore typed deadline dates without rewriting ===
+INPUT
+list
+bye
+OUTPUT
+ █████╗ ██╗     ██████╗ ██╗  ██╗ █████╗ 
+██╔══██╗██║     ██╔══██╗██║  ██║██╔══██╗
+███████║██║     ██████╔╝███████║███████║
+██╔══██║██║     ██╔═══╝ ██╔══██║██╔══██║
+██║  ██║███████╗██║     ██║  ██║██║  ██║
+╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝
+Yooo! I'm Alpha. What can I help you with today?
+    ____________________________________________________________
+     Here are the tasks in your list:
+     1.[D][X] leap day (by: Feb 29 2024)
+     2.[D][ ] return book (by: Oct 15 2019)
+    ____________________________________________________________
+     Bye. Hope to see you again soon!
+    ____________________________________________________________
+RESULT: PASS
+```
+
+
+### UI-28 result
+
+
+- Working directory: `/tmp/alpha-ui-f2ankocr/UI-28`
+
+- Exit: 0; timeout: False; stderr: ''.
+
+```text
+=== UI-28: Reject an impossible saved deadline date ===
+INPUT
+OUTPUT
+ █████╗ ██╗     ██████╗ ██╗  ██╗ █████╗ 
+██╔══██╗██║     ██╔══██╗██║  ██║██╔══██╗
+███████║██║     ██████╔╝███████║███████║
+██╔══██║██║     ██╔═══╝ ██╔══██║██╔══██║
+██║  ██║███████╗██║     ██║  ██║██║  ██║
+╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝
+Yooo! I'm Alpha. What can I help you with today?
+    ____________________________________________________________
+     Cannot load data/alpha.txt: Invalid task at line 2: Invalid deadline; use yyyy-MM-dd or d/M/yyyy HHmm (e.g., 2/12/2019 1800). The file has not been changed.
+    ____________________________________________________________
+RESULT: PASS
+```
+
+
+### UI-29 result
+
+
+- Working directory: `/tmp/alpha-ui-f2ankocr/UI-29`
+
+- Exit: 0; timeout: False; stderr: ''.
+
+```text
+=== UI-29: Preserve old free-text deadlines without guessing a year ===
+INPUT
+OUTPUT
+ █████╗ ██╗     ██████╗ ██╗  ██╗ █████╗ 
+██╔══██╗██║     ██╔══██╗██║  ██║██╔══██╗
+███████║██║     ██████╔╝███████║███████║
+██╔══██║██║     ██╔═══╝ ██╔══██║██╔══██║
+██║  ██║███████╗██║     ██║  ██║██║  ██║
+╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝
+Yooo! I'm Alpha. What can I help you with today?
+    ____________________________________________________________
+     Cannot load data/alpha.txt: Invalid task at line 2: Invalid deadline; use yyyy-MM-dd or d/M/yyyy HHmm (e.g., 2/12/2019 1800). The file has not been changed.
+    ____________________________________________________________
+RESULT: PASS
+```
+
+
+### UI-30 result
+
+
+- Working directory: `/tmp/alpha-ui-f2ankocr/UI-30`
+
+- Exit: 0; timeout: False; stderr: ''.
+
+```text
+=== UI-30: Day-first deadline dates and strict 24-hour times ===
+INPUT
+deadline return book /by 2/12/2019 1800
+deadline midnight /by 29/02/2024 00:00
+deadline late /by 31/12/2024 2359
+deadline date only /by 2/12/2019
+deadline colon /by 02/12/2019 18:00
+deadline invalid /by 29/2/2023 1800
+deadline invalid /by 31/4/2019 1800
+deadline invalid /by 2/12/2019 2400
+deadline invalid /by 2/12/2019 1860
+deadline invalid /by 2/12/2019 18:60
+deadline invalid /by 2/12/2019 180
+deadline invalid /by 12/31/2019 1800
+deadline invalid /by 2/12/2019 6pm
+deadline invalid /by 2/12/2019 18:00:30
+deadline invalid /by 2/12/2019 1800 extra
+list
+bye
+OUTPUT
+ █████╗ ██╗     ██████╗ ██╗  ██╗ █████╗ 
+██╔══██╗██║     ██╔══██╗██║  ██║██╔══██╗
+███████║██║     ██████╔╝███████║███████║
+██╔══██║██║     ██╔═══╝ ██╔══██║██╔══██║
+██║  ██║███████╗██║     ██║  ██║██║  ██║
+╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝
+Yooo! I'm Alpha. What can I help you with today?
+    ____________________________________________________________
+     Got it. I've added this task:
+       [D][ ] return book (by: Dec 02 2019, 18:00)
+     Now you have 1 tasks in the list.
+    ____________________________________________________________
+     Got it. I've added this task:
+       [D][ ] midnight (by: Feb 29 2024, 00:00)
+     Now you have 2 tasks in the list.
+    ____________________________________________________________
+     Got it. I've added this task:
+       [D][ ] late (by: Dec 31 2024, 23:59)
+     Now you have 3 tasks in the list.
+    ____________________________________________________________
+     Got it. I've added this task:
+       [D][ ] date only (by: Dec 02 2019)
+     Now you have 4 tasks in the list.
+    ____________________________________________________________
+     Got it. I've added this task:
+       [D][ ] colon (by: Dec 02 2019, 18:00)
+     Now you have 5 tasks in the list.
+    ____________________________________________________________
+     Invalid deadline; use yyyy-MM-dd or d/M/yyyy HHmm (e.g., 2/12/2019 1800)
+    ____________________________________________________________
+     Invalid deadline; use yyyy-MM-dd or d/M/yyyy HHmm (e.g., 2/12/2019 1800)
+    ____________________________________________________________
+     Invalid deadline; use yyyy-MM-dd or d/M/yyyy HHmm (e.g., 2/12/2019 1800)
+    ____________________________________________________________
+     Invalid deadline; use yyyy-MM-dd or d/M/yyyy HHmm (e.g., 2/12/2019 1800)
+    ____________________________________________________________
+     Invalid deadline; use yyyy-MM-dd or d/M/yyyy HHmm (e.g., 2/12/2019 1800)
+    ____________________________________________________________
+     Invalid deadline; use yyyy-MM-dd or d/M/yyyy HHmm (e.g., 2/12/2019 1800)
+    ____________________________________________________________
+     Invalid deadline; use yyyy-MM-dd or d/M/yyyy HHmm (e.g., 2/12/2019 1800)
+    ____________________________________________________________
+     Invalid deadline; use yyyy-MM-dd or d/M/yyyy HHmm (e.g., 2/12/2019 1800)
+    ____________________________________________________________
+     Invalid deadline; use yyyy-MM-dd or d/M/yyyy HHmm (e.g., 2/12/2019 1800)
+    ____________________________________________________________
+     Invalid deadline; use yyyy-MM-dd or d/M/yyyy HHmm (e.g., 2/12/2019 1800)
+    ____________________________________________________________
+     Here are the tasks in your list:
+     1.[D][ ] return book (by: Dec 02 2019, 18:00)
+     2.[D][ ] midnight (by: Feb 29 2024, 00:00)
+     3.[D][ ] late (by: Dec 31 2024, 23:59)
+     4.[D][ ] date only (by: Dec 02 2019)
+     5.[D][ ] colon (by: Dec 02 2019, 18:00)
+    ____________________________________________________________
+     Bye. Hope to see you again soon!
+    ____________________________________________________________
+RESULT: PASS
+```
+
+
+### UI-31 result
+
+
+- Working directory: `/tmp/alpha-ui-f2ankocr/UI-31`
+
+- Exit: 0; timeout: False; stderr: ''.
+
+```text
+=== UI-31: Reload and resave explicit midnight separately from a date ===
+INPUT
+list
+mark 1
+bye
+OUTPUT
+ █████╗ ██╗     ██████╗ ██╗  ██╗ █████╗ 
+██╔══██╗██║     ██╔══██╗██║  ██║██╔══██╗
+███████║██║     ██████╔╝███████║███████║
+██╔══██║██║     ██╔═══╝ ██╔══██║██╔══██║
+██║  ██║███████╗██║     ██║  ██║██║  ██║
+╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝
+Yooo! I'm Alpha. What can I help you with today?
+    ____________________________________________________________
+     Here are the tasks in your list:
+     1.[D][ ] midnight (by: Feb 29 2024, 00:00)
+     2.[D][ ] date only (by: Feb 29 2024)
+    ____________________________________________________________
+     Nice! I've marked this task as done:
+       [D][X] midnight (by: Feb 29 2024, 00:00)
+    ____________________________________________________________
+     Bye. Hope to see you again soon!
+    ____________________________________________________________
+RESULT: PASS
+```
+
+
+### UI-32 result
+
+
+- Working directory: `/tmp/alpha-ui-f2ankocr/UI-32`
+
+- Exit: 0; timeout: False; stderr: ''.
+
+```text
+=== UI-32: Reject invalid saved time without overwriting ===
+INPUT
+OUTPUT
+ █████╗ ██╗     ██████╗ ██╗  ██╗ █████╗ 
+██╔══██╗██║     ██╔══██╗██║  ██║██╔══██╗
+███████║██║     ██████╔╝███████║███████║
+██╔══██║██║     ██╔═══╝ ██╔══██║██╔══██║
+██║  ██║███████╗██║     ██║  ██║██║  ██║
+╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝
+Yooo! I'm Alpha. What can I help you with today?
+    ____________________________________________________________
+     Cannot load data/alpha.txt: Invalid task at line 2: Invalid deadline; use yyyy-MM-dd or d/M/yyyy HHmm (e.g., 2/12/2019 1800). The file has not been changed.
     ____________________________________________________________
 RESULT: PASS
 ```
@@ -4491,4 +5329,11 @@ Overall: PASS
 - UI-23: PASS
 - UI-24: PASS
 - UI-25: PASS
+- UI-26: PASS
+- UI-27: PASS
+- UI-28: PASS
+- UI-29: PASS
+- UI-30: PASS
+- UI-31: PASS
+- UI-32: PASS
 
