@@ -30,9 +30,11 @@ public class Alpha {
     public void run() {
         ui.showWelcome();
 
-        ArrayList<Task> tasks = new ArrayList<>();
+        TaskList tasks;
         try {
-            storage.load(tasks);
+            ArrayList<Task> restoredTasks = new ArrayList<>();
+            storage.load(restoredTasks);
+            tasks = new TaskList(restoredTasks);
         } catch (AlphaException exception) {
             ui.showError(exception.getMessage());
             ui.showDivider();
@@ -64,10 +66,10 @@ public class Alpha {
      * @param tasks The list of tasks.
      * @throws AlphaException If the command is invalid or its change cannot be saved.
      */
-    private void processCommand(Parser.CommandType commandType, String command, ArrayList<Task> tasks)
+    private void processCommand(Parser.CommandType commandType, String command, TaskList tasks)
             throws AlphaException {
         switch (commandType) {
-        case LIST -> ui.showTasks(tasks);
+        case LIST -> ui.showTasks(tasks.toList());
         case MARK -> markTask(parser.parseIndex(command, tasks.size()), tasks);
         case UNMARK -> unmarkTask(parser.parseIndex(command, tasks.size()), tasks);
         case DELETE -> deleteTask(parser.parseIndex(command, tasks.size()), tasks);
@@ -86,15 +88,15 @@ public class Alpha {
      * @param tasks The list of tasks.
      * @throws AlphaException If the change cannot be saved.
      */
-    private void markTask(int index, ArrayList<Task> tasks)
+    private void markTask(int index, TaskList tasks)
             throws AlphaException {
-        boolean wasDone = tasks.get(index).getStatusIcon().equals("X");
-        tasks.get(index).markAsDone();
+        boolean wasDone = tasks.isDone(index);
+        tasks.mark(index);
         try {
-            storage.save(tasks);
+            storage.save(tasks.toList());
         } catch (AlphaException exception) {
             if (!wasDone) {
-                tasks.get(index).markAsNotDone();
+                tasks.unmark(index);
             }
             throw exception;
         }
@@ -108,15 +110,15 @@ public class Alpha {
      * @param tasks The list of tasks.
      * @throws AlphaException If the change cannot be saved.
      */
-    private void unmarkTask(int index, ArrayList<Task> tasks)
+    private void unmarkTask(int index, TaskList tasks)
             throws AlphaException {
-        boolean wasDone = tasks.get(index).getStatusIcon().equals("X");
-        tasks.get(index).markAsNotDone();
+        boolean wasDone = tasks.isDone(index);
+        tasks.unmark(index);
         try {
-            storage.save(tasks);
+            storage.save(tasks.toList());
         } catch (AlphaException exception) {
             if (wasDone) {
-                tasks.get(index).markAsDone();
+                tasks.mark(index);
             }
             throw exception;
         }
@@ -130,13 +132,13 @@ public class Alpha {
      * @param tasks The list of tasks.
      * @throws AlphaException If the deletion cannot be saved.
      */
-    private void deleteTask(int index, ArrayList<Task> tasks)
+    private void deleteTask(int index, TaskList tasks)
             throws AlphaException {
-        Task deletedTask = tasks.remove(index);
+        Task deletedTask = tasks.delete(index);
         try {
-            storage.save(tasks);
+            storage.save(tasks.toList());
         } catch (AlphaException exception) {
-            tasks.add(index, deletedTask);
+            tasks.insert(index, deletedTask);
             throw exception;
         }
 
@@ -149,11 +151,11 @@ public class Alpha {
      * @param tasks The list of tasks.
      * @throws AlphaException If the addition cannot be saved.
      */
-    private void saveAddition(ArrayList<Task> tasks) throws AlphaException {
+    private void saveAddition(TaskList tasks) throws AlphaException {
         try {
-            storage.save(tasks);
+            storage.save(tasks.toList());
         } catch (AlphaException exception) {
-            tasks.remove(tasks.size() - 1);
+            tasks.delete(tasks.size() - 1);
             throw exception;
         }
         ui.showAdded(tasks.get(tasks.size() - 1), tasks.size());

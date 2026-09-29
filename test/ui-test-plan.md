@@ -2398,16 +2398,16 @@ Yooo! I'm Alpha. What can I help you with today?
 ## Latest test session
 
 
-- Date/time: 2026-09-29T19:18:08.571543+08:00
+- Date/time: 2026-09-29T19:23:54.158962+08:00
 
 - Branch: master
 
-- Commit: 8ca7b766b9a9e039e47bd2601be1a8b744a27f71
+- Commit: 19079805502efc9b0ce0400c208a85c47e4ef1e9
 
 - Working tree at start:
 ```text
  M src/main/java/alpha/Alpha.java
-?? src/main/java/alpha/Parser.java
+?? src/main/java/alpha/TaskList.java
 ```
 
 - OS: Linux 6.6.87.2-microsoft-standard-WSL2; UTF-8; 10-second timeout.
@@ -2420,15 +2420,15 @@ OpenJDK 64-Bit Server VM (build 25.0.3+9-2-24.04.2-Ubuntu, mixed mode, sharing)
 javac 25.0.3
 ```
 
-- Compile command: `/usr/lib/jvm/java-25-openjdk-amd64/bin/javac -encoding UTF-8 -d /tmp/alpha-ui-c7fsvx99/classes /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/Alpha.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/AlphaException.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/Parser.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/Storage.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/Ui.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/task/Deadline.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/task/Event.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/task/Task.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/task/Todo.java`
+- Compile command: `/usr/lib/jvm/java-25-openjdk-amd64/bin/javac -encoding UTF-8 -d /tmp/alpha-ui-p1itlo94/classes /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/Alpha.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/AlphaException.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/Parser.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/Storage.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/TaskList.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/Ui.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/task/Deadline.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/task/Event.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/task/Task.java /mnt/c/Users/sheny/CS2113/ip/src/main/java/alpha/task/Todo.java`
 
-- Launch command: `/usr/lib/jvm/java-25-openjdk-amd64/bin/java -Dfile.encoding=UTF-8 -cp /tmp/alpha-ui-c7fsvx99/classes alpha.Alpha`
+- Launch command: `/usr/lib/jvm/java-25-openjdk-amd64/bin/java -Dfile.encoding=UTF-8 -cp /tmp/alpha-ui-p1itlo94/classes alpha.Alpha`
 
 
 ### UI-01 result
 
 
-- Working directory: `/tmp/alpha-ui-c7fsvx99/UI-01`
+- Working directory: `/tmp/alpha-ui-p1itlo94/UI-01`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -2458,7 +2458,7 @@ RESULT: PASS
 ### UI-02 result
 
 
-- Working directory: `/tmp/alpha-ui-c7fsvx99/UI-02`
+- Working directory: `/tmp/alpha-ui-p1itlo94/UI-02`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -2484,7 +2484,7 @@ RESULT: PASS
 ### UI-03 result
 
 
-- Working directory: `/tmp/alpha-ui-c7fsvx99/UI-03`
+- Working directory: `/tmp/alpha-ui-p1itlo94/UI-03`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -2531,7 +2531,7 @@ RESULT: PASS
 ### UI-04 result
 
 
-- Working directory: `/tmp/alpha-ui-c7fsvx99/UI-04`
+- Working directory: `/tmp/alpha-ui-p1itlo94/UI-04`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -2586,7 +2586,7 @@ RESULT: PASS
 ### UI-05 result
 
 
-- Working directory: `/tmp/alpha-ui-c7fsvx99/UI-05`
+- Working directory: `/tmp/alpha-ui-p1itlo94/UI-05`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -2683,7 +2683,7 @@ RESULT: PASS
 ### UI-06 result
 
 
-- Working directory: `/tmp/alpha-ui-c7fsvx99/UI-06`
+- Working directory: `/tmp/alpha-ui-p1itlo94/UI-06`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -2890,7 +2890,7 @@ RESULT: PASS
 ### UI-07 result
 
 
-- Working directory: `/tmp/alpha-ui-c7fsvx99/UI-07`
+- Working directory: `/tmp/alpha-ui-p1itlo94/UI-07`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -2937,7 +2937,7 @@ RESULT: PASS
 ### UI-08 result
 
 
-- Working directory: `/tmp/alpha-ui-c7fsvx99/UI-08`
+- Working directory: `/tmp/alpha-ui-p1itlo94/UI-08`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -3000,7 +3000,7 @@ RESULT: PASS
 ### UI-09 result
 
 
-- Working directory: `/tmp/alpha-ui-c7fsvx99/UI-09`
+- Working directory: `/tmp/alpha-ui-p1itlo94/UI-09`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -3052,7 +3052,7 @@ RESULT: PASS
 ### UI-10 result
 
 
-- Working directory: `/tmp/alpha-ui-c7fsvx99/UI-10`
+- Working directory: `/tmp/alpha-ui-p1itlo94/UI-10`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -3099,7 +3099,7 @@ RESULT: PASS
 ### UI-11 result
 
 
-- Working directory: `/tmp/alpha-ui-c7fsvx99/UI-11`
+- Working directory: `/tmp/alpha-ui-p1itlo94/UI-11`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -3848,7 +3848,7 @@ RESULT: PASS
 ### UI-12 result
 
 
-- Working directory: `/tmp/alpha-ui-c7fsvx99/UI-12`
+- Working directory: `/tmp/alpha-ui-p1itlo94/UI-12`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -3903,7 +3903,7 @@ RESULT: PASS
 ### UI-13 result
 
 
-- Working directory: `/tmp/alpha-ui-c7fsvx99/UI-13`
+- Working directory: `/tmp/alpha-ui-p1itlo94/UI-13`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -3941,7 +3941,7 @@ RESULT: PASS
 ### UI-14 result
 
 
-- Working directory: `/tmp/alpha-ui-c7fsvx99/UI-14`
+- Working directory: `/tmp/alpha-ui-p1itlo94/UI-14`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -3993,7 +3993,7 @@ RESULT: PASS
 ### UI-15 result
 
 
-- Working directory: `/tmp/alpha-ui-c7fsvx99/UI-15`
+- Working directory: `/tmp/alpha-ui-p1itlo94/UI-15`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -4031,7 +4031,7 @@ RESULT: PASS
 ### UI-16 result
 
 
-- Working directory: `/tmp/alpha-ui-c7fsvx99/UI-16`
+- Working directory: `/tmp/alpha-ui-p1itlo94/UI-16`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -4083,7 +4083,7 @@ RESULT: PASS
 ### UI-17 result
 
 
-- Working directory: `/tmp/alpha-ui-c7fsvx99/UI-17`
+- Working directory: `/tmp/alpha-ui-p1itlo94/UI-17`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -4117,7 +4117,7 @@ RESULT: PASS
 ### UI-18 result
 
 
-- Working directory: `/tmp/alpha-ui-c7fsvx99/UI-18`
+- Working directory: `/tmp/alpha-ui-p1itlo94/UI-18`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -4142,7 +4142,7 @@ RESULT: PASS
 ### UI-19 result
 
 
-- Working directory: `/tmp/alpha-ui-c7fsvx99/UI-19`
+- Working directory: `/tmp/alpha-ui-p1itlo94/UI-19`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -4167,7 +4167,7 @@ RESULT: PASS
 ### UI-20 result
 
 
-- Working directory: `/tmp/alpha-ui-c7fsvx99/UI-20`
+- Working directory: `/tmp/alpha-ui-p1itlo94/UI-20`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -4192,7 +4192,7 @@ RESULT: PASS
 ### UI-21 result
 
 
-- Working directory: `/tmp/alpha-ui-c7fsvx99/UI-21`
+- Working directory: `/tmp/alpha-ui-p1itlo94/UI-21`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -4217,7 +4217,7 @@ RESULT: PASS
 ### UI-22 result
 
 
-- Working directory: `/tmp/alpha-ui-c7fsvx99/UI-22`
+- Working directory: `/tmp/alpha-ui-p1itlo94/UI-22`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -4266,7 +4266,7 @@ RESULT: PASS
 ### UI-23 result
 
 
-- Working directory: `/tmp/alpha-ui-c7fsvx99/UI-23`
+- Working directory: `/tmp/alpha-ui-p1itlo94/UI-23`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -4400,7 +4400,7 @@ RESULT: PASS
 ### UI-24 result
 
 
-- Working directory: `/tmp/alpha-ui-c7fsvx99/UI-24`
+- Working directory: `/tmp/alpha-ui-p1itlo94/UI-24`
 
 - Exit: 0; timeout: False; stderr: ''.
 
@@ -4440,7 +4440,7 @@ RESULT: PASS
 ### UI-25 result
 
 
-- Working directory: `/tmp/alpha-ui-c7fsvx99/UI-25`
+- Working directory: `/tmp/alpha-ui-p1itlo94/UI-25`
 
 - Exit: 0; timeout: False; stderr: ''.
 
