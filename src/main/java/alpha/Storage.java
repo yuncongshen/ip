@@ -182,6 +182,9 @@ public class Storage {
 
     /**
      * Reads a bounded regular file, distinguishing a missing file from inaccessible or unsafe paths.
+     *
+     * @return The snapshot bytes, or {@code null} when the file does not exist.
+     * @throws IOException If the file cannot be read, is not regular, or exceeds the size limit.
      */
     private byte[] readSnapshot() throws IOException {
         BasicFileAttributes attributes;
@@ -276,10 +279,21 @@ public class Storage {
         return createTask(fields);
     }
 
+    /**
+     * Encodes a legacy field as UTF-8 Base64 so it can reuse the versioned-record parser.
+     *
+     * @param field The decoded legacy field.
+     */
     private static String encode(String field) {
         return Base64.getEncoder().encodeToString(field.getBytes(StandardCharsets.UTF_8));
     }
 
+    /**
+     * Decodes a Base64 field and validates its UTF-8 bytes without replacing malformed characters.
+     *
+     * @param field The encoded snapshot field.
+     * @throws IllegalArgumentException If the Base64 or decoded UTF-8 is invalid.
+     */
     private static String decode(String field) {
         try {
             return decodeUtf8(Base64.getDecoder().decode(field));
@@ -289,7 +303,7 @@ public class Storage {
     }
 
     /**
-     * Validates the record shape, completion status, and description before constructing a task.
+     * Decodes a Base64 snapshot record and delegates task validation to {@link #createTask(String[])}.
      */
     private static Task parseRecord(String line) {
         String[] fields = line.split("\\|", -1);

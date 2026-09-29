@@ -19,6 +19,13 @@ public class FindCommand extends Command {
         this.keyword = keyword;
     }
 
+    /**
+     * Displays description matches with their original task numbers without saving data.
+     *
+     * @param tasks The active task list to search.
+     * @param ui The interface used to display matches.
+     * @param storage The storage, unused by this command.
+     */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) {
         ui.showMatchingTasks(tasks.toList(), tasks.findDescriptionIndices(keyword));

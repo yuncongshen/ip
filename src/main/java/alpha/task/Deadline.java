@@ -54,10 +54,17 @@ public class Deadline extends Task {
         }
     }
 
+    /**
+     * Returns the immutable deadline datetime, using midnight for date-only input.
+     * Use {@link #hasTime()} to distinguish an explicit midnight from an unspecified time.
+     */
     public LocalDateTime getBy() {
         return by;
     }
 
+    /**
+     * Returns whether the input supplied a time, including an explicit midnight.
+     */
     public boolean hasTime() {
         return hasTime;
     }

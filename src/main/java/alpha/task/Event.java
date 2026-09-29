@@ -1,11 +1,17 @@
 package alpha.task;
 
 /**
- * Represents an Event task, which has a description and start and end
- * datetimes.
+ * Represents an event with a description and free-text start and end fields.
+ * Unlike deadline dates, event times are not parsed into calendar values.
  */
 public class Event extends Task {
+    /**
+     * Stores the event's start text without interpreting it as a datetime.
+     */
     protected String from;
+    /**
+     * Stores the event's end text without interpreting it as a datetime.
+     */
     protected String to;
 
     /**
@@ -22,10 +28,16 @@ public class Event extends Task {
         this.to = to;
     }
 
+    /**
+     * Returns the event's start text, or an empty string when no start was supplied.
+     */
     public String getFrom() {
         return from;
     }
 
+    /**
+     * Returns the event's end text, or an empty string when no end was supplied.
+     */
     public String getTo() {
         return to;
     }

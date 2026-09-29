@@ -159,6 +159,11 @@ public class Ui {
         }
     }
 
+    /**
+     * Displays the number of tasks remaining after a successful addition or deletion.
+     *
+     * @param taskCount The updated number of tasks.
+     */
     private void showTaskCount(int taskCount) {
         System.out.println("     Now you have " + taskCount + " tasks in the list.");
     }

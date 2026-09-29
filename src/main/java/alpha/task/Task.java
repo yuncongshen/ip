@@ -1,12 +1,15 @@
 package alpha.task;
 
 /**
- * Represents the common behaviour shared by all task types in the Alpha
+ * Represents the common behavior shared by all task types in the Alpha
  * chatbot application. Each task has a description and a done status that
  * can be toggled. Subclasses {@code Todo}, {@code Deadline}, and
  * {@code Event} add their own type-specific details.
  */
 public class Task {
+    /**
+     * Stores the user-supplied description shared by all task types.
+     */
     protected String description;
     private boolean isDone;
 

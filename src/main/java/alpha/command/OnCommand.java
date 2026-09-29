@@ -21,6 +21,13 @@ public class OnCommand extends Command {
         this.date = date;
     }
 
+    /**
+     * Displays deadlines on the requested date, including all times and completion states.
+     *
+     * @param tasks The active task list to search.
+     * @param ui The interface used to display matching deadlines.
+     * @param storage The storage, unused by this command.
+     */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) {
         ui.showDeadlinesOn(date, tasks.toList(), tasks.findDeadlineIndices(date));

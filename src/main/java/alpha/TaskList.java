@@ -31,10 +31,20 @@ public class TaskList {
         tasks = new ArrayList<>(initialTasks);
     }
 
+    /**
+     * Returns the number of tasks in the list.
+     */
     public int size() {
         return tasks.size();
     }
 
+    /**
+     * Returns the task at the given position without copying it.
+     * Changes to the returned task are reflected in this list.
+     *
+     * @param index The zero-based task index.
+     * @throws IndexOutOfBoundsException If the index does not identify a task.
+     */
     public Task get(int index) {
         return tasks.get(index);
     }

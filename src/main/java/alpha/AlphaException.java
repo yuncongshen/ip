@@ -1,7 +1,7 @@
 package alpha;
 
 /**
- * Represents an error that occurs while processing a user command.
+ * Represents a user-facing error while parsing a command, executing it, or loading saved tasks.
  */
 public class AlphaException extends Exception {
 
