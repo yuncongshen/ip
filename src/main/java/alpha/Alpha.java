@@ -1,10 +1,6 @@
 package alpha;
 
-import alpha.command.AddCommand;
 import alpha.command.Command;
-import alpha.command.DeleteCommand;
-import alpha.command.MarkCommand;
-import alpha.command.UnmarkCommand;
 import alpha.task.Task;
 
 import java.nio.file.Path;
@@ -45,45 +41,18 @@ public class Alpha {
             ui.showDivider();
             return;
         }
-        while (ui.hasNextCommand()) {
-            String command = ui.readCommand();
-
+        boolean isExit = false;
+        while (!isExit && ui.hasNextCommand()) {
             try {
-                Parser.CommandType commandType = parser.parseCommandType(command);
-                if (commandType == Parser.CommandType.BYE) {
-                    ui.showGoodbye();
-                    ui.showDivider();
-                    break;
-                }
-                processCommand(commandType, command, tasks);
+                String fullCommand = ui.readCommand();
+                Command command = parser.parse(fullCommand, tasks.size());
+                command.execute(tasks, ui, storage);
+                isExit = command.isExit();
             } catch (AlphaException exception) {
                 ui.showError(exception.getMessage());
+            } finally {
+                ui.showDivider();
             }
-            ui.showDivider();
         }
-    }
-
-    /**
-     * Processes a non-exit command and updates the task list.
-     *
-     * @param commandType The recognized non-exit operation.
-     * @param command The user's command.
-     * @param tasks The list of tasks.
-     * @throws AlphaException If the command is invalid or its change cannot be saved.
-     */
-    private void processCommand(Parser.CommandType commandType, String command, TaskList tasks)
-            throws AlphaException {
-        if (commandType == Parser.CommandType.LIST) {
-            ui.showTasks(tasks.toList());
-            return;
-        }
-        Command operation = switch (commandType) {
-        case MARK -> new MarkCommand(parser.parseIndex(command, tasks.size()));
-        case UNMARK -> new UnmarkCommand(parser.parseIndex(command, tasks.size()));
-        case DELETE -> new DeleteCommand(parser.parseIndex(command, tasks.size()));
-        case TODO, DEADLINE, EVENT -> new AddCommand(parser.parseTask(command));
-        default -> throw new IllegalArgumentException("Exit commands are handled by run.");
-        };
-        operation.execute(tasks, ui, storage);
     }
 }

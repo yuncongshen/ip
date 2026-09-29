@@ -1,5 +1,12 @@
 package alpha;
 
+import alpha.command.AddCommand;
+import alpha.command.Command;
+import alpha.command.DeleteCommand;
+import alpha.command.ExitCommand;
+import alpha.command.ListCommand;
+import alpha.command.MarkCommand;
+import alpha.command.UnmarkCommand;
 import alpha.task.Deadline;
 import alpha.task.Event;
 import alpha.task.Task;
@@ -12,7 +19,7 @@ public class Parser {
     /**
      * Identifies the operations supported by the command-line interface.
      */
-    public enum CommandType {
+    private enum CommandType {
         LIST, MARK, UNMARK, DELETE, TODO, DEADLINE, EVENT, BYE
     }
 
@@ -23,7 +30,7 @@ public class Parser {
      * @return The recognized operation.
      * @throws AlphaException If the command is unknown.
      */
-    public CommandType parseCommandType(String command) throws AlphaException {
+    private CommandType parseCommandType(String command) throws AlphaException {
         if (command.equals("list")) {
             return CommandType.LIST;
         } else if (command.equals("bye")) {
@@ -45,19 +52,24 @@ public class Parser {
     }
 
     /**
-     * Creates a task from an addition command without adding it to a list.
-     * Missing time markers retain their existing empty-field behavior.
+     * Creates a command without executing it or changing application state.
+     * Indexed commands are validated against the current list size and must execute before the list changes.
      *
      * @param command The unmodified user input.
-     * @return The task described by the command.
-     * @throws AlphaException If the command is not an addition or its description is empty.
+     * @param taskCount The current number of tasks, used to validate task numbers.
+     * @return The operation ready for immediate execution.
+     * @throws AlphaException If the command or its arguments are invalid.
      */
-    public Task parseTask(String command) throws AlphaException {
+    public Command parse(String command, int taskCount) throws AlphaException {
         return switch (parseCommandType(command)) {
-        case TODO -> parseTodo(command);
-        case DEADLINE -> parseDeadline(command);
-        case EVENT -> parseEvent(command);
-        default -> throw new AlphaException("Bro, I don't know what that means...");
+        case LIST -> new ListCommand();
+        case BYE -> new ExitCommand();
+        case MARK -> new MarkCommand(parseIndex(command, taskCount));
+        case UNMARK -> new UnmarkCommand(parseIndex(command, taskCount));
+        case DELETE -> new DeleteCommand(parseIndex(command, taskCount));
+        case TODO -> new AddCommand(parseTodo(command));
+        case DEADLINE -> new AddCommand(parseDeadline(command));
+        case EVENT -> new AddCommand(parseEvent(command));
         };
     }
 
@@ -70,7 +82,7 @@ public class Parser {
      * @throws AlphaException If the number is not a valid positive integer
      *                        or does not refer to a stored task.
      */
-    public int parseIndex(String command, int taskCount)
+    private int parseIndex(String command, int taskCount)
             throws AlphaException {
         int separator = command.indexOf(' ');
         String argument = separator < 0 ? "" : command.substring(separator).trim();
