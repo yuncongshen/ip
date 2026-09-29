@@ -2,6 +2,9 @@ package alpha;
 
 import alpha.command.AddCommand;
 import alpha.command.Command;
+import alpha.command.DeleteCommand;
+import alpha.command.MarkCommand;
+import alpha.command.UnmarkCommand;
 import alpha.task.Task;
 
 import java.nio.file.Path;
@@ -70,81 +73,17 @@ public class Alpha {
      */
     private void processCommand(Parser.CommandType commandType, String command, TaskList tasks)
             throws AlphaException {
-        switch (commandType) {
-        case LIST -> ui.showTasks(tasks.toList());
-        case MARK -> markTask(parser.parseIndex(command, tasks.size()), tasks);
-        case UNMARK -> unmarkTask(parser.parseIndex(command, tasks.size()), tasks);
-        case DELETE -> deleteTask(parser.parseIndex(command, tasks.size()), tasks);
-        case TODO, DEADLINE, EVENT -> {
-            Command addition = new AddCommand(parser.parseTask(command));
-            addition.execute(tasks, ui, storage);
+        if (commandType == Parser.CommandType.LIST) {
+            ui.showTasks(tasks.toList());
+            return;
         }
+        Command operation = switch (commandType) {
+        case MARK -> new MarkCommand(parser.parseIndex(command, tasks.size()));
+        case UNMARK -> new UnmarkCommand(parser.parseIndex(command, tasks.size()));
+        case DELETE -> new DeleteCommand(parser.parseIndex(command, tasks.size()));
+        case TODO, DEADLINE, EVENT -> new AddCommand(parser.parseTask(command));
         default -> throw new IllegalArgumentException("Exit commands are handled by run.");
-        }
+        };
+        operation.execute(tasks, ui, storage);
     }
-
-    /**
-     * Marks the task at the validated zero-based index as done.
-     *
-     * @param index The validated zero-based task index.
-     * @param tasks The list of tasks.
-     * @throws AlphaException If the change cannot be saved.
-     */
-    private void markTask(int index, TaskList tasks)
-            throws AlphaException {
-        boolean wasDone = tasks.isDone(index);
-        tasks.mark(index);
-        try {
-            storage.save(tasks.toList());
-        } catch (AlphaException exception) {
-            if (!wasDone) {
-                tasks.unmark(index);
-            }
-            throw exception;
-        }
-        ui.showMarked(tasks.get(index));
-    }
-
-    /**
-     * Marks the task at the validated zero-based index as not done.
-     *
-     * @param index The validated zero-based task index.
-     * @param tasks The list of tasks.
-     * @throws AlphaException If the change cannot be saved.
-     */
-    private void unmarkTask(int index, TaskList tasks)
-            throws AlphaException {
-        boolean wasDone = tasks.isDone(index);
-        tasks.unmark(index);
-        try {
-            storage.save(tasks.toList());
-        } catch (AlphaException exception) {
-            if (wasDone) {
-                tasks.mark(index);
-            }
-            throw exception;
-        }
-        ui.showUnmarked(tasks.get(index));
-    }
-
-    /**
-     * Deletes a task while preserving the order of the remaining tasks.
-     *
-     * @param index The validated zero-based task index.
-     * @param tasks The list of tasks.
-     * @throws AlphaException If the deletion cannot be saved.
-     */
-    private void deleteTask(int index, TaskList tasks)
-            throws AlphaException {
-        Task deletedTask = tasks.delete(index);
-        try {
-            storage.save(tasks.toList());
-        } catch (AlphaException exception) {
-            tasks.insert(index, deletedTask);
-            throw exception;
-        }
-
-        ui.showDeleted(deletedTask, tasks.size());
-    }
-
 }
