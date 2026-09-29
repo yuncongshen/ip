@@ -1,5 +1,7 @@
 package alpha;
 
+import alpha.command.AddCommand;
+import alpha.command.Command;
 import alpha.task.Task;
 
 import java.nio.file.Path;
@@ -74,8 +76,8 @@ public class Alpha {
         case UNMARK -> unmarkTask(parser.parseIndex(command, tasks.size()), tasks);
         case DELETE -> deleteTask(parser.parseIndex(command, tasks.size()), tasks);
         case TODO, DEADLINE, EVENT -> {
-            tasks.add(parser.parseTask(command));
-            saveAddition(tasks);
+            Command addition = new AddCommand(parser.parseTask(command));
+            addition.execute(tasks, ui, storage);
         }
         default -> throw new IllegalArgumentException("Exit commands are handled by run.");
         }
@@ -145,19 +147,4 @@ public class Alpha {
         ui.showDeleted(deletedTask, tasks.size());
     }
 
-    /**
-     * Saves an addition before confirming it, removing the new task if saving fails.
-     *
-     * @param tasks The list of tasks.
-     * @throws AlphaException If the addition cannot be saved.
-     */
-    private void saveAddition(TaskList tasks) throws AlphaException {
-        try {
-            storage.save(tasks.toList());
-        } catch (AlphaException exception) {
-            tasks.delete(tasks.size() - 1);
-            throw exception;
-        }
-        ui.showAdded(tasks.get(tasks.size() - 1), tasks.size());
-    }
 }
