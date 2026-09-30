@@ -1,29 +1,37 @@
-# Alpha project template
+# Alpha
 
-This is a project template for a greenfield Java project. It is named _Alpha_. Given below are instructions on how to use it.
+Alpha is a command-line task manager for todos, deadlines, and events, with automatic saving and task searches.
+See the [User Guide](https://yuncongshen.github.io/ip/) for commands and examples.
+The sections below explain project setup, building, and application behavior.
 
-## Setting up in Intellij
+## Setting up in IntelliJ IDEA
 
-Prerequisites: JDK 25, update Intellij to the most recent version.
+Prerequisites: JDK 25 and an up-to-date version of IntelliJ IDEA.
 
-1. Open Intellij (if you are not in the welcome screen, click `File` > `Close Project` to close the existing project first)
-1. Open the project into Intellij as follows:
+1. Open IntelliJ IDEA (if you are not in the welcome screen, click `File` > `Close Project` to close the existing project first).
+1. Open the project in IntelliJ IDEA as follows:
    1. Click `Open`.
    1. Select the project directory, and click `OK`.
    1. If there are any further prompts, accept the defaults.
 1. Configure the project to use **JDK 25** (not other versions) as explained in [here](https://www.jetbrains.com/help/idea/sdk.html#set-up-jdk).<br>
    In the same dialog, set the **Project language level** field to the `SDK default` option.
 1. After that, locate the `src/main/java/alpha/Alpha.java` file, right-click it, and choose `Run Alpha.main()` (if the code editor is showing compile errors, try restarting the IDE). If the setup is correct, you should see the following output:
+   ```text
+         █████╗ ██╗     ██████╗ ██╗  ██╗ █████╗
+        ██╔══██╗██║     ██╔══██╗██║  ██║██╔══██╗
+        ███████║██║     ██████╔╝███████║███████║
+        ██╔══██║██║     ██╔═══╝ ██╔══██║██╔══██║
+        ██║  ██║███████╗██║     ██║  ██║██║  ██║
+        ╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝
+        Yooo! I'm Alpha. What can I help you with today?
+       ____________________________________________________________
    ```
-    █████╗ ██╗     ██████╗ ██╗  ██╗ █████╗
-   ██╔══██╗██║     ██╔══██╗██║  ██║██╔══██╗
-   ███████║██║     ██████╔╝███████║███████║
-   ██╔══██║██║     ██╔═══╝ ██╔══██║██╔══██║
-   ██║  ██║███████╗██║     ██║  ██║██║  ██║
-   ╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝
-   Yooo! I'm Alpha. What can I help you with today?
 
-   Bye! See you soon!
+   Alpha then waits for a command. Enter `bye` to exit:
+
+   ```text
+        Bye. Hope to see you again soon!
+       ____________________________________________________________
    ```
 
 **Warning:** Keep the `src\main\java` folder as the root folder for Java files (i.e., don't rename those folders or move Java files to another folder outside of this folder path), as this is the default location some tools (e.g., Gradle) expect to find Java files.
@@ -143,7 +151,10 @@ You can search for a phrase with `find return book`; surrounding spaces are igno
 Punctuation is literal, not a regular expression. Dates, time fields, and status labels are not searched.
 
 Results retain their original list order and task numbers, just like `on`, so the displayed numbers
-work with `mark`, `unmark`, and `delete`. Empty results show `No matching tasks found.`
+work with `mark`, `unmark`, and `delete`. If existing tasks do not match, Alpha prints
+`No matching tasks found. Try a shorter keyword or use "list" to see all tasks.`
+If the task list is empty, it prints
+`Your task list is empty. Add a task first, e.g. "todo read book".`
 Missing or blank keywords produce an error. Searching does not modify tasks or the save file.
 
 ## Saving and loading tasks (Level-7)
