@@ -18,8 +18,9 @@ public class Deadline extends Task {
             .withResolverStyle(ResolverStyle.STRICT);
     private static final DateTimeFormatter INPUT_TIME = DateTimeFormatter.ofPattern("d/M/uuuu HHmm", Locale.ENGLISH)
             .withResolverStyle(ResolverStyle.STRICT);
-    private static final String INVALID_DATE = "Invalid deadline; use yyyy-MM-dd or d/M/yyyy HHmm"
-            + " (e.g., 2/12/2019 1800)";
+    private static final String INVALID_DATE = "Invalid deadline date or time. Use yyyy-MM-dd, d/M/yyyy,"
+            + " d/M/yyyy HHmm, d/M/yyyy HH:mm, or yyyy-MM-ddTHH:mm (e.g., 2019-12-02T18:00)."
+            + " Use a valid calendar date and a 24-hour time (0000-2359 or 00:00-23:59).";
     private final LocalDateTime by;
     // Distinguishes an unspecified time from an explicit midnight deadline.
     private final boolean hasTime;
