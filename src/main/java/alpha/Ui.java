@@ -147,14 +147,19 @@ public class Ui {
 
     /**
      * Displays description-search results with their original task numbers.
+     * Explains how to proceed when the list is empty or no descriptions match.
      *
      * @param tasks The full task list.
      * @param indices Matching zero-based indices in list order.
      */
     public void showMatchingTasks(List<Task> tasks, List<Integer> indices) {
         printMessage("Here are the matching tasks in your list:");
+        if (tasks.isEmpty()) {
+            printMessage("Your task list is empty. Add a task first, e.g. \"todo read book\".");
+            return;
+        }
         if (indices.isEmpty()) {
-            printMessage("No matching tasks found.");
+            printMessage("No matching tasks found. Try a shorter keyword or use \"list\" to see all tasks.");
             return;
         }
         for (int index : indices) {
