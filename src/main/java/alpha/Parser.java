@@ -24,6 +24,8 @@ import java.util.Locale;
  * Interprets command text without changing the task list, displaying output, or accessing storage.
  */
 public class Parser {
+    private static final String INVALID_QUERY_DATE = "Invalid query date. Use on yyyy-MM-dd or on d/M/yyyy"
+            + " (e.g., on 2/12/2019). Enter a valid calendar date without a time.";
     private static final DateTimeFormatter QUERY_DATE = DateTimeFormatter.ofPattern("d/M/uuuu", Locale.ENGLISH)
             .withResolverStyle(ResolverStyle.STRICT);
 
@@ -113,9 +115,9 @@ public class Parser {
                 return LocalDate.parse(date, QUERY_DATE);
             }
         } catch (DateTimeParseException exception) {
-            throw new AlphaException("Invalid query date; use on yyyy-MM-dd or on d/M/yyyy");
+            throw new AlphaException(INVALID_QUERY_DATE);
         }
-        throw new AlphaException("Invalid query date; use on yyyy-MM-dd or on d/M/yyyy");
+        throw new AlphaException(INVALID_QUERY_DATE);
     }
 
     /**
